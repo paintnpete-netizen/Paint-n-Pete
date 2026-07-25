@@ -22,6 +22,7 @@ const archive = [
   { file: "bar-sage-wine-rack.jpg", title: "Bar" },
   { file: "dining-charcoal.jpg", title: "Dining" },
   { file: "staircase.jpg", title: "Stair" },
+  { file: "action-scaffold-ceiling-white.jpg", title: "Ceiling, in progress" },
   { file: "craftsman-straighton.jpg", title: "Craftsman front" },
   { file: "craftsman-front.jpg", title: "Elevation" },
   { file: "exterior-charcoal.jpg", title: "Charcoal exterior" },
