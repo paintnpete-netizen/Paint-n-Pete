@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Noah Kanwal</title>
+  <meta name="description" content="Noah Kanwal — painter. Selected residential work in St. Petersburg, Florida." />
+  <meta name="theme-color" content="#0b0b0b" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="preload" as="image" href="images/work/action-exterior-fascia-brush.jpg" />
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+  <div class="loader" id="loader">
+    <p class="loader-name">Noah Kanwal</p>
+    <div class="loader-bar"><i id="loader-fill"></i></div>
+  </div>
+
+  <header class="chrome">
+    <a class="chrome-name" href="#top">Noah Kanwal</a>
+    <nav class="chrome-nav" aria-label="Primary">
+      <a href="#exhibition" data-nav="exhibition">Work</a>
+      <a href="#about" data-nav="about">About</a>
+      <a href="#contact" data-nav="contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-stage">
+        <img
+          class="hero-img"
+          src="images/work/action-exterior-fascia-brush.jpg"
+          alt="Noah Kanwal cutting a clean line along an exterior fascia with a brush"
+          fetchpriority="high"
+        />
+        <div class="hero-shade"></div>
+      </div>
+      <div class="hero-copy">
+        <h1>
+          <span class="hero-line hero-line-1">Noah</span>
+          <span class="hero-line hero-line-2">Kanwal</span>
+        </h1>
+        <p class="hero-kicker">Painter</p>
+        <p class="hero-lede">He works in edges, pigment, and light — one room at a time.</p>
+        <a class="hero-enter" href="#exhibition">
+          <span>Enter</span>
+          <svg width="28" height="12" viewBox="0 0 28 12" fill="none" aria-hidden="true"><path d="M0 6h26M21 1l5 5-5 5" stroke="currentColor" stroke-width="1.2"/></svg>
+        </a>
+      </div>
+      <p class="hero-locale">St. Petersburg</p>
+    </section>
+
+    <section class="exhibition" id="exhibition" aria-label="Selected work">
+      <div class="exhibition-pin">
+        <div class="exhibition-row" id="exhibition-row">
+          <header class="exhibition-intro panel">
+            <p class="eyebrow">Selected</p>
+            <h2>Works</h2>
+            <p class="exhibition-count" id="exhibition-count"></p>
+          </header>
+          <!-- plates injected -->
+        </div>
+        <div class="exhibition-hud" aria-hidden="true">
+          <span id="hud-index">01</span>
+          <div class="hud-bar"><i id="hud-bar"></i></div>
+          <span id="hud-title"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="archive" id="archive">
+      <header class="section-head">
+        <p class="eyebrow">Archive</p>
+        <h2>Further work</h2>
+      </header>
+      <div class="archive-grid" id="archive-grid"></div>
+    </section>
+
+    <section class="about" id="about">
+      <div class="about-visual">
+        <div class="about-frame">
+          <img src="images/work/action-luxury-apt-roller.jpg" alt="Noah Kanwal painting a luxury high-rise interior with a roller" />
+        </div>
+      </div>
+      <div class="about-copy">
+        <p class="eyebrow">About</p>
+        <h2>A true<br />Craftsman.</h2>
+        <div class="about-body">
+          <p>Noah Kanwal paints homes in St. Petersburg, Florida. For fifteen years he has worked at the scale of a house — interiors and exteriors, given the patience he’d bring to a canvas.</p>
+          <p>More than three hundred projects have taught him one thing: paint can behave like architecture. Surfaces that hold under hard Florida light, lines that stay true, color that finally belongs to the room it lives in.</p>
+          <p>He works closely with the architects, designers, and owners who care about that last ten percent — the part most people never notice, and the part he can’t leave alone.</p>
+          <p class="about-aside">He is the owner of <em>Paint’n Pete</em>, a residential painting company based in St. Petersburg.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <p class="eyebrow">Contact</p>
+      <h2>Let’s talk<br />about your room.</h2>
+      <p class="contact-lede">If you have a space that deserves care, commissions and inquiries are always welcome.</p>
+      <div class="contact-rows">
+        <a class="contact-row" href="tel:+17279021986">
+          <span>Telephone</span>
+          <span>727-902-1986</span>
+        </a>
+        <div class="contact-row">
+          <span>Based in</span>
+          <span>St. Petersburg, FL</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="colophon">
+    <span>© <span id="year"></span> Noah Kanwal</span>
+    <span>All images · the artist</span>
+  </footer>
+
+  <dialog class="lightbox" id="lightbox">
+    <button class="lightbox-close" type="button" data-close>Close · Esc</button>
+    <button class="lightbox-nav prev" type="button" data-prev aria-label="Previous">‹</button>
+    <button class="lightbox-nav next" type="button" data-next aria-label="Next">›</button>
+    <img alt="" />
+    <p class="lightbox-cap" id="lightbox-cap"></p>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
