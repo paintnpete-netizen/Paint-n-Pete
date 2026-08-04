@@ -192,9 +192,9 @@ function playHero() {
     .to(".hero-locale", { opacity: 1, duration: 0.8 }, 0.65);
 
   gsap.to(".hero-img", {
-    scale: 1.05,
-    xPercent: -1,
-    yPercent: -0.5,
+    scale: 1.03,
+    xPercent: -0.5,
+    yPercent: 0,
     ease: "none",
     scrollTrigger: {
       trigger: ".hero",
