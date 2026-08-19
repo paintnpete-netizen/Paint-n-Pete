@@ -292,11 +292,29 @@ currently the SIM in your pocket, your handset needs a different number for
 personal and outbound use, and you keep taking business calls by having Kai's
 routing ring you first.
 
-**Confirm which number is which before porting anything.** Noah's own test
-calls to Kai came from `+19143571448`, and the live Wix site publishes that
-same number in its LocalBusiness schema. So there are two numbers in play and
-it matters which one is the handset and which is the business line. Porting a
-personal cell is disruptive; porting a dedicated business line is clean.
+**Resolved 2026-08-19: this is the clean case.** 914-357-1448 is Noah's
+handset; 727-902-1986 is a separate business line. Porting the business line
+changes nothing about the phone in his pocket, and afterwards the business
+number is answered by Kai directly rather than reached through a forwarding
+rule that can silently break.
+
+### The leak to fix first
+
+The live Wix site publishes **914-357-1448** — the personal cell — in its
+LocalBusiness schema. In the first audit this looked like a typo. It isn't.
+
+Consequences, in order of cost:
+
+1. **Every call from the website bypasses the whole system.** It rings the
+   handset directly. No business line, no forwarding rule, no Kai, no lead
+   captured, no alert. Kai has never seen a single website caller.
+2. Two different numbers across the website and Google Business Profile is an
+   inconsistency that local search treats as a signal the business details are
+   unreliable.
+3. Noah's personal number is published on the open internet permanently.
+
+This is cheaper to fix than anything else in this document and should not wait
+for the rebuild if the rebuild is more than a few days out.
 
 ### Prerequisites — gather before submitting
 

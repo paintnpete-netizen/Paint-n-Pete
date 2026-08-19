@@ -61,8 +61,19 @@ contact:
     value: "727-902-1986"
     status: verified
     note: >
-      Canonical number. The live Wix site's LocalBusiness JSON-LD currently
-      publishes 9143571448, which is wrong and must be corrected.
+      Canonical business line, separate from Noah's handset. Confirmed
+      2026-08-19. To be ported into KaiCalls so Kai answers it directly —
+      procedure in 03-leads/kai-setup.md.
+  personal_cell:
+    value: "914-357-1448"
+    status: verified
+    note: >
+      NOAH'S PERSONAL CELL. NEVER PUBLISH. The live Wix site's LocalBusiness
+      JSON-LD currently publishes this number as the business number, which is
+      why it looked like a typo in the first audit. It is not a typo — it is a
+      personal number leaking onto the website. Calls from the site therefore
+      land on the handset, bypass the business line, and never reach Kai. Fix
+      it on Wix now, or retire it with the rebuild, whichever lands first.
   email:
     value: "paintnpete@gmail.com"
     status: unverified
