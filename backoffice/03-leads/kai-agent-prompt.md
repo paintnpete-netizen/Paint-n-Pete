@@ -18,12 +18,18 @@ and verified. Details in `kai-setup.md`.
 
 ## ⚠️ Still blocking, and bigger than any wording below
 
-**The number Kai holds is +1 762 316 2584 — a Georgia area code, with no agent
-assigned. 727-902-1986 is not on the account.** And the account has 19 free
-trial minutes left with no card on file.
+**The number Kai holds is +1 762 316 2584 — a Georgia area code on a St. Pete
+business.** It is set to *Ring Team First*, so Kai only answers what your team
+doesn't. Whether callers reach Kai at all depends on carrier forwarding that
+KaiCalls cannot see. And the account has 19 free trial minutes left with no card
+on file.
 
 A perfect prompt on a phone nobody reaches, that stops answering in twenty
-calls, is worth nothing. Fix the number and the plan before the prompt.
+calls, is worth nothing. Settle the number and the plan before the prompt.
+
+Also note: `transfer_enabled` in the settings table below cannot work yet.
+There are no human handoff destinations configured, so Kai has nowhere to
+transfer a caller to.
 
 ---
 

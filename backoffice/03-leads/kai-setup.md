@@ -247,10 +247,42 @@ and it is the kind of detail a homeowner comparing three contractors notices.
 Either port 727-902-1986 in (`/dashboard/phone-system/porting`) or buy a 727
 number and forward to it.
 
-**3. No agent is assigned to it.** The dashboard banner says Kai is live, and
-the API says the number has no agent attached. Those disagree, and the
-disagreement is worth resolving before trusting either. It is a plausible
-explanation for the 18-day silence.
+**3. "Agent unassigned" was a red herring.** The dashboard shows the number set
+to **Ring Team First** — "rings your team first, then lets Kai answer if no one
+picks up." No agent is bound directly because Kai is the fallback, not the
+first responder. Nothing is broken here. But it does mean Kai is a backstop for
+missed calls, not a 24/7 front door, which is a different product than the one
+the rest of this document assumes.
+
+### What actually decides whether callers reach Kai
+
+`+17279021986` appears in two places, and neither one answers calls:
+
+- **Business profile phone** — a record on the account, not a routing target.
+- **Admin Phone Access, "Noah", Active** — lets you call Kai's number from that
+  phone and manage the agent by voice. Not an answering line.
+
+So the only path from a customer to Kai is **call forwarding configured at your
+carrier**, from 727-902-1986 to 762-316-2584. KaiCalls cannot see whether that
+exists, and the dashboard offers a "How to Forward Calls" guide precisely
+because it happens outside the platform. **This is the open question behind the
+18-day silence, and only Noah can answer it.**
+
+### Two more gaps found on the routing page
+
+**Caller ID is unverified.** "0 of 1 numbers are caller-ID verified", and the
+number shows *Pending verification*. Affects whether a name shows when Kai
+calls out, which affects pickup rates.
+
+**No human handoff destinations.** The transfer suggestion in
+`kai-agent-prompt.md` cannot work until one is added — Kai has nowhere to send
+a caller who asks for a person.
+
+### Good news: SMS will actually send
+
+Compliance Center reads *All systems operational*, A2P 10DLC status
+**KaiCalls Pool**. The alerts configured above are not going to be silently
+blocked by 10DLC registration, which was the obvious next thing to worry about.
 
 ### Trial minutes — the account will stop answering
 
