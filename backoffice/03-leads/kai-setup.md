@@ -152,6 +152,14 @@ created 2026-07-23). 8 calls, 6 leads.
 
 ### The urgent one
 
+**Kai has never notified Noah of anything.** Read from
+`get_operational_settings`: no alert phone, no alert email, SMS alerts
+disabled, zero escalation rules. Six leads were captured and not one text or
+email was ever sent, because there is nowhere configured to send them.
+
+Every prompt improvement is worthless until this is fixed. See
+`kai-agent-prompt.md`.
+
 **Every lead is still status `new`. None has been worked.**
 
 Lead `f057c7cc`, phone **+1 863 449 0446**, captured 24 July: a real caller
@@ -164,12 +172,16 @@ time. Nobody called. It has been sitting 26 days.
 This is precisely the failure the follow-up automation exists to prevent, and it
 was happening before the automation existed.
 
+The corrected configuration addressing everything below is drafted in
+`kai-agent-prompt.md`, unapplied, pending Noah's review.
+
 ### Configuration problems found in the transcripts
 
 **1. Kai gets the company name wrong.** Across two calls it said "Peyton Pete",
-"Paint and Pete", and "paints and peas". The account name is registered as
-"Paint N Pete". The first three seconds of every call currently misname the
-business.
+"Paint and Pete", and "paints and peas". The correct pronunciation is
+"Paintin' Pete" — PAYN-tin-PEET. The account is registered as "Paint N Pete",
+which is itself part of the cause: text-to-speech reads that literally. The
+first three seconds of every call currently misname the business.
 
 **2. It asks for the phone number far too late.** In the 178-second call the
 first request came at 130 seconds, after scope, address, and timing. Ask for the

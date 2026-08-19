@@ -25,6 +25,16 @@ meta:
 # -----------------------------------------------------------------------------
 company:
   name: "Paint'n Pete"
+  pronunciation:
+    spoken: "Paintin' Pete"
+    phonetic: "PAYN-tin-PEET"
+    status: verified
+    note: >
+      Written "Paint'n Pete", said "Paintin' Pete". Any voice agent, video
+      voiceover, or radio read must be given the spoken spelling, not the
+      written one — text-to-speech reads the apostrophe as a letter N and
+      produces "Paint N Pete". The live KaiCalls agent has said "Peyton Pete",
+      "Paint and Pete", and "paints and peas" on recorded calls.
   legal_name:
     value: null
     status: todo              # registered entity name for contracts, W-9, COI
