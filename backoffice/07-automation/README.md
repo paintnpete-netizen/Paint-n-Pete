@@ -17,9 +17,24 @@ matters — the first one is the one that costs real money when it fails.
 | 5 | Every Monday 7:00am | Reminder to run the weekly content batch and work the follow-up list |
 | 6 | Client painted 3+ years ago | Seasonal check-in queued for review — interior flagged at year 4, exterior at year 5 |
 
-**Depends on:** the Leads sheet and past-client sheet (schemas to be defined
-here), and workflow 1 additionally depends on the website rebuild, since the
-current Wix site can't post to an endpoint we control.
+| File | Purpose |
+|---|---|
+| `sheets-setup.md` | Build the master workbook — do this first |
+| `Code.gs` | All six workflows, ready to paste into Apps Script |
+| `DEPLOY.md` | Install, authorise, and set triggers |
+| `scorecard.csv` | The four monthly numbers |
 
-**Foundation to build first:** the Sheets schemas. Four of the six workflows read
-or write them, and getting the columns right once avoids migrating later.
+**Workflow 1 no longer waits on the website.** It's wired to a Google Form
+submission rather than a custom endpoint, so it runs today on Wix — or on no
+site at all. Point it at the website form later by changing the trigger, not the
+code.
+
+**Kai owns the phone.** Calls are answered, qualified, and booked by KaiCalls,
+which also sends the SMS lead alert that Apps Script cannot. That supersedes
+workflow 3 and the missed-call path — see `../03-leads/kai-setup.md`. Web form
+leads still run through workflow 1 here.
+
+**Reminders alert Noah — they never message a client automatically.** Every
+follow-up, review request, and check-in is drafted by a human before it sends.
+An automated system that emails clients in your voice is how the last ten
+percent stops being yours.

@@ -6,7 +6,8 @@ otherwise.
 
 | File | Purpose |
 |---|---|
-| `standard-responses.md` | Four replies, saved as phone shortcuts |
+| `kai-setup.md` | Configuring the KaiCalls phone secretary |
+| `standard-responses.md` | Four replies — 2, 3, 4 now feed Kai's script |
 | `follow-up-sequence.md` | Day 3 / 8 / 21 emails |
 | `objection-library.md` | Five objections, driveway voice |
 | `intake-form.md` | 12-question Google Form spec |

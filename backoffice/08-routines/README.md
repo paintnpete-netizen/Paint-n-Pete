@@ -23,5 +23,6 @@ Inquiries received · proposals sent · jobs won · reviews earned.
 One row in a spreadsheet, thirty seconds a month. Everything else — followers,
 impressions — is decoration until these are moving.
 
-**To build:** calendar event definitions, and a monthly scorecard sheet holding
-the four numbers.
+**Built:** `operating-rhythm.md` — the calendar events with checklists to paste
+into each one, plus what to do when you fall off. The monthly scorecard sheet
+lives in `../07-automation/scorecard.csv`.

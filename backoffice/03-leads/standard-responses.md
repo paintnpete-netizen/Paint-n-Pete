@@ -24,17 +24,20 @@ which asks them to do the scheduling work.
 
 ---
 
-## 2. Missed call text-back `[wmiss]`
+## 2. Missed call text-back — **now handled by Kai**
 
 > Noah here, Paint'n Pete — sorry I missed you, I was on a ladder. What kind of
 > project are you looking at?
 
-Short on purpose. It reads as a real person who is genuinely working, which is
-the truth and also more credible than a polished auto-reply.
+Kai answers the line and texts missed callers back automatically, so you no
+longer send this by hand. Keep it as the *voice* Kai should use — short, real,
+a person who is genuinely working rather than a polished auto-reply.
+
+See `kai-setup.md`.
 
 ---
 
-## 3. "What's your ballpark price?" `[wball]`
+## 3. "What's your ballpark price?" `[wball]` — **also give this to Kai**
 
 > Honest answer: I could give you a number now, but it would be a guess, and
 > guesses are how people end up with a change order halfway through. Twenty
@@ -59,10 +62,14 @@ to the person who was straight with them.
 
 ## Wiring it up
 
-Workflow 1 in `../07-automation/` sends the acknowledgment automatically the
-moment a form lands, so the five-minute clock never runs out while you're
-spraying cabinets. The automated reply buys you time; **it is not the personal
-reply**. Send response 1 yourself as well.
+**Phone calls go to Kai**, which answers in about two seconds, runs intake, and
+books. Responses 2, 3, and 4 become Kai's configuration rather than things you
+type — see `kai-setup.md`.
+
+**Web form submissions** still run through workflow 1 in `../07-automation/`,
+which sends the acknowledgment the moment a form lands so the five-minute clock
+never runs out while you're spraying cabinets. That automated reply buys you
+time; **it is not the personal reply**. Send response 1 yourself as well.
 
 Service-area boundaries for response 4 are still `todo` in the config. Worth
 settling — right now you'd be guessing at the edge of your own map.

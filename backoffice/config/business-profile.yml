@@ -248,3 +248,14 @@ stack:
   research: "Perplexity"
   web_editing: "Cursor"
   hosting: "Netlify"
+  phone: "KaiCalls — AI phone secretary"
+  phone_note: >
+    Answers 24/7, runs intake, books onto Google Calendar, texts missed callers
+    back, and sends a lead summary by SMS and email. Replaces the missed-call
+    text-back, the consultation-booking workflow, and the SMS alert that Apps
+    Script cannot send. Not the system of record — leads still land in the Leads
+    tab. Configuration procedure in 03-leads/kai-setup.md.
+  phone_rules:
+    - "Never quotes a price, not even a range."
+    - "Declines out-of-area work gracefully."
+    - "Escalates rather than improvising on anything it wasn't told."

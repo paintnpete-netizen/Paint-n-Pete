@@ -5,13 +5,17 @@ Google reviews against 300+ completed projects is the largest single gap in the
 business and the cheapest to close. If 40% of the last 30 clients respond, the
 public review count roughly triples in a few weeks.
 
-**To build:** review request texts (walkthrough night, 2-day follow-up, and a
-version for clients finished months or years ago), review response templates,
-Google Business Profile content pack, weekly content batch prompt, hashtag bank,
-service-area page template, case study template.
+**Built:**
+- `review-engine.md` — request texts and response templates
+- `review-tracker.csv` — importable backlog tracker with pacing
+- `SETUP.md` — the click-by-click Google-account steps
+- `gbp-content-pack.md` — description, categories, services, 8 Q&A, 4 posts
+- `content-engine.md` — weekly batch prompt, hashtag bank, photo list for crew
+- `web-templates.md` — service-area and case study page specs
 
-**Depends on:** Business Brief (built), Google Business Profile URL (`todo` in
-config), and the last 30 completed clients with contact details.
+**Blocked on:** Google Business Profile URL (`todo` in config), the last 30
+completed clients with contact details, and `credentials` before any
+licence/insurance/warranty claim is published.
 
 **Asset already on hand:** ~30 real project photographs in `../../images/work/`.
 Service-area pages and content run on these. Stock imagery defeats the point.

@@ -14,7 +14,8 @@ inherits the entire system. See `config/README.md`.
 
 1. Read `config/business-profile.yml` — the config layer. Fill in every `todo`.
 2. Read `01-foundation/business-brief.md` — paste it above every AI prompt.
-3. Work the roadmap below in order.
+3. Read `prompt-library.md` — the index of every prompt in the system.
+4. Work the roadmap below in order.
 
 ---
 
@@ -38,11 +39,12 @@ not on the website, not in the capabilities packet.
 | `01-foundation/` | Business Brief | 2.1 | **Built** |
 | `02-estimating/` | Proposals, exclusions, photo-to-scope, job costing | 2 | **Built** |
 | `03-leads/` | Response standards, follow-up, objections, intake form | 3 | **Built** |
-| `04-visibility/` | Review engine, Google Business Profile, content | 4 | **Review engine built** — needs your review link |
-| `05-commercial/` | Capabilities packet, GC and PM outreach, bid analysis | 5 | Not started |
-| `06-crew/` | SOPs (EN + ES), hiring, onboarding | 6 | Not started |
-| `07-automation/` | Apps Script workflows | 7 | Not started |
-| `08-routines/` | Daily, weekly, monthly operating rhythm | 9 | Not started |
+| `04-visibility/` | Review engine, Google Business Profile, content | 4 | **Built** — needs your review link |
+| `05-commercial/` | Capabilities packet, GC and PM outreach, bid analysis | 5 | **Built** — ⛔ blocked on credentials |
+| `06-crew/` | SOPs (EN + ES), hiring, onboarding | 6 | **Built** — Spanish needs native review |
+| `07-automation/` | Apps Script workflows | 7 | **Built** — needs deploying |
+| `08-routines/` | Daily, weekly, monthly operating rhythm | 9 | **Built** |
+| `prompt-library.md` | Index of every prompt, plus the standalone ones | 10 | **Built** |
 
 ---
 
@@ -62,11 +64,25 @@ photo-to-scope, and job-costing sheets with live formulas. Open items are
 production rates (backfill three jobs), the service-area boundary, and a legal
 review of the exclusions block.
 
-**Phase 3 — Website.** Rebuild `paintnpete.com` in Cursor on Netlify, executing
-the architecture and copy already written in `../paintnpete-redesign/`.
+**Phase 2b — Automation.** *Built, not deployed.* All six workflows from guide
+§7 on Apps Script, plus the master workbook. About 20 minutes to install — see
+`07-automation/DEPLOY.md`.
 
-**Phase 4 — Commercial and crew.** Capabilities packet, outreach, the three core
-SOPs in English and Spanish.
+**Phase 3 — Visibility, crew, commercial, rhythm.** *Built.* Google Business
+Profile content pack, the weekly content engine, service-area and case study page
+specs, the three core SOPs in English and Spanish, hiring and onboarding, the
+capabilities statement and outreach sequences, the bid analyser, the calendar
+routines, and the prompt library.
+
+Three gates remain on this phase, and they are deliberate:
+- Commercial documents cannot be sent until `credentials` is verified.
+- Spanish SOPs are AI first drafts and need a fluent speaker before they go in
+  the van.
+- No service-area page publishes for a city until `service_area.boundary` is
+  confirmed.
+
+**Phase 4 — Website.** Rebuild `paintnpete.com` in Cursor on Netlify, executing
+the architecture and copy already written in `../paintnpete-redesign/`.
 
 **Phase 5 — Franchise packaging.** Clonable operator kit.
 
@@ -76,6 +92,12 @@ SOPs in English and Spanish.
 
 Resolved 2026-08-19: **Google Workspace**, so the supporting layer is Gmail on
 the domain, Google Forms, Sheets, Drive, and Calendar.
+
+**Phone: KaiCalls.** Answers 24/7, qualifies, books onto Google Calendar, and
+texts the lead summary. It owns everything that happens on a call and closes the
+SMS gap Apps Script couldn't. It is not the system of record — leads still land
+in the `Leads` tab, because Kai's job ends at the booked appointment and the
+money is made after it. See `03-leads/kai-setup.md`.
 
 Automation runs on **Google Apps Script**, not Make.com. The guide defaults to
 Make.com and correctly flags its free tier as the system's only hard limit — two
