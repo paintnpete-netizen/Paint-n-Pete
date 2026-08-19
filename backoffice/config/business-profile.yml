@@ -1,0 +1,250 @@
+# =============================================================================
+# BUSINESS PROFILE — the config layer
+# =============================================================================
+# Every template, prompt, SOP, form spec, and web page in this back office
+# reads its facts from this file. Nothing downstream hardcodes a company name,
+# a city, or a phone number.
+#
+# To stand up a second operator: copy this file, change the values, leave the
+# rest of the back office untouched. That is the whole franchise mechanism.
+#
+# STATUS FLAGS — every claim carries one:
+#   verified   Noah has confirmed it. Safe to publish, send, or print.
+#   unverified Do NOT put in front of a client, GC, or crew until confirmed.
+#   todo       Noah still needs to supply this.
+# =============================================================================
+
+meta:
+  operator_id: paintnpete-stpete
+  profile_version: 1
+  last_reviewed: 2026-08-19
+  review_cadence: quarterly   # per guide 2.1
+
+# -----------------------------------------------------------------------------
+# Identity
+# -----------------------------------------------------------------------------
+company:
+  name: "Paint'n Pete"
+  legal_name:
+    value: null
+    status: todo              # registered entity name for contracts, W-9, COI
+  founded:
+    value: null
+    status: todo              # distinct from owner's 15 years in the trade
+  tagline: null               # deliberately empty; see voice.forbidden
+
+owner:
+  name: "Noah Kanwal"
+  role: "Owner"
+  years_in_trade:
+    value: 15
+    status: verified
+  projects_completed:
+    value: "300+"
+    status: verified
+
+# -----------------------------------------------------------------------------
+# Contact
+# -----------------------------------------------------------------------------
+contact:
+  phone:
+    value: "727-902-1986"
+    status: verified
+    note: >
+      Canonical number. The live Wix site's LocalBusiness JSON-LD currently
+      publishes 9143571448, which is wrong and must be corrected.
+  email:
+    value: "paintnpete@gmail.com"
+    status: unverified
+    note: >
+      Placeholder. Google Workspace is already paid for, so a domain address
+      (noah@paintnpete.com) is included at no extra cost. Replace this value
+      before any commercial outreach — GCs and property managers read a free
+      address as a one-man operation. See guide 1.2.
+  address:
+    street: "1105 18th St S"
+    city: "St. Petersburg"
+    state: "FL"
+    zip: "33712"
+    status: unverified
+    note: "Confirm this is correct to publish publicly before it goes in schema."
+  hours:
+    value: null
+    status: todo
+
+web:
+  business_site:
+    url: "https://paintnpete.com"
+    platform: "Wix (Classic Editor)"
+    status: "rebuild approved 2026-08-19 — target Cursor + Netlify"
+  portfolio_site:
+    url: "https://noah-kanwal.netlify.app"
+    platform: "Static HTML/CSS/JS on Netlify"
+    status: live
+    note: "This repo. Used for designer and architect outreach."
+  google_business_profile:
+    url:
+      value: null
+      status: todo
+    rating:
+      value: 5.0
+      status: unverified
+    review_count:
+      value: 14
+      status: unverified
+      note: "Changes constantly. Re-check before quoting it anywhere."
+  social:
+    instagram:
+      value: null
+      status: todo
+    facebook:
+      value: null
+      status: todo
+
+# -----------------------------------------------------------------------------
+# What the business sells
+# -----------------------------------------------------------------------------
+services:
+  - id: interior
+    label: "Interior Painting"
+    slug: /interior-painting
+  - id: exterior
+    label: "Exterior Painting"
+    slug: /exterior-painting
+  - id: cabinets
+    label: "Cabinets & Fine Finishes"
+    slug: /cabinets-and-finishes
+    note: "Highest margin, most visual. Lead with this in content."
+  - id: repair
+    label: "Drywall & Surface Repair"
+    slug: /drywall-repair
+  - id: commercial
+    label: "Commercial"
+    slug: /commercial
+
+declines:
+  status: todo
+  note: >
+    The guide (2.1) asks explicitly what you decline to do. This is one of the
+    most useful things in the brief — it stops the AI proposing work you don't
+    want and stops you being drawn into jobs you'd regret. Common candidates:
+    roof coatings, pressure-wash-only jobs, pure handyman work, insurance
+    restoration, jobs where the client supplies the paint, anything under a
+    minimum dollar value. Noah to fill in.
+
+# -----------------------------------------------------------------------------
+# Territory
+# -----------------------------------------------------------------------------
+service_area:
+  counties:
+    - Pinellas
+    - Hillsborough
+  neighborhoods:              # used for content tagging and service-area pages
+    - Old Northeast
+    - Snell Isle
+    - Kenwood
+    - Tierra Verde
+    - Gulfport
+    - St. Pete Beach
+  boundary:
+    status: todo
+    note: "Which cities do you actually take work in? Needed before service-area pages."
+
+# -----------------------------------------------------------------------------
+# Products
+# -----------------------------------------------------------------------------
+products:
+  brands:
+    - Benjamin Moore
+    - Sherwin-Williams
+    - Florida Paints
+    - Farrow & Ball
+  selection_principle: >
+    Products are chosen for substrate and exposure, not for price per gallon.
+
+# -----------------------------------------------------------------------------
+# Craft philosophy — the source of the differentiation, so it drives all copy
+# -----------------------------------------------------------------------------
+philosophy:
+  - "Prep is most of the job."
+  - "Coatings cure on their schedule, not ours."
+  - "Products are specified for the surface and its exposure."
+  - "The last ten percent is the part nobody else finishes."
+
+ideal_client: >
+  Homeowners, interior designers, and architects who care about the last ten
+  percent — the details most people never notice.
+
+# -----------------------------------------------------------------------------
+# Voice — enforced across every generated document
+# -----------------------------------------------------------------------------
+voice:
+  register: "Direct, craftsman, factual."
+  person: "Third person for company documents; first person for texts and emails from Noah."
+  forbidden:
+    - exclamation points
+    - superlatives and hype
+    - "self-describing 'premium' or 'luxury'"
+    - "'transformation Tuesday' and similar social clichés"
+    - discount language
+    - apologising for price
+
+# -----------------------------------------------------------------------------
+# Credentials — NOTHING HERE IS PUBLISHABLE YET
+# -----------------------------------------------------------------------------
+credentials:
+  license:
+    number: null
+    exact_wording: null
+    status: todo
+    note: "Required for the commercial capabilities packet (guide 5.2)."
+  insurance:
+    carrier: null
+    limits: null
+    status: todo
+  warranty:
+    years: null
+    covers: null
+    status: todo
+  w9_on_file:
+    value: false
+    status: todo
+    note: "GCs and property managers expect W-9 + COI within the hour. See guide 5.2."
+
+# -----------------------------------------------------------------------------
+# Pricing posture
+# -----------------------------------------------------------------------------
+pricing:
+  publish_ranges:
+    value: null
+    status: todo
+    note: "Competitor research suggested transparent ranges build trust. Your call."
+  rule: >
+    AI never sets a price. Every figure comes from the job-costing sheet.
+    Proposals are generated with [PRICE] placeholders that Noah fills in.
+
+# -----------------------------------------------------------------------------
+# Tool stack — resolved 2026-08-19
+# -----------------------------------------------------------------------------
+stack:
+  platform: "Google Workspace"
+  ai_writing: "Claude (long documents, proposals, SOPs, photo-to-scope)"
+  ai_quick: "ChatGPT (short drafts, captions)"
+  documents: "Google Docs"
+  spreadsheets: "Google Sheets"
+  forms: "Google Forms"
+  storage: "Google Drive"
+  calendar: "Google Calendar"
+  email: "Gmail (Workspace, domain address pending)"
+  automation: "Google Apps Script"
+  automation_note: >
+    The guide defaults to Make.com, whose free tier allows only 2 active
+    scenarios on 1,000 credits/month — not enough for the six workflows in
+    Section 7. Apps Script is included with Workspace, has no scenario cap,
+    is native to Sheets/Forms/Gmail/Calendar, and is version-controllable in
+    this repo. Make.com is kept as a fallback only for third-party services
+    Apps Script cannot reach.
+  design: "Canva (free)"
+  research: "Perplexity"
+  web_editing: "Cursor"
+  hosting: "Netlify"
