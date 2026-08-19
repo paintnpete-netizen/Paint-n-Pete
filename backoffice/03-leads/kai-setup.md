@@ -150,15 +150,35 @@ Once Kai is live:
 Read directly from the KaiCalls account (business `db4a5647`, agent `Kai`,
 created 2026-07-23). 8 calls, 6 leads.
 
+### Alerts — FIXED 2026-08-19
+
+No alert phone, no alert email, SMS alerts disabled, zero escalation rules.
+No text was ever sent about any of the six leads.
+
+Email is a partial exception: the dashboard falls back to "the emails of all
+users associated with this business" when the field is blank, so lead emails
+may have been reaching the account signup address. They were not reaching a
+phone, and they were not being acted on.
+
+**Now configured** (verified through `get_operational_settings`):
+
+- Alert phone `+17279021986`, SMS alerts enabled
+- Alert email `paintnpete@gmail.com` — set explicitly rather than relying on
+  the fallback. Change to the Workspace address once it exists.
+- Four escalation rules, each firing an urgent text and email:
+  1. Caller wanted an estimate or callback but no appointment was booked
+  2. Caller needs work urgently, or said tomorrow / this week / as soon as possible
+  3. Caller has a complaint or problem with work already completed
+  4. Caller pushed for a price and did not book, or seemed unhappy at getting
+     no price
+
+Rule 1 is the direct guard against the lead below. Rule 4 is the early warning
+on the no-price rule — if Kai is losing people at the price question, it shows
+up on the first caller rather than the tenth.
+
+Scenario text is capped at about 100 characters, so rules have to be short.
+
 ### The urgent one
-
-**Kai has never notified Noah of anything.** Read from
-`get_operational_settings`: no alert phone, no alert email, SMS alerts
-disabled, zero escalation rules. Six leads were captured and not one text or
-email was ever sent, because there is nowhere configured to send them.
-
-Every prompt improvement is worthless until this is fixed. See
-`kai-agent-prompt.md`.
 
 **Every lead is still status `new`. None has been worked.**
 
@@ -207,11 +227,44 @@ intended offer — it is a commitment being made on your behalf on every call.
 "Eno Avnandar, you five 18th street south". Reading a mangled address back to a
 customer undermines the professionalism the rest of the call earns.
 
+### The phone number problem — found 2026-08-19
+
+`list_numbers` returns exactly one number on the account:
+
+```
++17623162584 | agent unassigned | business db4a5647
+```
+
+Three separate problems in one line.
+
+**1. It is not your number.** 727-902-1986 is not on the KaiCalls account at
+all. Unless that line is forwarding to 762-316-2584, callers to your published
+number never reach Kai.
+
+**2. The area code is wrong.** 762 is Georgia. A St. Petersburg painting
+company answering on a Georgia number costs trust before the call even starts,
+and it is the kind of detail a homeowner comparing three contractors notices.
+Either port 727-902-1986 in (`/dashboard/phone-system/porting`) or buy a 727
+number and forward to it.
+
+**3. No agent is assigned to it.** The dashboard banner says Kai is live, and
+the API says the number has no agent attached. Those disagree, and the
+disagreement is worth resolving before trusting either. It is a plausible
+explanation for the 18-day silence.
+
+### Trial minutes — the account will stop answering
+
+The dashboard reads **19 of 25 free trial minutes left**, no card on file.
+Eight calls have consumed six minutes. At the observed rate of roughly 45
+seconds a call, that is around twenty more calls before Kai stops.
+
+Every fix in this document assumes Kai is answering. Decide on the paid plan
+before the minutes run out, not after a missed week.
+
 ### Also worth checking
 
-**No calls since 1 August** — 18 days silent. Either the business line isn't
-forwarding to Kai, or the number isn't published anywhere. Worth confirming
-before assuming the phone is being answered.
+**No calls since 1 August** — 18 days silent. See the phone number problem
+above for the likely cause.
 
 **The no-price rule is untested.** No caller in these 8 calls asked for a
 ballpark, so we don't yet know what Kai would say. Test it deliberately.

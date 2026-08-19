@@ -11,26 +11,19 @@ Agent `4cf219a6-8468-4f2f-b757-217918365ffd` · Business `db4a5647-08ca-4cb9-b9e
 
 ---
 
-## ⚠️ Fix this first — it is not a wording problem
+## ✅ Alerts — done 2026-08-19
 
-```
-Alert phones:  none
-Alert emails:  none
-SMS alerts:    disabled
-Escalation rules: 0
-```
+Alert phone, alert email, SMS alerts, and four escalation rules are configured
+and verified. Details in `kai-setup.md`.
 
-**Kai has never notified you of anything.** Six leads were captured and no text
-and no email was ever sent, because there is nowhere configured to send them.
-The 26-day-old exterior repaint lead was not missed because you ignored a text —
-there was no text.
+## ⚠️ Still blocking, and bigger than any wording below
 
-Every prompt improvement below is worthless until this is fixed. A better intake
-conversation just produces better-qualified leads that nobody hears about.
+**The number Kai holds is +1 762 316 2584 — a Georgia area code, with no agent
+assigned. 727-902-1986 is not on the account.** And the account has 19 free
+trial minutes left with no card on file.
 
-**The fix:** set the alert phone to 727-902-1986, set the alert email to the
-Workspace address, and enable SMS alerts. This is `configure_staff_alerts`, and
-it is the single highest-value change in this document.
+A perfect prompt on a phone nobody reaches, that stops answering in twenty
+calls, is worth nothing. Fix the number and the plan before the prompt.
 
 ---
 
