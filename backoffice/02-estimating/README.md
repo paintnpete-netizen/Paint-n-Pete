@@ -3,10 +3,17 @@
 Turning walkthrough notes into an itemized proposal the same day. Speed here is
 a large part of why Paint'n Pete wins work.
 
-**To build:** master proposal template, exclusions and assumptions block,
-photo-to-scope prompt, job-costing sheet with formulas.
+| File | Purpose |
+|---|---|
+| `proposal-template.md` | Walkthrough notes to itemized proposal |
+| `exclusions-assumptions.md` | Section 5 of every proposal — needs legal review |
+| `photo-to-scope.md` | Job photos to surface inventory and prep checklist |
+| `job-costing.md` | How to use the sheets and read the variance |
+| `job-costing-estimate.csv` | Importable, formulas live |
+| `job-costing-actuals.csv` | Importable, variance by phase |
 
-**Depends on:** Business Brief (built), and Noah's production rates.
+**Open:** production rates are deliberately blank. Backfill three completed jobs
+to seed them — see `job-costing.md`.
 
 **Hard rule:** AI never sets a price. Proposals generate with `[PRICE]`
 placeholders filled in from the job-costing sheet.

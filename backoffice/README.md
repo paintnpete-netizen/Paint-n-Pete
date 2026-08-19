@@ -36,8 +36,8 @@ not on the website, not in the capabilities packet.
 |---|---|---|---|
 | `config/` | Business profile — the config layer | 1.2 | **Built** |
 | `01-foundation/` | Business Brief | 2.1 | **Built** |
-| `02-estimating/` | Proposals, exclusions, photo-to-scope, job costing | 2 | Not started |
-| `03-leads/` | Response standards, follow-up, objections, intake form | 3 | Not started |
+| `02-estimating/` | Proposals, exclusions, photo-to-scope, job costing | 2 | **Built** |
+| `03-leads/` | Response standards, follow-up, objections, intake form | 3 | **Built** |
 | `04-visibility/` | Review engine, Google Business Profile, content | 4 | **Review engine built** — needs your review link |
 | `05-commercial/` | Capabilities packet, GC and PM outreach, bid analysis | 5 | Not started |
 | `06-crew/` | SOPs (EN + ES), hiring, onboarding | 6 | Not started |
@@ -55,9 +55,12 @@ business: 14 Google reviews against 300+ completed projects. Blocked only on
 Noah's Google review link and the client backlog — see
 `04-visibility/SETUP.md`.
 
-**Phase 2 — The money path.** Lead capture through proposal to follow-up.
-Consultation intake form, leads sheet, job-costing sheet with real formulas,
-proposal and exclusions templates, three-touch follow-up.
+**Phase 2 — The money path.** *Built.* Lead capture through proposal to
+follow-up: four standard responses, three-touch sequence, objection library,
+intake form spec, leads tracker, proposal and exclusions templates,
+photo-to-scope, and job-costing sheets with live formulas. Open items are
+production rates (backfill three jobs), the service-area boundary, and a legal
+review of the exclusions block.
 
 **Phase 3 — Website.** Rebuild `paintnpete.com` in Cursor on Netlify, executing
 the architecture and copy already written in `../paintnpete-redesign/`.
