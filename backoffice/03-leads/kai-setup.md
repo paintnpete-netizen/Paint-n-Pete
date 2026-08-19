@@ -265,8 +265,68 @@ the rest of this document assumes.
 So the only path from a customer to Kai is **call forwarding configured at your
 carrier**, from 727-902-1986 to 762-316-2584. KaiCalls cannot see whether that
 exists, and the dashboard offers a "How to Forward Calls" guide precisely
-because it happens outside the platform. **This is the open question behind the
-18-day silence, and only Noah can answer it.**
+because it happens outside the platform.
+
+**Resolved 2026-08-19:** Noah has conditional forwarding — calls reach Kai only
+when he doesn't answer. So Kai is working as configured, and the 18-day silence
+is not a fault. It means he has been answering his own phone, and the eight
+calls Kai has handled are genuinely the ones he missed. Kai is currently a
+missed-call safety net, not the front door.
+
+That reframes the whole account: six leads from eight missed calls is a good
+argument for Kai, not a bad one. Those were calls that would otherwise have
+been lost entirely.
+
+---
+
+## Decision — port 727-902-1986 into KaiCalls
+
+Chosen 2026-08-19. Kai becomes the front door on the published number, with
+routing set so Noah still gets first crack at live calls.
+
+### Read this before starting the port
+
+**Porting moves the number out of your carrier account and into KaiCalls.**
+After it completes, 727-902-1986 is a KaiCalls line. If that number is
+currently the SIM in your pocket, your handset needs a different number for
+personal and outbound use, and you keep taking business calls by having Kai's
+routing ring you first.
+
+**Confirm which number is which before porting anything.** Noah's own test
+calls to Kai came from `+19143571448`, and the live Wix site publishes that
+same number in its LocalBusiness schema. So there are two numbers in play and
+it matters which one is the handset and which is the business line. Porting a
+personal cell is disruptive; porting a dedicated business line is clean.
+
+### Prerequisites — gather before submitting
+
+- Current carrier account number and the port-out PIN
+- Billing name and service address **exactly** as the carrier has them; a
+  mismatch is the most common rejection reason
+- A recent bill showing the number
+- **Do not cancel the carrier line.** Cancelling before the port completes
+  releases the number and it can be lost permanently.
+
+### Sequence
+
+1. **Get on a paid plan first.** The account has 19 trial minutes left. Do not
+   port a live business number onto a trial that can stop answering.
+2. Keep the existing conditional forwarding running until the port completes —
+   it is the safety net during the transition.
+3. Submit the port at `/dashboard/phone-system/porting`. Expect days, not hours.
+4. After it lands, set routing deliberately. *Ring Team First* pointed at
+   Noah's handset reproduces today's behaviour with none of the forwarding
+   fragility. *Kai answers first* is the change worth making only once the
+   corrected prompt is live and tested.
+5. Add a human handoff destination so Kai can transfer a live caller.
+6. Verify caller ID, currently *Pending verification*.
+7. Release the Georgia number `+17623162584` once nothing depends on it.
+
+### Then correct the published record
+
+Once the port is done, 727-902-1986 is the single canonical number. The Wix
+site's schema still publishes 9143571448 — fix it, or retire it with the
+rebuild.
 
 ### Two more gaps found on the routing page
 
