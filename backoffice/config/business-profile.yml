@@ -88,11 +88,18 @@ contact:
     city: "St. Petersburg"
     state: "FL"
     zip: "33712"
-    status: unverified
-    note: "Confirm this is correct to publish publicly before it goes in schema."
+    status: verified
+    note: >
+      Already published on the Google Business Profile and on MapQuest,
+      localitybiz, and Nextdoor. The decision to make it public has effectively
+      been taken, so it is safe to use in schema and on the site.
   hours:
-    value: null
-    status: todo
+    value: "8:00 AM – 8:00 PM, seven days"
+    status: verified
+    note: >
+      Read from the Google Business Profile 2026-08-19. Kai's intake and any
+      "we'll call you back" promise must respect these — do not let the agent
+      offer a callback at 9pm.
 
 web:
   business_site:
@@ -112,22 +119,40 @@ web:
     note: "This repo. Used for designer and architect outreach."
   google_business_profile:
     url:
-      value: null
+      value: "https://www.google.com/search?q=Paint%27n+Pete&stick=H4sIAAAAAAAA_-NgU1I1qDAxMEu0SLQwMjAyTUxJsjC1MqgwNzU0N060tDQ3MLJMMU4xXMTKE5CYmVeinqcQkFqSCgCG4UQUOAAAAA"
+      status: verified
+      note: >
+        Knowledge-panel link. Still needed: the short review link for the
+        request texts (see 04-visibility/SETUP.md), which can only be generated
+        from inside a claimed profile.
+    ownership:
       status: todo
+      note: >
+        PROBLEM. Signed in as kanwalconsulting297@gmail.com, the panel offers
+        "Own this business?", "Suggest an edit", and "Suggest new hours" — the
+        options Google shows a member of the public, not an owner. So the
+        profile is either unclaimed, or claimed under a different Google
+        account. Until this is resolved Noah cannot respond to reviews, publish
+        posts, add services or Q&A, or generate a review link. Most of
+        04-visibility depends on it.
     rating:
       value: 5.0
-      status: unverified
+      status: verified
     review_count:
-      value: 14
-      status: unverified
-      note: "Changes constantly. Re-check before quoting it anywhere."
+      value: 21
+      status: verified
+      note: >
+        Read live 2026-08-19, up from the 14 recorded at the start of this
+        project. Changes constantly — re-check before quoting it anywhere.
   social:
     instagram:
-      value: null
-      status: todo
+      value: "https://www.instagram.com/paintnpete/"
+      status: verified
+      note: "Linked from the Google profile. ~140 followers as of 2026-08-19."
     facebook:
       value: null
       status: todo
+      note: "Not linked from the Google profile and did not surface in search."
 
 # -----------------------------------------------------------------------------
 # What the business sells
