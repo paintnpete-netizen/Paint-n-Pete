@@ -81,8 +81,13 @@ Three gates remain on this phase, and they are deliberate:
 - No service-area page publishes for a city until `service_area.boundary` is
   confirmed.
 
-**Phase 4 — Website.** Rebuild `paintnpete.com` in Cursor on Netlify, executing
-the architecture and copy already written in `../paintnpete-redesign/`.
+**Phase 4 — Website.** *Largely done already.* `paintnpete.com` was checked live
+on 2026-08-19 and is no longer Wix — it serves from Netlify as flat `.html`
+pages with `HousePainter`, `FAQPage`, and `AggregateRating` structured data, and
+the phone number is correct throughout. Before planning any further work here,
+audit the live site against `../paintnpete-redesign/`, because those documents
+describe a rebuild that has since been executed and their open items may be
+stale.
 
 **Phase 5 — Franchise packaging.** Clonable operator kit.
 

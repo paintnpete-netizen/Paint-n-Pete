@@ -68,12 +68,13 @@ contact:
     value: "914-357-1448"
     status: verified
     note: >
-      NOAH'S PERSONAL CELL. NEVER PUBLISH. The live Wix site's LocalBusiness
-      JSON-LD currently publishes this number as the business number, which is
-      why it looked like a typo in the first audit. It is not a typo — it is a
-      personal number leaking onto the website. Calls from the site therefore
-      land on the handset, bypass the business line, and never reach Kai. Fix
-      it on Wix now, or retire it with the rebuild, whichever lands first.
+      NOAH'S PERSONAL CELL. FAMILY USE. NEVER PUBLISH ANYWHERE.
+      The old Wix site published this in its LocalBusiness JSON-LD. Checked
+      against the live site 2026-08-19 and it is gone — the current site
+      publishes 727-902-1986 in the schema, the tel: link, and the visible
+      copy, with no occurrence of this number anywhere. Recorded here only so
+      it is recognisable if it resurfaces on a directory, an old listing, or a
+      social profile.
   email:
     value: "paintnpete@gmail.com"
     status: unverified
@@ -96,8 +97,14 @@ contact:
 web:
   business_site:
     url: "https://paintnpete.com"
-    platform: "Wix (Classic Editor)"
-    status: "rebuild approved 2026-08-19 — target Cursor + Netlify"
+    platform: "Static HTML on Netlify"
+    status: >
+      Already rebuilt. Verified live 2026-08-19: server header reports Netlify,
+      pages are flat .html, and the markup carries HousePainter, FAQPage, and
+      AggregateRating structured data. No longer Wix. The rebuild described in
+      ../../paintnpete-redesign/ has been executed, at least in part — audit
+      the live site against those plans before assuming any of that work is
+      still outstanding.
   portfolio_site:
     url: "https://noah-kanwal.netlify.app"
     platform: "Static HTML/CSS/JS on Netlify"

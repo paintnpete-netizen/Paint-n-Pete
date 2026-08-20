@@ -298,23 +298,40 @@ changes nothing about the phone in his pocket, and afterwards the business
 number is answered by Kai directly rather than reached through a forwarding
 rule that can silently break.
 
-### The leak to fix first
+### The website is already clean — checked, not assumed
 
-The live Wix site publishes **914-357-1448** — the personal cell — in its
-LocalBusiness schema. In the first audit this looked like a typo. It isn't.
+Both earlier audits recorded the site as publishing 914-357-1448 in its
+LocalBusiness schema. **That is no longer true.** Fetched live 2026-08-19:
 
-Consequences, in order of cost:
+| Surface | Value |
+|---|---|
+| JSON-LD `telephone` | `+17279021986` |
+| `tel:` links | `tel:+17279021986` — the only one on the page |
+| Visible copy | 727-902-1986, five occurrences |
+| Any occurrence of 914 | none |
 
-1. **Every call from the website bypasses the whole system.** It rings the
-   handset directly. No business line, no forwarding rule, no Kai, no lead
-   captured, no alert. Kai has never seen a single website caller.
-2. Two different numbers across the website and Google Business Profile is an
-   inconsistency that local search treats as a signal the business details are
-   unreliable.
-3. Noah's personal number is published on the open internet permanently.
+The site is also no longer Wix. It serves from Netlify as flat `.html` pages
+with `HousePainter`, `FAQPage`, and `AggregateRating` structured data, so the
+rebuild has already happened.
 
-This is cheaper to fix than anything else in this document and should not wait
-for the rebuild if the rebuild is more than a few days out.
+**So website callers already reach the business line**, and from there the
+existing conditional forwarding hands the missed ones to Kai. No fix needed
+here.
+
+### Where 914 could still be published
+
+The website was the surface we could check directly. These we cannot, and each
+one would route a customer to the family phone:
+
+- **Google Business Profile** — the highest-volume caller source for a local
+  trade, and the GBP URL is still `todo` in config. Check this first.
+- Facebook and Instagram profile contact fields
+- Yelp, Angi, Thumbtack, HomeAdvisor, Nextdoor, BBB, and any directory ever
+  filled in
+- Old quotes, invoices, business cards, vehicle signage
+- The Google Form and any email signature
+
+One number, everywhere: **727-902-1986**.
 
 ### Prerequisites — gather before submitting
 
@@ -342,9 +359,8 @@ for the rebuild if the rebuild is more than a few days out.
 
 ### Then correct the published record
 
-Once the port is done, 727-902-1986 is the single canonical number. The Wix
-site's schema still publishes 9143571448 — fix it, or retire it with the
-rebuild.
+Once the port is done, 727-902-1986 is the single canonical number everywhere.
+The website already matches. The audit list above is what remains.
 
 ### Two more gaps found on the routing page
 
