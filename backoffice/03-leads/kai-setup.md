@@ -320,14 +320,22 @@ here.
 
 ### Where 914 could still be published
 
-The website was the surface we could check directly. These we cannot, and each
-one would route a customer to the family phone:
+Searched the open web for the personal number on 2026-08-19. Every public
+listing that surfaced carries 727-902-1986 and none carries 914: Nextdoor
+(which lists it four times, plus `+17279021986`), localitybiz, and the Lantern
+directory. Nothing to clean up in the places a search can reach.
+
+One caveat: the search engine's cached copy of paintnpete.com still shows Wix
+page furniture, so the index is serving a stale version of the site. That
+resolves on its own as the new pages are recrawled.
+
+Still unchecked, because they need account access:
 
 - **Google Business Profile** — the highest-volume caller source for a local
   trade, and the GBP URL is still `todo` in config. Check this first.
 - Facebook and Instagram profile contact fields
-- Yelp, Angi, Thumbtack, HomeAdvisor, Nextdoor, BBB, and any directory ever
-  filled in
+- Yelp, Angi, Thumbtack, HomeAdvisor, BBB — any directory claimed but not
+  indexed under this search
 - Old quotes, invoices, business cards, vehicle signage
 - The Google Form and any email signature
 
