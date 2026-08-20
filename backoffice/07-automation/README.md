@@ -24,11 +24,16 @@ matters — the first one is the one that costs real money when it fails.
 | `DEPLOY.md` | Install, authorise, and set triggers |
 | `scorecard.csv` | The four monthly numbers |
 
-**⛔ Workflow 1 does not fire for website leads.** Audited 2026-08-19: the
+**⚠️ Workflow 1 does not fire for website leads.** Audited 2026-08-19: the
 contact form on paintnpete.com posts to **Netlify Forms**, which does not write
-to Google Sheets and cannot trigger Apps Script. So a homeowner who fills in the
-form gets no acknowledgment, appears in no Leads row, and generates no text
-alert — the submission sits in a Netlify inbox instead.
+to Google Sheets and cannot trigger Apps Script.
+
+Netlify does email `noah@paintnpete.com` on every submission, so Noah is told.
+What does not happen is everything after that: the customer gets no
+acknowledgment, no row appears in Leads, and the day 3 / 8 / 21 follow-ups never
+start because they read from that sheet.
+
+Nothing has been lost so far — the form has two submissions, both tests.
 
 The trigger here is `onFormSubmit` on a linked **Google Form**, which is a
 different form that does not exist yet. Both halves are real; they are just not

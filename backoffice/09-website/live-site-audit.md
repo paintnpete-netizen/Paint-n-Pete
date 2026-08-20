@@ -24,31 +24,39 @@ costing money right now.
 
 ---
 
-## ⛔ 1. Website leads are not reaching the system
+## 1. Website leads reach Noah, but not the system
 
-**The contact form is a Netlify form**, identified by its hidden `form-name`
-field and `bot-field` honeypot. It collects name, email, phone, address, date,
-time, and description.
+**Checked in the Netlify dashboard 2026-08-19.** The first draft of this audit
+assumed the worst here and was too pessimistic. The facts:
 
-Netlify forms post to Netlify. They do not write to Google Sheets, they do not
-trigger Apps Script, and they do not send the acknowledgment email. So the
-entire money path in `../03-leads/` and `../07-automation/` — instant
-acknowledgment, row in the Leads tab, text alert to Noah — **does not fire for
-anyone who fills in the form on the website.**
+**No leads have been lost.** The form has **two submissions ever**, both from
+the same IP on the day the site was deployed, both obviously tests — one named
+"Deploy Verify" at `123 Test St`, one from a family address at the exact minute
+of the CLI deploy. Nothing is sitting unanswered.
 
-This is the same failure mode as the Kai alerts: a lead arrives, and nothing
-tells anyone. `../07-automation/README.md` states that workflow 1 "is wired to
-a Google Form submission rather than a custom endpoint, so it runs today on Wix
-— or on no site at all." True, and irrelevant, because the live site is not
-posting to a Google Form.
+**An email notification is already configured:** *Email noah@paintnpete.com on
+new submission from any form.* So a real submission does reach Noah. That is
+the single most important thing and it works.
 
-**Check first, before building anything:** log in to Netlify and look at Forms
-for the site. Two things to find out — how many submissions are sitting there,
-and whether an email notification was ever configured. If there are unanswered
-submissions, those are real leads that were never replied to, and working
-through them is more urgent than any fix below.
+**What still does not happen**, because Netlify Forms cannot write to a
+spreadsheet or fire an Apps Script trigger:
 
-**Then pick one of three:**
+- The customer gets **no acknowledgment**. They submit into apparent silence and
+  wait, while comparing three contractors.
+- There is **no row in the Leads tab**, so the lead does not exist to the rest
+  of the system.
+- Therefore **no day 3 / 8 / 21 follow-up** — those read from the sheet.
+- **No text alert.** Email only, which is slower to notice than a text.
+
+So this is not the black hole the Kai alerts were. It is a lead that lands in an
+inbox and then falls out of the pipeline. The timing is fortunate: the fix can
+go in before real traffic arrives rather than after.
+
+**Also confirmed:** *No webhooks set up yet* — so the outgoing webhook below is
+the missing piece, and adding it does not disturb the email notification, which
+should stay as a belt-and-braces second channel.
+
+**Pick one of three:**
 
 | Option | Effort | Trade-off |
 |---|---|---|
@@ -56,9 +64,21 @@ through them is more urgent than any fix below.
 | Netlify outgoing webhook → Apps Script web app | Medium | Clean, real-time, the right answer |
 | Replace the form with an embedded Google Form | Low | Works today with zero code, but worse on the page |
 
-The webhook is the correct one. Netlify can POST the submission as JSON to a
-URL, and Apps Script can be published as a web app that accepts a POST. That
-makes workflow 1 fire exactly as designed.
+The webhook is the correct one, and **the code is already written**: `doPost` in
+`../07-automation/Code.gs` accepts Netlify's payload and produces the same Leads
+row, acknowledgment, and alert as a Google Form submission. Step 6 of
+`../07-automation/DEPLOY.md` connects it. What it needs is the script published
+as a web app, which requires the Google account.
+
+### Account facts worth keeping
+
+- Netlify team `kanwalconsulting297`, site slug **`paintnpete`**, three projects
+  on the account (paintnpete.com, noahkanwal.com, and one unused).
+- **Deploys are from the CLI, not from git.** There is no continuous deployment
+  connected, so every publish is a manual `netlify deploy` from the folder on
+  Noah's machine — which is also why the uncommitted work in item 7 is riskier
+  than it looks. The deployed site and the repo can silently diverge.
+- Form name `consultation-details`, honeypot spam prevention enabled.
 
 ---
 
@@ -179,9 +199,10 @@ founding year. Same questions, asked in July, still unanswered.
 
 ## Suggested order
 
-1. **Netlify Forms** — check for unanswered submissions, then wire the webhook.
-   This is the only item costing money today.
-2. **Commit the website repo.** Uncommitted work is one bad afternoon from gone.
+1. **Wire the webhook** — `DEPLOY.md` step 6. Nothing has been lost yet, so this
+   is preventive rather than a rescue. Do it before the site gets real traffic.
+2. **Commit the website repo.** Uncommitted work is one bad afternoon from gone,
+   and with CLI-only deploys there is no git copy of what is actually live.
 3. Fix the review count, add opening hours, reconcile the city list — one small
    pass, all in the schema.
 4. Add `ContactPage` schema and the missing alt attribute.

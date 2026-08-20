@@ -23,11 +23,16 @@ phone number is right everywhere. The Phase 1 rebuild described in
 `../../paintnpete-redesign/` has already happened — those documents are stale
 and describe a Wix site that no longer exists.
 
-**One thing is actively costing money.** The contact form posts to Netlify
-Forms, which does not talk to Google Sheets or Apps Script. So a website lead
-does not get the acknowledgment email, does not land in the Leads tab, and does
-not text Noah. Check the Netlify Forms inbox for unanswered submissions before
-building anything else.
+**One gap, and it is preventive rather than urgent.** The contact form posts to
+Netlify Forms, which cannot talk to Google Sheets or Apps Script. Netlify does
+email `noah@paintnpete.com` on every submission, so a lead does reach Noah — but
+the customer gets no acknowledgment, no row appears in the Leads tab, and no
+follow-up sequence starts.
+
+Checked the Netlify inbox on 2026-08-19: **two submissions, both tests, nothing
+lost.** The fix is written (`doPost` in `../07-automation/Code.gs`) and needs
+deploying — `../07-automation/DEPLOY.md` step 6 — ideally before the site sees
+real traffic.
 
 ---
 

@@ -90,13 +90,17 @@ data across the homepage and every service page, and the right phone number
 throughout. The Phase 1 rebuild in `../paintnpete-redesign/` has already been
 executed, so those documents are stale and should not be worked from.
 
-**One finding is urgent.** The contact form posts to Netlify Forms, which cannot
-reach Google Sheets or Apps Script — so workflow 1 never fires for a website
-lead. No acknowledgment, no Leads row, no text alert. Check the Netlify Forms
-inbox for unanswered submissions before anything else in this phase.
+**One gap, preventive rather than urgent.** The contact form posts to Netlify
+Forms, which cannot reach Google Sheets or Apps Script, so workflow 1 never
+fires for a website lead — no acknowledgment to the customer, no Leads row, no
+follow-up sequence. Netlify does email Noah, and the inbox was checked on
+2026-08-19: two submissions, both tests, nothing lost. The fix is written and
+waiting in `07-automation/DEPLOY.md` step 6.
 
 The site source is a separate repository (`~/Projects/paintnpete-website`) with
-one commit and a large body of uncommitted work. Commit it before touching it.
+one commit and a large body of uncommitted work, and it deploys from the CLI
+rather than from git — so nothing guarantees the repo matches what is live.
+Commit it before touching it.
 
 **Phase 5 — Franchise packaging.** Clonable operator kit.
 

@@ -153,19 +153,29 @@ web:
       website repo has one commit and a large body of uncommitted changes —
       commit it before touching anything there.
     lead_capture:
-      mechanism: "Netlify Forms"
-      status: broken
+      mechanism: "Netlify Forms — form name consultation-details"
+      status: partial
+      netlify_team: "kanwalconsulting297"
+      netlify_slug: "paintnpete"
+      deploys: >
+        From the CLI, not from git. No continuous deployment is connected, so
+        every publish is a manual netlify deploy from the local folder and the
+        live site can silently diverge from the repo.
+      notification: >
+        Email to noah@paintnpete.com on new submission from any form, already
+        configured and verified in the dashboard 2026-08-19. Keep it after the
+        webhook lands — a second channel costs nothing.
       note: >
-        The contact form posts to Netlify, identified by its hidden form-name
-        field and bot-field honeypot. Netlify Forms does not write to Google
-        Sheets and does not trigger Apps Script, so workflow 1 never fires for
-        a website lead: no acknowledgment email, no row in the Leads tab, no
-        text alert. Same failure mode as the Kai alerts — a lead arrives and
-        nothing tells anyone.
+        Netlify Forms cannot write to Google Sheets or trigger Apps Script, so
+        workflow 1 does not fire: the customer gets no acknowledgment, no row
+        appears in Leads, and the day 3/8/21 follow-ups never start because
+        they read from that sheet. Noah is emailed, so this is not silent.
 
-        Check the Netlify Forms inbox for unanswered submissions before
-        building the fix. Those are real leads. Fix is a Netlify outgoing
-        webhook into an Apps Script web app.
+        Nothing has been lost. The inbox holds two submissions, both tests,
+        both from the deploy day. Fix is written — doPost in
+        07-automation/Code.gs — and needs the script published as a web app,
+        then a Netlify outgoing webhook pointed at it. DEPLOY.md step 6.
+        No webhooks are configured yet.
     schema_gaps:
       aggregate_rating: >
         Hardcoded at ratingCount 14 while Google shows 21. Also verify the
