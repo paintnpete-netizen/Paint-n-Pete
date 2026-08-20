@@ -173,10 +173,25 @@ This repo (`~/Projects/paint-n-pete`) is Noah's **portfolio** site — its root
 `README.md` says so, its Netlify site ID is different, and `backoffice/` is
 carried inside it.
 
-That repo has **one commit** and a substantial pile of uncommitted
-modifications across most pages. Whatever was changed since the initial commit
-exists only on that disk. It should be committed before anything else is
-touched there.
+**Resolved 2026-08-19.** It had one commit and a pile of uncommitted work — 27
+files, 1,132 insertions, including `service-areas.html`, `sitemap.xml`,
+`robots.txt`, the web manifest, and the brand icons, none of which were tracked
+at all despite being live. All committed as `9389cc5` and pushed off the
+machine.
+
+The backup is deliberately temporary: the branch `website-backup` on the back
+office's own GitHub repo. That was the only route available without a new
+account or an admin password, and getting it off a single disk mattered more
+than putting it in the right place. It still needs its own repository — see
+`backup` under `web.business_site` in the config.
+
+**A near miss worth recording.** Attempting to switch the Cursor workspace to
+that folder stashed every uncommitted change and reset the working tree to the
+old commit. For a few minutes the live pages were absent from disk. Everything
+was recovered from the stash, but had a `netlify deploy` run in that window, it
+would have published the old site over the current one. With CLI deploys and no
+git remote, the folder *was* the only copy — which is precisely the exposure
+that has now been closed.
 
 Worth deciding separately: the back office arguably belongs with neither site.
 `README.md` already flags splitting it into its own private repository.

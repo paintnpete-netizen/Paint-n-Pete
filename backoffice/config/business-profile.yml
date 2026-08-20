@@ -140,6 +140,21 @@ web:
     platform: "Static HTML on Netlify"
     source_repo: "~/Projects/paintnpete-website"
     netlify_site_id: "e5f29f47-051c-40a5-995c-08d0471a1d6c"
+    backup:
+      status: temporary
+      location: >
+        Branch website-backup on github.com:paintnpete-netizen/Paint-n-Pete —
+        commit 9389cc5, 62 files, pushed and verified 2026-08-19.
+      note: >
+        A stopgap, not the permanent home. The site history was living only on
+        Noah's laptop with no remote at all, so it was parked on the back
+        office repo as an unrelated branch to get it off one disk the same
+        night. Two projects in one repository is not the end state.
+
+        Replace it: create github.com/paintnpete-netizen/paintnpete-website
+        (private, no README), then in ~/Projects/paintnpete-website run
+        git remote add origin <url> && git push -u origin master, and delete
+        the website-backup branch afterwards.
     status: >
       Audited page by page 2026-08-19 — see 09-website/live-site-audit.md.
       Eleven pages, all 200, all with meta descriptions, H1s, and canonicals;
