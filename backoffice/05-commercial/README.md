@@ -14,10 +14,10 @@ statement with the insurance limits missing is what disqualifies you — it tell
 a GC's admin you aren't ready for a jobsite. The documents are written with
 `[BRACKETED]` gaps precisely so they cannot be sent by accident.
 
-**A second gate, easy to miss:** outreach sends from `noah@paintnpete.com`, and
-the domain has SPF but no DKIM and no DMARC. Cold email fails silently without
-them — you'd read the silence as disinterest rather than non-delivery. Fifteen
-minutes of DNS in `../04-visibility/SETUP.md`.
+**A second gate, easy to miss:** outreach sends from `noah@paintnpete.com`.
+SPF, DKIM, and DMARC (`p=none`) were added 2026-08-19. Leave DMARC on monitor
+until reports look clean; procedure and don't-touch list are in
+`../04-visibility/SETUP.md`.
 
 **Also needs:** a ready folder holding live W-9, certificate of insurance,
 license, and a one-page reference sheet. Being able to send these within an hour

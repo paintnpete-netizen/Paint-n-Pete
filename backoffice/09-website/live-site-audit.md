@@ -72,11 +72,12 @@ as a web app, which requires the Google account.
 
 ### Account facts worth keeping
 
-- Netlify team slug is currently `kanwalconsulting297` — that is the consulting
-  mailbox and **must not own the business site**. Transfer `www.paintnpete.com`
-  to an account under `paintnpete@gmail.com` or `noah@paintnpete.com` before
-  deleting anything. Site slug **`paintnpete`**, three projects on the old team.
-  on the account (paintnpete.com, noahkanwal.com, and one unused).
+- Netlify login is `paintnpete@gmail.com` and the team is **Paint'n Pete**
+  (slug `paintnpete`), moved 2026-08-19 off `kanwalconsulting297`. Site slug
+  is still **`paintnpete`**. Same Personal team still holds three projects
+  (paintnpete.com, noahkanwal.com, and one unused). Residual: Google OAuth
+  on the Netlify user is still the consulting mailbox — disconnect only after
+  a password or `paintnpete@gmail.com` Google login is connected.
 - **Deploys are from the CLI, not from git.** There is no continuous deployment
   connected, so every publish is a manual `netlify deploy` from the folder on
   Noah's machine — which is also why the uncommitted work in item 7 is riskier

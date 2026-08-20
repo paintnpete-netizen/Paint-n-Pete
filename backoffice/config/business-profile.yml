@@ -111,22 +111,32 @@ contact:
       keep working under it.
 
       Still attached as of 2026-08-19 (must move):
-      - Netlify team slug kanwalconsulting297 owns www.paintnpete.com
       - This Cursor/Origin login and the browser session used for Admin
-      Transfer the Netlify site to an account under paintnpete@gmail.com or
-      noah@paintnpete.com. Do not delete the team first — that can take the
-      site down. Form notification is already noah@, which is correct.
+      Netlify login and team were moved 2026-08-19 to paintnpete@gmail.com /
+      team slug paintnpete. Residual: Google OAuth on that Netlify user is
+      still the consulting mailbox — disconnect after a password or a
+      paintnpete@gmail.com Google login is connected, or a "Sign in with
+      Google" can bounce back to consulting. Form notification is already
+      noah@, which is correct.
 
   email_auth:
     spf: "present — v=spf1 include:_spf.google.com ~all"
     dkim:
-      status: todo
-      note: "No key on the google selector. Required before cold outreach."
-    dmarc:
-      status: todo
+      status: verified
+      selector: google
+      bits: 2048
       note: >
-        No record at _dmarc.paintnpete.com. Start at p=none with rua reporting,
-        tighten to p=quarantine after a few weeks. Never open at p=reject.
+        Generated 2026-08-19 as noah@paintnpete.com in Admin → Authenticate
+        email. TXT at google._domainkey.paintnpete.com is live, Google status
+        is "Authenticating email with DKIM." Do not click Generate new record
+        or Stop authentication.
+    dmarc:
+      status: verified
+      record: "v=DMARC1; p=none; rua=mailto:noah@paintnpete.com"
+      note: >
+        TXT added at _dmarc.paintnpete.com in Wix 2026-08-19. Monitor-only.
+        Tighten to p=quarantine after a few weeks of reports. Never open at
+        p=reject. SPF and MX were left untouched.
     dns_host: >
       Wix (ns6/ns7.wixdns.net) as of 2026-08-19, even though the website itself
       now serves from Netlify. Both TXT records go in the Wix DNS panel.
@@ -185,34 +195,57 @@ web:
       commit it before touching anything there.
     lead_capture:
       mechanism: "Netlify Forms — form name consultation-details"
-      status: partial
-      netlify_team:
-        current: "kanwalconsulting297"
-        status: forbidden_must_move
-        target: "an account owned by paintnpete@gmail.com or noah@paintnpete.com"
+      status: live
+      workbook:
+        name: "Paint'n Pete — Back Office"
+        id: "18SVd9ZQPacTWd9KvwqnZz2kgNHR8y18t_S2t8J90Xvo"
+        url: "https://docs.google.com/spreadsheets/d/18SVd9ZQPacTWd9KvwqnZz2kgNHR8y18t_S2t8J90Xvo/edit"
+        owner: "noah@paintnpete.com"
+        tabs: [Leads, Jobs, Scorecard]
+      apps_script:
+        name: "Paint'n Pete Automation"
+        id: "1tdNt0a7__f4lFFa3RO9I25cylgmlMT89ifKhh9GJGQNASms6y4zx8Hxh"
+        web_app: "https://script.google.com/macros/s/AKfycbxVsao0huXM_P6_LNkk1uYxE1adS8SqxgRbiTzkAoAjhVftz5EYeBSKOMccbEluTERM/exec"
         note: >
-          The live site sits on the consulting Netlify team. Move it. Do not
-          delete this team until the site is confirmed live on the new one.
+          Webhook secret lives in Project Settings → Script properties
+          (key webhookSecret). Do not put it in git or this file.
+          After any Code.gs change, Deploy → Manage deployments →
+          New version, or Netlify keeps hitting the old copy.
+          Time triggers installed 2026-08-20 as noah@paintnpete.com:
+          dailyCheck (time-driven, ~7am) and mondayReminder (Monday ~7am).
+          Head deployment. Do not add onFormSubmit until a Google Form
+          is linked to the sheet.
+      netlify_team:
+        current: "paintnpete"
+        name: "Paint'n Pete"
+        login: "paintnpete@gmail.com"
+        status: verified
+        note: >
+          Moved 2026-08-19. Login email verified as paintnpete@gmail.com,
+          team renamed from kanwalconsulting297 / "kanwalconsulting297's
+          team" to slug paintnpete / "Paint'n Pete". Same Personal team,
+          same three projects (paintnpete.com, noahkanwal.com, unused).
+          Site confirmed HTTP 200 after the rename. Do not delete the team.
+          Residual: connected Google OAuth is still the consulting mailbox.
       netlify_slug: "paintnpete"
       deploys: >
         From the CLI, not from git. No continuous deployment is connected, so
         every publish is a manual netlify deploy from the local folder and the
         live site can silently diverge from the repo.
       notification: >
-        Email to noah@paintnpete.com on new submission from any form, already
-        configured and verified in the dashboard 2026-08-19. Keep it after the
-        webhook lands — a second channel costs nothing.
+        Email to noah@paintnpete.com on new submission from any form, verified
+        2026-08-19, plus an outgoing HTTP POST webhook to the Apps Script web
+        app, added 2026-08-20. Event: New form submission. Form: Any form.
+        JWS skipped — Apps Script cannot read request headers. Keep both.
       note: >
-        Netlify Forms cannot write to Google Sheets or trigger Apps Script, so
-        workflow 1 does not fire: the customer gets no acknowledgment, no row
-        appears in Leads, and the day 3/8/21 follow-ups never start because
-        they read from that sheet. Noah is emailed, so this is not silent.
+        Live 2026-08-20. The website form posts to Netlify Forms; the webhook
+        fires doPost; a Leads row lands with source=website; the submitter
+        gets an acknowledgment (Reply-To noah@paintnpete.com); paintnpete@gmail.com
+        gets an alert whose subject begins [Paint'n Pete].
 
-        Nothing has been lost. The inbox holds two submissions, both tests,
-        both from the deploy day. Fix is written — doPost in
-        07-automation/Code.gs — and needs the script published as a web app,
-        then a Netlify outgoing webhook pointed at it. DEPLOY.md step 6.
-        No webhooks are configured yet.
+        End-to-end test: submitted the live contact form as
+        "Noah Kanwal (webhook test)". Two Leads rows appeared (the test
+        posted twice). Both rows marked outcome=test 2026-08-20.
     schema_gaps:
       aggregate_rating: >
         Hardcoded at ratingCount 14 while Google shows 21. Also verify the

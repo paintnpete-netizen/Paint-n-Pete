@@ -24,7 +24,8 @@ At the top of the file. These come from `../config/business-profile.yml`:
 - `reviewLink` — from `../04-visibility/SETUP.md`. Leave empty for now; the
   review reminders will still fire and will tell you it isn't set.
 - `intakeFormUrl` — from `../03-leads/intake-form.md`.
-- `webhookSecret` — invent a long random string. Needed for step 6.
+- `webhookSecret` — leave empty in git. Put the live value in **Project
+  Settings → Script properties** as `webhookSecret`. Needed for step 6.
 
 ## 3. Authorise
 
@@ -78,7 +79,9 @@ Apps Script editor → **Deploy → New deployment** → gear icon → **Web app
 - Who has access: **Anyone**
 
 "Anyone" sounds alarming and isn't optional — Netlify is an anonymous caller.
-That is exactly what `webhookSecret` is protecting. Copy the deployment URL.
+That is exactly what `webhookSecret` is protecting. Put the live secret in
+**Project Settings → Script properties** (key `webhookSecret`) before you
+copy the deployment URL. Do not put it in `Code.gs`. Copy the deployment URL.
 
 **b. Point Netlify at it.**
 Netlify → site → **Forms → Form notifications → Add notification → Outgoing

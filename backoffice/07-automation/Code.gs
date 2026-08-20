@@ -33,7 +33,11 @@ const CONFIG = {
   // Shared secret for the Netlify webhook, passed as ?key= on the web app URL.
   // Invent a long random string. Leave empty only while testing — the endpoint
   // is public, and without this anyone who finds the URL can write to Leads.
+  // The live secret is set in the deployed Apps Script project, not in git.
   webhookSecret: "",
+
+  // Bound workbook. Used when the script runs as a web app (getActive is empty).
+  spreadsheetId: "18SVd9ZQPacTWd9KvwqnZz2kgNHR8y18t_S2t8J90Xvo",
 
   // Repaint windows, in years, per guide §8
   repaintYears: { interior: 4, exterior: 5 }
@@ -106,8 +110,8 @@ function onFormSubmit(e) {
  */
 function doPost(e) {
   try {
-    if (CONFIG.webhookSecret &&
-        (!e || !e.parameter || e.parameter.key !== CONFIG.webhookSecret)) {
+    const secret = webhookSecret_();
+    if (secret && (!e || !e.parameter || e.parameter.key !== secret)) {
       return textResponse_("forbidden");
     }
 
@@ -164,6 +168,12 @@ function webNotes_(d) {
 function zipFrom_(address) {
   const m = String(address || "").match(/\b(\d{5})\b(?!.*\b\d{5}\b)/);
   return m ? m[1] : "";
+}
+
+function webhookSecret_() {
+  return PropertiesService.getScriptProperties().getProperty("webhookSecret")
+    || CONFIG.webhookSecret
+    || "";
 }
 
 function alreadySeen_(id) {
@@ -466,9 +476,76 @@ function mondayReminder() {
 // ---------------------------------------------------------------------------
 
 function sheet_(name) {
-  const s = SpreadsheetApp.getActive().getSheetByName(name);
+  const ss = spreadsheet_();
+  const s = ss.getSheetByName(name);
   if (!s) throw new Error('Missing tab "' + name + '". See sheets-setup.md.');
   return s;
+}
+
+function spreadsheet_() {
+  try {
+    const active = SpreadsheetApp.getActive();
+    if (active) return active;
+  } catch (e) {}
+  if (!CONFIG.spreadsheetId) {
+    throw new Error("No active spreadsheet and CONFIG.spreadsheetId is empty.");
+  }
+  return SpreadsheetApp.openById(CONFIG.spreadsheetId);
+}
+
+/**
+ * One-time: install the time-driven triggers from DEPLOY.md step 4.
+ * Safe to re-run — skips a function that already has a trigger.
+ * Does not add onFormSubmit; that waits until a Google Form is linked.
+ */
+function installTriggers() {
+  const existing = ScriptApp.getProjectTriggers().map(function (t) {
+    return t.getHandlerFunction();
+  });
+  if (existing.indexOf("dailyCheck") === -1) {
+    ScriptApp.newTrigger("dailyCheck").timeBased().everyDays(1).atHour(7).create();
+  }
+  if (existing.indexOf("mondayReminder") === -1) {
+    ScriptApp.newTrigger("mondayReminder")
+      .timeBased()
+      .onWeekDay(ScriptApp.WeekDay.MONDAY)
+      .atHour(7)
+      .create();
+  }
+}
+
+/**
+ * One-time: create the three tabs and header rows from sheets-setup.md.
+ * Run this from the editor before anything else. Safe to re-run — it will
+ * not wipe existing data, only add a missing tab or a missing header row.
+ */
+function setupWorkbook() {
+  const ss = spreadsheet_();
+  ensureTab_(ss, TABS.leads, [
+    "date_received", "name", "phone", "email", "source", "project_type",
+    "address", "zip", "status", "consult_date", "proposal_sent",
+    "followup_d3", "followup_d8", "followup_d21", "outcome", "value", "notes"
+  ]);
+  ensureTab_(ss, TABS.jobs, [
+    "client_name", "phone", "email", "project_type", "neighborhood",
+    "completed_date", "batch_day", "asked_verbally", "request_sent",
+    "followup_sent", "review_received", "notes"
+  ]);
+  ensureTab_(ss, TABS.scorecard, [
+    "month", "inquiries", "proposals_sent", "jobs_won", "reviews_earned",
+    "close_rate"
+  ]);
+  const leftover = ss.getSheetByName("Sheet1");
+  if (leftover && ss.getSheets().length > 1) ss.deleteSheet(leftover);
+}
+
+function ensureTab_(ss, name, headers) {
+  let s = ss.getSheetByName(name);
+  if (!s) s = ss.insertSheet(name);
+  if (!String(s.getRange(1, 1).getValue() || "").trim()) {
+    s.getRange(1, 1, 1, headers.length).setValues([headers]);
+    s.setFrozenRows(1);
+  }
 }
 
 function alert_(subject, body) {

@@ -12,13 +12,10 @@ and then nothing produces nothing.
 
 1. The capabilities statement must be complete. See the gate in
    `capabilities-statement.md`.
-2. **Email authentication must be finished.** Send from
-   `noah@paintnpete.com`, never a Gmail address — but the domain currently has
-   SPF only, with no DKIM key and no DMARC record. Cold outreach goes to people
-   who have never emailed you, so their servers judge it on authentication
-   alone. Without those two records this entire channel can fail silently, and
-   you would read the lack of replies as "outreach doesn't work" rather than
-   "outreach never arrived." Fifteen minutes of DNS, in `../04-visibility/SETUP.md`.
+2. **Email authentication is finished (2026-08-19).** Send from
+   `noah@paintnpete.com`, never a Gmail address. SPF, DKIM (`google` selector),
+   and DMARC (`p=none`) are live. Google is authenticating outbound mail with
+   DKIM. Leave DMARC on monitor-only until reports look clean.
 
 ---
 

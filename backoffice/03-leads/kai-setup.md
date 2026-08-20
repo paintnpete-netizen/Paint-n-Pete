@@ -145,10 +145,90 @@ Once Kai is live:
 
 ---
 
+## Incident — ERROR voicemail on 762, diagnosed 2026-08-20
+
+Noah called **+1 762-316-2584 directly** and got an ERROR voicemail. Live API
+read the same afternoon (business `db4a5647-08ca-4cb9-b9e6-1bd232a02d75`,
+agent Kai `4cf219a6-8468-4f2f-b757-217918365ffd`):
+
+| Check | Live result |
+|---|---|
+| `list_numbers` | `+17623162584` **agent unassigned** (only number on the account) |
+| `list_agents` | Kai exists, voice, vapi/Elliot |
+| `list_recent_calls` | 8 calls, **newest 2026-08-01**. Today's call is not there |
+| `list_voicemails` | empty |
+| Observability errors | none for today (the call never reached the runtime) |
+
+**Root cause:** 762 is on the account but not routed to Kai. The 2026-08-19
+writeup that called "agent unassigned" a red herring is **wrong for inbound
+now**. Combined with the last-known dashboard routing (**Ring Team First**,
+no team members / no fallback agent bound), a direct call has nowhere to go.
+Twilio/KaiCalls plays an error voicemail instead of answering. That is why
+the attempt never created a call, a lead, or a voicemail transcript.
+
+The agent itself is not dead: the eight calls through 1 August were handled
+by Kai. The inbound *path* on 762 is what is broken.
+
+**What was changed on the live account: nothing.** Attempts to fix it:
+
+- `attach_number` → Kai: denied (`numbers:write` missing)
+- `update_agent_config` / prompt apply: denied (`agents:write` missing)
+- Cursor browser MCP: tabs do not persist (`No browser tab available`)
+- Chrome dashboard: **sign-in wall** at `/dashboard/phone-system`. Login is
+  `paintnpete@gmail.com` (never `kanwalconsulting297@gmail.com`). Password
+  was not requested. Stopped here per policy.
+
+The API key in Cursor is read-only (`agents:read` / `calls:read` / numbers
+read). MCP auth itself works; writes do not.
+
+### What Noah has to do (about 90 seconds) so the test call works
+
+1. Sign in at [kaicalls.com/dashboard](https://www.kaicalls.com/dashboard)
+   as **paintnpete@gmail.com**.
+2. **Phone System → Call Routing** (or Phone Numbers).
+3. **Configure** `+1 762-316-2584`.
+4. Set routing to **AI-Only / Direct** (Kai answers immediately — not Ring
+   Team First). Fallback agent: **Kai**. Save.
+5. Call **762-316-2584** from any phone that is not 914-357-1448.
+
+**Resolved 2026-08-20 via dashboard (paintnpete@gmail.com):** 762 is assigned
+to Kai and routing is **Send Straight to Kai**. Live `list_numbers` now reads
+`+17623162584 | agent 4cf219a6-…`. Dashboard card: "This number sends every
+call straight to Kai."
+
+Intended customer path: call **727-902-1986** → Noah answers if he can →
+missed-call forward to 762 → Kai. Do **not** set 762 back to Ring Team First
+pointing at 727 — that loops (762 rings 727, 727 forwards to 762) and is what
+produced the error voicemail.
+
+Kai rules published the same day: collect name + service, no prices, say
+Paintin' Pete, text https://www.paintnpete.com/contact, promise a follow-up
+call within 1 business day. Actions on: Text callers + Send saved links
+(existing short link `kaicalls.com/l/ZRWyz1UI` → contact page). Staff alerts
+already go to +17279021986 and paintnpete@gmail.com.
+
+Do not port 727. Do not buy another number.
+
+### What he should hear (after routing is Direct)
+
+The **corrected Paintin' Pete prompt is still draft** — it was not applied.
+Expect the current live greeting, which previously mis-said the name
+("Peyton Pete" / "Paint and Pete") and played the recording disclosure,
+then asked how it can help / offered a free estimate.
+
+If it works: Kai talks. Report back the greeting wording.
+If it fails: still error voicemail, or dead air — say which.
+
+Optional second call: ask for a ballpark price. Kai must not give a number
+(see the no-price rule). That rule has never been tested on a live caller.
+
+---
+
 ## Audit of the live account — 2026-08-19
 
 Read directly from the KaiCalls account (business `db4a5647`, agent `Kai`,
-created 2026-07-23). 8 calls, 6 leads.
+created 2026-07-23). 8 calls, 6 leads. **Re-read 2026-08-20: still 8 calls,
+6 leads; nothing newer.**
 
 ### Alerts — FIXED 2026-08-19
 
@@ -247,12 +327,14 @@ and it is the kind of detail a homeowner comparing three contractors notices.
 Either port 727-902-1986 in (`/dashboard/phone-system/porting`) or buy a 727
 number and forward to it.
 
-**3. "Agent unassigned" was a red herring.** The dashboard shows the number set
-to **Ring Team First** — "rings your team first, then lets Kai answer if no one
-picks up." No agent is bound directly because Kai is the fallback, not the
-first responder. Nothing is broken here. But it does mean Kai is a backstop for
-missed calls, not a 24/7 front door, which is a different product than the one
-the rest of this document assumes.
+**3. "Agent unassigned" is live and is the inbound break (corrected 2026-08-20).**
+On 2026-08-19 the dashboard showed **Ring Team First**, and that was read as
+"nothing is broken — Kai is just the fallback." Noah then called 762 directly
+and got an **ERROR voicemail**. Re-read the same day: the number is still
+`agent unassigned`, the call never entered `list_recent_calls`, and there is
+no voicemail record. Ring Team First with nobody to ring and no agent bound
+is a dead route, not a safety net. Fix: attach Kai and set routing to
+**AI-Only / Direct**. See the 2026-08-20 incident section above.
 
 ### What actually decides whether callers reach Kai
 
@@ -267,15 +349,11 @@ carrier**, from 727-902-1986 to 762-316-2584. KaiCalls cannot see whether that
 exists, and the dashboard offers a "How to Forward Calls" guide precisely
 because it happens outside the platform.
 
-**Resolved 2026-08-19:** Noah has conditional forwarding — calls reach Kai only
-when he doesn't answer. So Kai is working as configured, and the 18-day silence
-is not a fault. It means he has been answering his own phone, and the eight
-calls Kai has handled are genuinely the ones he missed. Kai is currently a
-missed-call safety net, not the front door.
-
-That reframes the whole account: six leads from eight missed calls is a good
-argument for Kai, not a bad one. Those were calls that would otherwise have
-been lost entirely.
+**Resolved 2026-08-19, then broken 2026-08-20:** Noah has conditional
+forwarding from 727 → 762 when he doesn't answer. That explained the silence
+through 1 August. It does **not** explain today's ERROR voicemail on a
+*direct* call to 762. That path is dead until Kai is attached and routing is
+AI-Only / Direct. See the incident section above.
 
 ---
 
@@ -413,9 +491,17 @@ volume is lower than the raw count suggests.
 
 ## Known issue — MCP connection from Cursor
 
-**Status: open. Reported to the KaiCalls developer 2026-08-19, fix in progress.**
+**Status 2026-08-20: OAuth/API-key reads work. Writes do not.**
 
-Kai's MCP connector works from Claude but fails from Cursor:
+`mcp_auth` succeeded. `list_numbers`, `list_agents`, `list_recent_calls`,
+`get_operational_settings` all return live data. Mutations fail with
+`Missing required scope: numbers:write` / `agents:write`. The key was issued
+read-only on purpose (2026-08-19). Dashboard login is required to attach the
+number or change routing. Cursor's browser MCP cannot open a tab in this
+session (`No browser tab available` / view IDs vanish immediately).
+
+Older note (2026-08-19), still true if the API key is removed and OAuth is
+retried:
 
 ```
 Unsupported redirect_uri: cursor://anysphere.cursor-mcp/oauth/callback
@@ -460,8 +546,12 @@ redirect error means it's fixed, and the API key can be retired.
 
 ## What to check in the first week
 
-Call your own number and listen to the whole conversation. Twice — once as a
-straightforward interior enquiry, once asking for a ballpark price.
+**Do this first (2026-08-20):** sign in as paintnpete@gmail.com, set 762 to
+AI-Only / Direct with Kai as fallback, then call **762-316-2584**. Do not
+call 914-357-1448. Do not wait on a port.
+
+Once Kai actually answers, call twice — once as a straightforward interior
+enquiry, once asking for a ballpark price.
 
 The second call is the one that matters. **If Kai gives you any kind of number,
 stop and fix the configuration before it does that to a real client.**

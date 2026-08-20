@@ -101,55 +101,20 @@ one screen: <https://admin.google.com> → Directory → Users → your user →
 `noah@paintnpete.com`, as primary or as an alias. Alias is safer — mail lands
 in the same inbox, nothing breaks, and you can send *as* it from Gmail settings.
 
-### ⚠️ Then fix authentication, before any cold outreach
+### ⚠️ Email authentication — done 2026-08-19
 
-Two records are missing, and both matter more for outreach than for normal
-mail. DNS shows **no DKIM** on the `google` selector and **no DMARC record at
-all**.
+DKIM (`google._domainkey`, 2048-bit) and DMARC (`p=none`, reports to
+`noah@paintnpete.com`) are live. Google Admin status is **Authenticating email
+with DKIM**. Do not generate a new key or click Stop authentication. Leave
+`p=none` for a few weeks of reports, then tighten to `p=quarantine`. Never open
+at `p=reject`.
 
-Why it matters here specifically: SPF alone is weak. Cold email to general
-contractors, designers, and property managers goes to people who have never
-corresponded with you, so their mail servers judge you almost entirely on
-authentication and domain reputation. Missing DKIM and DMARC is the difference
-between the inbox and the spam folder, and you will never know which one you
-landed in — the outreach will just quietly not work.
+Why it still matters: cold email to GCs and designers is judged on
+authentication. Keep these records; the channel fails silently without them.
 
-**DKIM** — Admin console → Apps → Google Workspace → Gmail → Authenticate
-email. Generate the key, add the TXT record it gives you at your DNS host, then
-come back and click Start authentication.
-
-**DMARC** — add a TXT record at `_dmarc.paintnpete.com`. Start in monitor mode,
-which changes nothing about delivery and only collects reports:
-
-```
-v=DMARC1; p=none; rua=mailto:noah@paintnpete.com
-```
-
-Leave it on `p=none` for a few weeks, then tighten to `p=quarantine` once you
-can see nothing legitimate is failing. Do not start at `p=reject` — that can
-silently kill your own mail.
-
-### Where to add both records
-
-**DNS is still at Wix**, even though the website has moved to Netlify. The
-nameservers read `ns6.wixdns.net` and `ns7.wixdns.net`. So the records go in
-the Wix dashboard, not Netlify: Wix → Domains → paintnpete.com → DNS Records.
-
-Worth knowing, because it is the kind of thing that bites later: Wix still
-controls where `paintnpete.com` points. Do not touch the existing A, CNAME, MX,
-or SPF entries — those are what keep the site and the mail working. You are only
-*adding* two TXT records.
-
-Add:
-
-| Type | Host | Value |
-|---|---|---|
-| TXT | `google._domainkey` | the long `v=DKIM1; k=rsa; p=…` string Google generates |
-| TXT | `_dmarc` | `v=DMARC1; p=none; rua=mailto:noah@paintnpete.com` |
-
-Give the DKIM key about an hour to propagate before clicking Start
-authentication in the admin console, and don't be alarmed if it fails on the
-first try — that is nearly always propagation, not a wrong record.
+DNS stays at Wix (`ns6`/`ns7.wixdns.net`) even though the site is on Netlify.
+Do not touch the existing A, CNAME, MX, or SPF entries. Do not add a second
+DKIM or DMARC record.
 
 ---
 
