@@ -21,11 +21,14 @@ and verified. Details in `kai-setup.md`.
 **The number Kai holds is +1 762 316 2584 — a Georgia area code on a St. Pete
 business.** It is set to *Ring Team First*, so Kai only answers what your team
 doesn't. Whether callers reach Kai at all depends on carrier forwarding that
-KaiCalls cannot see. And the account has 19 free trial minutes left with no card
-on file.
+KaiCalls cannot see.
 
-A perfect prompt on a phone nobody reaches, that stops answering in twenty
-calls, is worth nothing. Settle the number and the plan before the prompt.
+**Plan is no longer blocking.** Solo, card on file as of 2026-08-19. The
+remaining blockers are the number itself, caller ID, and a human handoff
+destination.
+
+A perfect prompt on a phone nobody reaches is still worth nothing. Settle the
+number before this prompt goes live.
 
 Also note: `transfer_enabled` in the settings table below cannot work yet.
 There are no human handoff destinations configured, so Kai has nowhere to

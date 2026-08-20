@@ -352,8 +352,10 @@ One number, everywhere: **727-902-1986**.
 
 ### Sequence
 
-1. **Get on a paid plan first.** The account has 19 trial minutes left. Do not
-   port a live business number onto a trial that can stop answering.
+1. **Paid plan — done 2026-08-19.** Solo, card on file, $0 invoice paid.
+   Trial converted to a 7-day Solo trial (ends 8/26/2026) with **148 of 150
+   minutes left**, then $69/month. Safe to port after caller-ID and a handoff
+   destination exist; do not port tonight.
 2. Keep the existing conditional forwarding running until the port completes —
    it is the safety net during the transition.
 3. Submit the port at `/dashboard/phone-system/porting`. Expect days, not hours.
@@ -386,14 +388,14 @@ Compliance Center reads *All systems operational*, A2P 10DLC status
 **KaiCalls Pool**. The alerts configured above are not going to be silently
 blocked by 10DLC registration, which was the obvious next thing to worry about.
 
-### Trial minutes — the account will stop answering
+### Trial minutes — FIXED 2026-08-19
 
-The dashboard reads **19 of 25 free trial minutes left**, no card on file.
-Eight calls have consumed six minutes. At the observed rate of roughly 45
-seconds a call, that is around twenty more calls before Kai stops.
+Card on file. Plan **Solo**. Invoice `2026-08-20` for **$0**, status paid.
+Usage & Billing reads: trial ends 8/26/2026, 2.0 / 150 min used, next payment
+$69. The 19-of-25 free-minute cliff is gone. Kai will keep answering.
 
-Every fix in this document assumes Kai is answering. Decide on the paid plan
-before the minutes run out, not after a missed week.
+Do not start the number port until caller ID is verified and a human handoff
+destination exists. The plan no longer blocks the port; those two still do.
 
 ### Also worth checking
 

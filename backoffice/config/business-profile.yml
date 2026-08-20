@@ -409,6 +409,18 @@ stack:
   web_editing: "Cursor"
   hosting: "Netlify"
   phone: "KaiCalls — AI phone secretary"
+  phone_plan:
+    product: Solo
+    status: trial_with_card
+    verified: 2026-08-19
+    trial_ends: 2026-08-26
+    price_after_trial: "$69/month"
+    allowance: "150 answered calls/mo"
+    first_invoice: "$0 paid 2026-08-20"
+    note: >
+      Card on file. The 25-minute free-trial cliff is gone. Do not port
+      727-902-1986 until caller ID is verified and a human handoff destination
+      exists.
   phone_note: >
     Answers 24/7, runs intake, books onto Google Calendar, texts missed callers
     back, and sends a lead summary by SMS and email. Replaces the missed-call
