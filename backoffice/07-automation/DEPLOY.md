@@ -24,6 +24,7 @@ At the top of the file. These come from `../config/business-profile.yml`:
 - `reviewLink` — from `../04-visibility/SETUP.md`. Leave empty for now; the
   review reminders will still fire and will tell you it isn't set.
 - `intakeFormUrl` — from `../03-leads/intake-form.md`.
+- `webhookSecret` — invent a long random string. Needed for step 6.
 
 ## 3. Authorise
 
@@ -48,7 +49,8 @@ trigger**:
 | `onFormSubmit` | From spreadsheet | On form submit |
 
 The third only works once a Google Form is linked to this sheet. Add it when
-the form exists.
+the form exists. **It has nothing to do with the website form** — that arrives
+through step 6 instead.
 
 ## 5. Match the form fields
 
@@ -57,6 +59,56 @@ strings must match **exactly** — copy them from the live form rather than
 retyping. A mismatch fails silently, dropping that answer while the rest of the
 row saves normally, which is the most annoying possible failure. Submit one test
 response and confirm every column populates.
+
+## 6. Connect the website form — the important one
+
+Without this, **nobody who fills in the form on paintnpete.com enters the
+system.** The site posts to Netlify Forms, which cannot write to a spreadsheet
+or fire a trigger. `doPost` in `Code.gs` bridges the two.
+
+**First, check what's already sitting there.** Netlify → the paintnpete.com site
+→ **Forms**. Any submissions in that inbox are real leads that were never
+acknowledged. Work through them before wiring anything up — an apology today
+still recovers some of them.
+
+**a. Publish the script as a web app.**
+Apps Script editor → **Deploy → New deployment** → gear icon → **Web app**.
+
+- Execute as: **Me**
+- Who has access: **Anyone**
+
+"Anyone" sounds alarming and isn't optional — Netlify is an anonymous caller.
+That is exactly what `webhookSecret` is protecting. Copy the deployment URL.
+
+**b. Point Netlify at it.**
+Netlify → site → **Forms → Form notifications → Add notification → Outgoing
+webhook**.
+
+- Event: **New form submission**
+- URL: your deployment URL with the secret appended —
+  `https://script.google.com/macros/s/AKfy…/exec?key=YOUR_SECRET`
+- Form: the consultation form, or all forms
+
+Netlify also offers a JWS signature secret. Skip it: Apps Script's `doPost`
+cannot read request headers, so the signature is unverifiable. The query-string
+secret is doing that job.
+
+**c. Test it end to end.** Submit the real form on the live site with your own
+details. Within a minute you should get the acknowledgment email, a row in
+Leads with source `website`, and the alert. If nothing happens, Apps Script
+editor → **Executions** shows whether the request arrived at all:
+
+- **No execution logged** — Netlify never called it. Check the URL in the
+  notification, and check Netlify's own delivery log.
+- **Execution returned `forbidden`** — the `key` parameter doesn't match
+  `CONFIG.webhookSecret`.
+- **Execution returned `error`** — you'll also have an email with the raw
+  payload attached. Send it to me and I'll fix the mapping.
+
+**d. Redeploy after any code change.** This is the one that catches everyone:
+editing `Code.gs` does *not* update a published web app. Deploy → Manage
+deployments → edit → **New version**. Otherwise Netlify keeps hitting the old
+copy and you debug code that isn't running.
 
 ---
 

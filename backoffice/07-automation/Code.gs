@@ -30,6 +30,11 @@ const CONFIG = {
   reviewLink: "",              // from 04-visibility/SETUP.md
   intakeFormUrl: "",           // from 03-leads/intake-form.md
 
+  // Shared secret for the Netlify webhook, passed as ?key= on the web app URL.
+  // Invent a long random string. Leave empty only while testing — the endpoint
+  // is public, and without this anyone who finds the URL can write to Leads.
+  webhookSecret: "",
+
   // Repaint windows, in years, per guide §8
   repaintYears: { interior: 4, exterior: 5 }
 };
@@ -77,18 +82,113 @@ const FORM_FIELDS = {
 // ---------------------------------------------------------------------------
 
 function onFormSubmit(e) {
-  const sheet = sheet_(TABS.leads);
-  const row = new Array(LEAD.notes).fill("");
-
-  row[LEAD.received - 1] = new Date();
-  row[LEAD.status - 1] = "new";
+  const row = blankLeadRow_();
 
   Object.keys(FORM_FIELDS).forEach(function (title) {
     const answer = e && e.namedValues && e.namedValues[title];
     if (answer && answer.length) row[FORM_FIELDS[title] - 1] = answer[0];
   });
 
-  sheet.appendRow(row);
+  saveAndAnnounceLead_(row);
+}
+
+/**
+ * Workflow 1, web half — Netlify form submissions.
+ *
+ * The website's contact form posts to Netlify Forms, which cannot write to a
+ * spreadsheet or fire a trigger on its own. Netlify sends the submission here
+ * as JSON via an outgoing webhook; this turns it into the same Leads row and
+ * the same alerts that a Google Form submission produces.
+ *
+ * Deploy: Deploy → New deployment → Web app, execute as yourself, access
+ * "Anyone". Netlify's webhook cannot send an auth header Apps Script can read,
+ * so the shared secret rides in the query string instead. See DEPLOY.md.
+ */
+function doPost(e) {
+  try {
+    if (CONFIG.webhookSecret &&
+        (!e || !e.parameter || e.parameter.key !== CONFIG.webhookSecret)) {
+      return textResponse_("forbidden");
+    }
+
+    const payload = JSON.parse(e.postData.contents);
+
+    // Netlify retries on any non-2xx, so the same submission can arrive twice.
+    if (payload.id && alreadySeen_(payload.id)) return textResponse_("duplicate");
+
+    const d = payload.data || {};
+    const row = blankLeadRow_();
+
+    row[LEAD.name - 1] = d.name || "";
+    row[LEAD.email - 1] = d.email || "";
+    row[LEAD.phone - 1] = d.phone || "";
+    row[LEAD.address - 1] = d.address || "";
+    row[LEAD.zip - 1] = zipFrom_(d.address);
+    row[LEAD.source - 1] = "website";
+    row[LEAD.notes - 1] = webNotes_(d);
+
+    saveAndAnnounceLead_(row);
+    return textResponse_("ok");
+  } catch (err) {
+    // Swallowing the error would make Netlify retry forever. Record it, tell
+    // Noah a lead came in that the script could not parse, and accept it.
+    alert_(
+      "Website lead FAILED to record",
+      [
+        "A submission arrived from the website and this script could not process it.",
+        "",
+        "Error: " + err,
+        "",
+        "The submission is still in Netlify — open the site's Forms tab and",
+        "reply to it by hand.",
+        "",
+        "Raw payload:",
+        (e && e.postData && e.postData.contents) || "(none)"
+      ].join("\n")
+    );
+    return textResponse_("error");
+  }
+}
+
+/** The date, time, and free-text description have no column of their own. */
+function webNotes_(d) {
+  const parts = [];
+  if (d.date || d.time) {
+    parts.push("Requested: " + [d.date, d.time].filter(String).join(" ") +
+               " (a preference, not a booking)");
+  }
+  if (d.description) parts.push(d.description);
+  return parts.join(" — ");
+}
+
+function zipFrom_(address) {
+  const m = String(address || "").match(/\b(\d{5})\b(?!.*\b\d{5}\b)/);
+  return m ? m[1] : "";
+}
+
+function alreadySeen_(id) {
+  const props = PropertiesService.getScriptProperties();
+  const key = "seen_" + id;
+  if (props.getProperty(key)) return true;
+  props.setProperty(key, String(Date.now()));
+  return false;
+}
+
+function textResponse_(text) {
+  return ContentService.createTextOutput(text)
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+
+function blankLeadRow_() {
+  const row = new Array(LEAD.notes).fill("");
+  row[LEAD.received - 1] = new Date();
+  row[LEAD.status - 1] = "new";
+  return row;
+}
+
+/** Append the lead, acknowledge the sender, and alert Noah. */
+function saveAndAnnounceLead_(row) {
+  sheet_(TABS.leads).appendRow(row);
 
   const name = row[LEAD.name - 1] || "Someone";
   const email = row[LEAD.email - 1];
@@ -104,6 +204,7 @@ function onFormSubmit(e) {
       "Email: " + (email || "not given"),
       "Project: " + (row[LEAD.projectType - 1] || "not specified"),
       "Source: " + (row[LEAD.source - 1] || "unknown"),
+      "Notes: " + (row[LEAD.notes - 1] || "none"),
       "",
       "The acknowledgment has gone out. That is not the personal reply —",
       "send response 1 from 03-leads/standard-responses.md within five minutes."
