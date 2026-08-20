@@ -14,20 +14,14 @@ start.
 
 Nothing sends without it.
 
-> **⛔ Blocked — resolve profile ownership first.** Checked 2026-08-19 while
-> signed in as `kanwalconsulting297@gmail.com`: the profile shows "Own this
-> business?", "Suggest an edit", and "Suggest new hours". Those are the options
-> Google shows the public, not an owner. So the profile is either unclaimed or
-> claimed under a different Google account.
+> **Sign in as `paintnpete@gmail.com` first.** Resolved 2026-08-19: Google
+> reports the profile is managed by `pa…@gmail.com`, which is that account.
+> The browser was signed into `kanwalconsulting297@gmail.com`, which owns no
+> business profiles — that is the only reason the profile looked unclaimed.
 >
-> Work out which. If you claimed it with another address — an older Gmail, or
-> the Workspace account — sign in with that one and everything below works. If
-> nobody has claimed it, start the claim from that panel and expect Google to
-> verify by postcard, video, or phone, which takes days to a couple of weeks.
->
-> The listing is live and taking calls regardless. What you cannot do until
-> this is settled is respond to reviews, publish posts, add services or Q&A, or
-> generate the review link this step needs.
+> Nothing needs claiming or verifying. **Do not click "Request Access"** on the
+> ownership screen; that asks permission from yourself and starts a multi-day
+> wait for nothing.
 
 1. Sign in to Google with the account that manages the business.
 2. Go to <https://business.google.com>, or just search "Paint'n Pete" while

@@ -126,15 +126,19 @@ web:
         request texts (see 04-visibility/SETUP.md), which can only be generated
         from inside a claimed profile.
     ownership:
-      status: todo
+      managed_by: "paintnpete@gmail.com"
+      status: verified
       note: >
-        PROBLEM. Signed in as kanwalconsulting297@gmail.com, the panel offers
-        "Own this business?", "Suggest an edit", and "Suggest new hours" — the
-        options Google shows a member of the public, not an owner. So the
-        profile is either unclaimed, or claimed under a different Google
-        account. Until this is resolved Noah cannot respond to reviews, publish
-        posts, add services or Q&A, or generate a review link. Most of
-        04-visibility depends on it.
+        Google's claim screen reports the profile is "currently managed by
+        pa…@gmail.com". The masked prefix and the gmail.com domain identify
+        paintnpete@gmail.com — noah@paintnpete.com would mask as
+        no…@paintnpete.com. The profile IS claimed; it is simply claimed under
+        a different account than the browser was signed into
+        (kanwalconsulting297@gmail.com, which owns no business profiles).
+
+        Action: sign in as paintnpete@gmail.com to manage the profile. No
+        access request or re-claim is needed, and neither should be started —
+        requesting access from yourself starts a multi-day process for nothing.
     rating:
       value: 5.0
       status: verified

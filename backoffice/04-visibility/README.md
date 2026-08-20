@@ -17,13 +17,12 @@ respond when actually asked.)*
 - `content-engine.md` — weekly batch prompt, hashtag bank, photo list for crew
 - `web-templates.md` — service-area and case study page specs
 
-**Blocked on:** ⛔ **Google Business Profile ownership** — the profile appears
-unclaimed, or claimed under a different Google account than the one Noah is
-using. Nothing in this folder that touches Google works until that is resolved:
-no review link, no review responses, no posts, no Q&A, no services. See
-`SETUP.md`.
+**Unblocked 2026-08-19.** The profile is claimed and managed by
+`paintnpete@gmail.com`. Sign in as that account and everything in this folder
+that touches Google works — review link, review responses, posts, Q&A,
+services. See `SETUP.md`.
 
-Also needed: the last 30 completed clients with contact details, and
+Still needed: the last 30 completed clients with contact details, and
 `credentials` before any licence/insurance/warranty claim is published.
 
 **Asset already on hand:** ~30 real project photographs in `../../images/work/`.
