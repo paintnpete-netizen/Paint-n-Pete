@@ -16,8 +16,11 @@ About 20 minutes. Build the workbook first — see `sheets-setup.md`.
 
 At the top of the file. These come from `../config/business-profile.yml`:
 
-- `alertEmail` — where every reminder lands. Use the domain address once it
-  exists rather than the Gmail one.
+- `alertEmail` — where reminders land. `paintnpete@gmail.com` is correct: these
+  are internal notes to yourself and no client ever sees them.
+- `clientEmail` — `noah@paintnpete.com`. Set as Reply-To on the two messages
+  this script sends to clients, so replies land on the business address rather
+  than a Gmail one.
 - `reviewLink` — from `../04-visibility/SETUP.md`. Leave empty for now; the
   review reminders will still fire and will tell you it isn't set.
 - `intakeFormUrl` — from `../03-leads/intake-form.md`.

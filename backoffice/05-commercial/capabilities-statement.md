@@ -16,9 +16,12 @@ limits missing is worse than no capabilities statement — it tells a GC's admin
 you aren't ready to be on a jobsite, and you rarely get a second look.
 
 The blocking items are: `credentials.license`, `credentials.insurance`,
-`credentials.warranty`, `credentials.w9_on_file`, `company.legal_name`,
-`company.founded`, and `contact.email` (a free Gmail address on a capabilities
-statement reads as a one-man operation regardless of whether you are one).
+`credentials.warranty`, `credentials.w9_on_file`, `company.legal_name`, and
+`company.founded`.
+
+`contact.email` is resolved — it is `noah@paintnpete.com`, and the domain
+address is what appears on this document. A free Gmail on a capabilities
+statement reads as a one-man operation regardless of whether you are one.
 
 ---
 
@@ -105,7 +108,7 @@ documentation available on request.
 
 ### Contact
 Noah Kanwal, Owner
-[noah@paintnpete.com] · 727-902-1986
+noah@paintnpete.com · 727-902-1986
 
 ---
 

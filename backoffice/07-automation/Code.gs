@@ -14,8 +14,12 @@ const CONFIG = {
   company: "Paint'n Pete",
   phone: "727-902-1986",
 
-  // Where reminders land. Replace with the domain address once it exists.
+  // Internal reminders only — these never reach a client, so the system
+  // address is correct here. Client-facing mail goes from noah@paintnpete.com.
   alertEmail: "paintnpete@gmail.com",
+
+  // Reply-To on anything this script sends that a client could see.
+  clientEmail: "noah@paintnpete.com",
 
   // Optional carrier email-to-SMS gateway for genuine text alerts.
   // Leave empty to rely on Gmail push notifications instead. See DEPLOY.md —
@@ -110,6 +114,8 @@ function onFormSubmit(e) {
 function sendAcknowledgment_(to, name) {
   MailApp.sendEmail({
     to: to,
+    name: CONFIG.company,
+    replyTo: CONFIG.clientEmail,
     subject: "Thanks for getting in touch — " + CONFIG.company,
     body: [
       name.split(" ")[0] + ",",
@@ -287,6 +293,8 @@ function sendIntakeForRow(rowNumber) {
   if (email) {
     MailApp.sendEmail({
       to: email,
+      name: CONFIG.company,
+      replyTo: CONFIG.clientEmail,
       subject: "Before I come out — a few quick questions",
       body: [
         name + ",",

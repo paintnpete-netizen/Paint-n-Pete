@@ -8,8 +8,17 @@ them the same email about how long you've been painting.
 months, so consistency matters far more than volume. Twenty a week for two weeks
 and then nothing produces nothing.
 
-**Before sending anything:** the capabilities statement must be complete. See
-the gate in `capabilities-statement.md`.
+**Before sending anything, two gates:**
+
+1. The capabilities statement must be complete. See the gate in
+   `capabilities-statement.md`.
+2. **Email authentication must be finished.** Send from
+   `noah@paintnpete.com`, never a Gmail address — but the domain currently has
+   SPF only, with no DKIM key and no DMARC record. Cold outreach goes to people
+   who have never emailed you, so their servers judge it on authentication
+   alone. Without those two records this entire channel can fail silently, and
+   you would read the lack of replies as "outreach doesn't work" rather than
+   "outreach never arrived." Fifteen minutes of DNS, in `../04-visibility/SETUP.md`.
 
 ---
 
@@ -40,7 +49,7 @@ else is secondary.
 > and price it — no obligation on your side either way.
 >
 > Noah Kanwal
-> Paint'n Pete · 727-902-1986 · [noah@paintnpete.com]
+> Paint'n Pete · 727-902-1986 · noah@paintnpete.com
 
 **Follow-up (day 10), if no reply:**
 > [First name] — following up on the note below. No pressure if painting is
@@ -78,7 +87,7 @@ lead.
 > I'd like to be considered.
 >
 > Noah Kanwal
-> Paint'n Pete · 727-902-1986 · [noah@paintnpete.com]
+> Paint'n Pete · 727-902-1986 · noah@paintnpete.com
 
 **Notes:** the personal observation in the second line is the entire email. A
 generic version of this goes straight to the bin. Send five a week that you've
@@ -116,7 +125,7 @@ invoice.
 > number to compare against what you're paying now.
 >
 > Noah Kanwal
-> Paint'n Pete · 727-902-1986 · [noah@paintnpete.com]
+> Paint'n Pete · 727-902-1986 · noah@paintnpete.com
 
 **Notes:** the free comparison walk is the hook — it costs you an hour and gets
 you inside. Property managers switch vendors more readily than GCs do, and the

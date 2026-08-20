@@ -76,13 +76,45 @@ contact:
       it is recognisable if it resurfaces on a directory, an old listing, or a
       social profile.
   email:
-    value: "paintnpete@gmail.com"
+    value: "noah@paintnpete.com"
     status: unverified
+    role: "Client outreach — everything a client, GC, designer, or PM sees"
     note: >
-      Placeholder. Google Workspace is already paid for, so a domain address
-      (noah@paintnpete.com) is included at no extra cost. Replace this value
-      before any commercial outreach — GCs and property managers read a free
-      address as a one-man operation. See guide 1.2.
+      Decided 2026-08-19. Proposals, follow-ups, objection replies, and all
+      commercial outreach send from this address. Marked unverified only
+      because the mailbox itself has not been confirmed to exist — the domain
+      is on Workspace and mail is routing (MX smtp.google.com, SPF present,
+      domain verified), so this is one screen in admin.google.com, not a DNS
+      project. Flip to verified once the address sends and receives.
+
+  email_internal:
+    value: "paintnpete@gmail.com"
+    status: verified
+    role: "System address — never client-facing"
+    note: >
+      Owns the Google Business Profile and receives KaiCalls lead alerts and
+      Apps Script notifications. Deliberately kept separate from the outreach
+      address so that a free Gmail never appears on a document a client or a
+      general contractor reads.
+
+  email_auth:
+    spf: "present — v=spf1 include:_spf.google.com ~all"
+    dkim:
+      status: todo
+      note: "No key on the google selector. Required before cold outreach."
+    dmarc:
+      status: todo
+      note: >
+        No record at _dmarc.paintnpete.com. Start at p=none with rua reporting,
+        tighten to p=quarantine after a few weeks. Never open at p=reject.
+    dns_host: >
+      Wix (ns6/ns7.wixdns.net) as of 2026-08-19, even though the website itself
+      now serves from Netlify. Both TXT records go in the Wix DNS panel.
+    why: >
+      Cold outreach reaches people with no correspondence history, so receiving
+      servers judge it almost entirely on authentication. Without DKIM and
+      DMARC the mail lands in spam silently and the channel appears to simply
+      not work. Procedure in 04-visibility/SETUP.md.
   address:
     street: "1105 18th St S"
     city: "St. Petersburg"
@@ -292,7 +324,7 @@ stack:
   forms: "Google Forms"
   storage: "Google Drive"
   calendar: "Google Calendar"
-  email: "Gmail (Workspace, domain address pending)"
+  email: "Google Workspace on paintnpete.com — verified live 2026-08-19 (MX smtp.google.com)"
   automation: "Google Apps Script"
   automation_note: >
     The guide defaults to Make.com, whose free tier allows only 2 active

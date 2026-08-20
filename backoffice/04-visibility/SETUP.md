@@ -80,30 +80,77 @@ personalise, and it's the part that makes the message work.
 
 ---
 
-## 4. Domain email — 30 minutes, already paid for
+## 4. Domain email — mostly done already
 
-You're on Google Workspace, so `noah@paintnpete.com` costs nothing additional.
-The back office currently lists `paintnpete@gmail.com` as unverified, and it
-should be retired before any commercial outreach.
+**`noah@paintnpete.com` is the client outreach address.** Decided 2026-08-19.
+Everything client-facing sends from it: proposals, follow-ups, objection
+replies, and all commercial outreach. `paintnpete@gmail.com` stays as the
+internal system address — it owns the Google Business Profile and receives
+KaiCalls alerts — and never appears on a document a client sees.
 
-**First, find out which domain your Workspace is actually on** — I can't see
-this. Go to <https://admin.google.com> and look at the top of the dashboard, or
-Account → Domains → Manage domains.
+**The domain is already on Google Workspace.** Checked the DNS directly on
+2026-08-19:
 
-**If paintnpete.com is already listed:** Directory → Users → your user → add
-`noah@paintnpete.com`, either as the primary address or as an alias. Alias is
-the safer move — mail arrives in the same inbox, nothing breaks, and you can
-send *as* the new address from Gmail settings.
+```
+MX   →  smtp.google.com          Google is handling mail for paintnpete.com
+TXT  →  v=spf1 include:_spf.google.com ~all      SPF present and correct
+TXT  →  google-site-verification=WGCO8iNx…       domain verified with Google
+```
 
-**If paintnpete.com is not listed**, it needs adding and verifying, which means
-editing DNS records wherever the domain is managed — probably Wix, since the
-site is there, but possibly a separate registrar. Google gives you a TXT record
-to verify ownership and a set of MX records to route mail.
+So no domain adding, no MX editing, none of the risky DNS work. What's left is
+one screen: <https://admin.google.com> → Directory → Users → your user → add
+`noah@paintnpete.com`, as primary or as an alias. Alias is safer — mail lands
+in the same inbox, nothing breaks, and you can send *as* it from Gmail settings.
 
-That second path is the one where people break their website by editing the
-wrong record. Tell me what you find on the domains screen and where the domain
-is registered, and I'll walk you through it record by record before you change
-anything.
+### ⚠️ Then fix authentication, before any cold outreach
+
+Two records are missing, and both matter more for outreach than for normal
+mail. DNS shows **no DKIM** on the `google` selector and **no DMARC record at
+all**.
+
+Why it matters here specifically: SPF alone is weak. Cold email to general
+contractors, designers, and property managers goes to people who have never
+corresponded with you, so their mail servers judge you almost entirely on
+authentication and domain reputation. Missing DKIM and DMARC is the difference
+between the inbox and the spam folder, and you will never know which one you
+landed in — the outreach will just quietly not work.
+
+**DKIM** — Admin console → Apps → Google Workspace → Gmail → Authenticate
+email. Generate the key, add the TXT record it gives you at your DNS host, then
+come back and click Start authentication.
+
+**DMARC** — add a TXT record at `_dmarc.paintnpete.com`. Start in monitor mode,
+which changes nothing about delivery and only collects reports:
+
+```
+v=DMARC1; p=none; rua=mailto:noah@paintnpete.com
+```
+
+Leave it on `p=none` for a few weeks, then tighten to `p=quarantine` once you
+can see nothing legitimate is failing. Do not start at `p=reject` — that can
+silently kill your own mail.
+
+### Where to add both records
+
+**DNS is still at Wix**, even though the website has moved to Netlify. The
+nameservers read `ns6.wixdns.net` and `ns7.wixdns.net`. So the records go in
+the Wix dashboard, not Netlify: Wix → Domains → paintnpete.com → DNS Records.
+
+Worth knowing, because it is the kind of thing that bites later: Wix still
+controls where `paintnpete.com` points. Do not touch the existing A, CNAME, MX,
+or SPF entries — those are what keep the site and the mail working. You are only
+*adding* two TXT records.
+
+Add:
+
+| Type | Host | Value |
+|---|---|---|
+| TXT | `google._domainkey` | the long `v=DKIM1; k=rsa; p=…` string Google generates |
+| TXT | `_dmarc` | `v=DMARC1; p=none; rua=mailto:noah@paintnpete.com` |
+
+Give the DKIM key about an hour to propagate before clicking Start
+authentication in the admin console, and don't be alarmed if it fails on the
+first try — that is nearly always propagation, not a wrong record.
 
 ---
 
