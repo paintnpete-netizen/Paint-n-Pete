@@ -90,6 +90,9 @@ Tag the neighborhood. Don't write anything new — that's Monday's job.
 3. REVIEWS (5 min)
    Current count vs last month. Work the next batch from the backlog
    tracker, respecting the pacing rules.
+   Then update the count on the website — it is hardcoded in the homepage
+   AggregateRating markup and does not update itself. It sat at 14 while
+   Google said 21. backoffice/09-website/live-site-audit.md
 
 4. COMMERCIAL PIPELINE (10 min)
    Every outreach contact — advance, follow up, or close it out.

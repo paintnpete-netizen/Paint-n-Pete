@@ -122,8 +122,11 @@ review — quoted, not paraphrased.
 
 Before any page from these templates goes live, check `config/business-profile.yml`:
 
-- `service_area.boundary` — currently `todo`. Don't publish a page for a city
-  you're not sure you take work in.
+- `service_area.boundary` — **already published.** `service-areas.html` is live
+  with eight cities on it, so this gate is retrospective now: check that every
+  published city is one you actually take work in, and reconcile the homepage
+  `areaServed` (three cities) with the page (eight). See
+  `../09-website/live-site-audit.md`.
 - `credentials` — currently `todo`. No licence, insurance, or warranty claim
   appears on any page until those are verified.
 - `contact.address` — `unverified`. Not in schema until confirmed publishable.

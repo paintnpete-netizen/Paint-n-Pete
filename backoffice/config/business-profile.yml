@@ -135,15 +135,44 @@ contact:
 
 web:
   business_site:
-    url: "https://paintnpete.com"
+    url: "https://www.paintnpete.com"
+    canonical: "www — the apex 301-redirects to it"
     platform: "Static HTML on Netlify"
+    source_repo: "~/Projects/paintnpete-website"
+    netlify_site_id: "e5f29f47-051c-40a5-995c-08d0471a1d6c"
     status: >
-      Already rebuilt. Verified live 2026-08-19: server header reports Netlify,
-      pages are flat .html, and the markup carries HousePainter, FAQPage, and
-      AggregateRating structured data. No longer Wix. The rebuild described in
-      ../../paintnpete-redesign/ has been executed, at least in part — audit
-      the live site against those plans before assuming any of that work is
-      still outstanding.
+      Audited page by page 2026-08-19 — see 09-website/live-site-audit.md.
+      Eleven pages, all 200, all with meta descriptions, H1s, and canonicals;
+      sitemap and robots.txt correct; structured data on the homepage, the five
+      service pages, and service-areas. The Phase 1 rebuild in
+      ../../paintnpete-redesign/ has already been executed, so those documents
+      are stale and describe a Wix site that no longer exists.
+
+      The source is NOT in this repository. This repo is Noah's portfolio site
+      (different Netlify site) and merely carries backoffice/ inside it. The
+      website repo has one commit and a large body of uncommitted changes —
+      commit it before touching anything there.
+    lead_capture:
+      mechanism: "Netlify Forms"
+      status: broken
+      note: >
+        The contact form posts to Netlify, identified by its hidden form-name
+        field and bot-field honeypot. Netlify Forms does not write to Google
+        Sheets and does not trigger Apps Script, so workflow 1 never fires for
+        a website lead: no acknowledgment email, no row in the Leads tab, no
+        text alert. Same failure mode as the Kai alerts — a lead arrives and
+        nothing tells anyone.
+
+        Check the Netlify Forms inbox for unanswered submissions before
+        building the fix. Those are real leads. Fix is a Netlify outgoing
+        webhook into an Apps Script web app.
+    schema_gaps:
+      aggregate_rating: >
+        Hardcoded at ratingCount 14 while Google shows 21. Also verify the
+        block earns anything at all — self-serving review markup is generally
+        not eligible for star rich results.
+      opening_hours: "Absent, though contact.hours is now verified."
+      pages_without_schema: "work, products, about, contact — contact matters most."
   portfolio_site:
     url: "https://noah-kanwal.netlify.app"
     platform: "Static HTML/CSS/JS on Netlify"
@@ -236,8 +265,29 @@ service_area:
     - Gulfport
     - St. Pete Beach
   boundary:
-    status: todo
-    note: "Which cities do you actually take work in? Needed before service-area pages."
+    status: published_unconfirmed
+    published_cities:          # live on service-areas.html, read 2026-08-19
+      - St. Petersburg
+      - Clearwater
+      - Tampa
+      - Gulfport
+      - Pinellas Park
+      - St. Pete Beach
+      - Tierra Verde
+      - Treasure Island
+    note: >
+      This was `todo`, and several documents in the back office refuse to
+      publish a service-area page until it is confirmed. That gate was already
+      overtaken by events: service-areas.html has been live with these eight
+      cities on it. The decision was made when the site shipped.
+
+      Still needs Noah's yes or no, but the question has changed. It is no
+      longer "which cities should we publish" — it is "is any of these eight a
+      city you don't actually want work in", and if so that is a live problem
+      today rather than a future one.
+
+      Note the homepage disagrees with the page: its areaServed lists only
+      St. Petersburg, Clearwater, and Tampa. Reconcile both to one list.
 
 # -----------------------------------------------------------------------------
 # Products

@@ -24,10 +24,19 @@ matters — the first one is the one that costs real money when it fails.
 | `DEPLOY.md` | Install, authorise, and set triggers |
 | `scorecard.csv` | The four monthly numbers |
 
-**Workflow 1 no longer waits on the website.** It's wired to a Google Form
-submission rather than a custom endpoint, so it runs today on Wix — or on no
-site at all. Point it at the website form later by changing the trigger, not the
-code.
+**⛔ Workflow 1 does not fire for website leads.** Audited 2026-08-19: the
+contact form on paintnpete.com posts to **Netlify Forms**, which does not write
+to Google Sheets and cannot trigger Apps Script. So a homeowner who fills in the
+form gets no acknowledgment, appears in no Leads row, and generates no text
+alert — the submission sits in a Netlify inbox instead.
+
+The trigger here is `onFormSubmit` on a linked **Google Form**, which is a
+different form that does not exist yet. Both halves are real; they are just not
+connected to each other.
+
+Fix is a Netlify outgoing webhook posting to this script published as a web app.
+Before writing it, check the Netlify Forms inbox — any submissions sitting there
+are leads nobody answered. See `../09-website/live-site-audit.md`.
 
 **Kai owns the phone.** Calls are answered, qualified, and booked by KaiCalls,
 which also sends the SMS lead alert that Apps Script cannot. That supersedes

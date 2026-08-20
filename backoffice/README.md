@@ -44,6 +44,7 @@ not on the website, not in the capabilities packet.
 | `06-crew/` | SOPs (EN + ES), hiring, onboarding | 6 | **Built** — Spanish needs native review |
 | `07-automation/` | Apps Script workflows | 7 | **Built** — needs deploying |
 | `08-routines/` | Daily, weekly, monthly operating rhythm | 9 | **Built** |
+| `09-website/` | Live site audit and publishing gates | 4 | **Audited** — ⛔ lead capture broken |
 | `prompt-library.md` | Index of every prompt, plus the standalone ones | 10 | **Built** |
 
 ---
@@ -78,16 +79,24 @@ Three gates remain on this phase, and they are deliberate:
 - Commercial documents cannot be sent until `credentials` is verified.
 - Spanish SOPs are AI first drafts and need a fluent speaker before they go in
   the van.
-- No service-area page publishes for a city until `service_area.boundary` is
-  confirmed.
+- ~~No service-area page publishes for a city until `service_area.boundary` is
+  confirmed.~~ **Overtaken by events** — `service-areas.html` has been live with
+  eight cities on it. See Phase 4.
 
-**Phase 4 — Website.** *Largely done already.* `paintnpete.com` was checked live
-on 2026-08-19 and is no longer Wix — it serves from Netlify as flat `.html`
-pages with `HousePainter`, `FAQPage`, and `AggregateRating` structured data, and
-the phone number is correct throughout. Before planning any further work here,
-audit the live site against `../paintnpete-redesign/`, because those documents
-describe a rebuild that has since been executed and their open items may be
-stale.
+**Phase 4 — Website.** *Audited 2026-08-19 — see `09-website/`.* Better than
+this document previously assumed: eleven pages, all returning 200, all with meta
+descriptions, H1s, and canonicals, correct sitemap and robots.txt, structured
+data across the homepage and every service page, and the right phone number
+throughout. The Phase 1 rebuild in `../paintnpete-redesign/` has already been
+executed, so those documents are stale and should not be worked from.
+
+**One finding is urgent.** The contact form posts to Netlify Forms, which cannot
+reach Google Sheets or Apps Script — so workflow 1 never fires for a website
+lead. No acknowledgment, no Leads row, no text alert. Check the Netlify Forms
+inbox for unanswered submissions before anything else in this phase.
+
+The site source is a separate repository (`~/Projects/paintnpete-website`) with
+one commit and a large body of uncommitted work. Commit it before touching it.
 
 **Phase 5 — Franchise packaging.** Clonable operator kit.
 
