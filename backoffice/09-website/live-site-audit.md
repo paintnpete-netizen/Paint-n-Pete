@@ -179,11 +179,10 @@ files, 1,132 insertions, including `service-areas.html`, `sitemap.xml`,
 at all despite being live. All committed as `9389cc5` and pushed off the
 machine.
 
-The backup is deliberately temporary: the branch `website-backup` on the back
-office's own GitHub repo. That was the only route available without a new
-account or an admin password, and getting it off a single disk mattered more
-than putting it in the right place. It still needs its own repository — see
-`backup` under `web.business_site` in the config.
+Permanent home is now
+[`github.com/paintnpete-netizen/paintnpete-website`](https://github.com/paintnpete-netizen/paintnpete-website)
+(private). Local `origin` tracks `master` there, remote HEAD is `9389cc5`.
+The temporary `website-backup` branch on the back office repo has been deleted.
 
 **A near miss worth recording.** Attempting to switch the Cursor workspace to
 that folder stashed every uncommitted change and reset the working tree to the
