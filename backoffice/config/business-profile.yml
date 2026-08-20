@@ -81,11 +81,9 @@ contact:
     role: "Client outreach — everything a client, GC, designer, or PM sees"
     note: >
       Decided 2026-08-19. Proposals, follow-ups, objection replies, and all
-      commercial outreach send from this address. Marked unverified only
-      because the mailbox itself has not been confirmed to exist — the domain
-      is on Workspace and mail is routing (MX smtp.google.com, SPF present,
-      domain verified), so this is one screen in admin.google.com, not a DNS
-      project. Flip to verified once the address sends and receives.
+      commercial outreach send from this address. Mailbox exists — Google
+      accepted noah@paintnpete.com at the sign-in identifier screen on
+      2026-08-19. Flip to verified once a test message sends and receives.
 
   email_internal:
     value: "paintnpete@gmail.com"
@@ -96,6 +94,28 @@ contact:
       Apps Script notifications. Deliberately kept separate from the outreach
       address so that a free Gmail never appears on a document a client or a
       general contractor reads.
+
+  # The only two addresses that may touch Paint'n Pete. Decided 2026-08-19.
+  # "noaha@" in that instruction is treated as noah@ — say so if that was wrong.
+  email_allowed:
+    - noah@paintnpete.com
+    - paintnpete@gmail.com
+  email_forbidden:
+    value: "kanwalconsulting297@gmail.com"
+    status: never_business
+    note: >
+      Personal / consulting mailbox. Must not own, manage, receive, or appear
+      on anything Paint'n Pete: not Google Business, not KaiCalls, not Netlify,
+      not Wix, not Workspace admin, not GitHub, not invoices, not signatures.
+      If a vendor is signed in as this account, switch or transfer — do not
+      keep working under it.
+
+      Still attached as of 2026-08-19 (must move):
+      - Netlify team slug kanwalconsulting297 owns www.paintnpete.com
+      - This Cursor/Origin login and the browser session used for Admin
+      Transfer the Netlify site to an account under paintnpete@gmail.com or
+      noah@paintnpete.com. Do not delete the team first — that can take the
+      site down. Form notification is already noah@, which is correct.
 
   email_auth:
     spf: "present — v=spf1 include:_spf.google.com ~all"
@@ -166,7 +186,13 @@ web:
     lead_capture:
       mechanism: "Netlify Forms — form name consultation-details"
       status: partial
-      netlify_team: "kanwalconsulting297"
+      netlify_team:
+        current: "kanwalconsulting297"
+        status: forbidden_must_move
+        target: "an account owned by paintnpete@gmail.com or noah@paintnpete.com"
+        note: >
+          The live site sits on the consulting Netlify team. Move it. Do not
+          delete this team until the site is confirmed live on the new one.
       netlify_slug: "paintnpete"
       deploys: >
         From the CLI, not from git. No continuous deployment is connected, so
@@ -214,13 +240,12 @@ web:
         Google's claim screen reports the profile is "currently managed by
         pa…@gmail.com". The masked prefix and the gmail.com domain identify
         paintnpete@gmail.com — noah@paintnpete.com would mask as
-        no…@paintnpete.com. The profile IS claimed; it is simply claimed under
-        a different account than the browser was signed into
-        (kanwalconsulting297@gmail.com, which owns no business profiles).
+        no…@paintnpete.com. The profile IS claimed.
 
-        Action: sign in as paintnpete@gmail.com to manage the profile. No
-        access request or re-claim is needed, and neither should be started —
-        requesting access from yourself starts a multi-day process for nothing.
+        kanwalconsulting297@gmail.com is not a business account and must not
+        be used to manage this profile. If the browser is signed into it,
+        switch to paintnpete@gmail.com. Do not click "Request Access" — that
+        asks permission from yourself and starts a multi-day wait for nothing.
     rating:
       value: 5.0
       status: verified

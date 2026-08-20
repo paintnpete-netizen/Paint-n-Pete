@@ -72,7 +72,10 @@ as a web app, which requires the Google account.
 
 ### Account facts worth keeping
 
-- Netlify team `kanwalconsulting297`, site slug **`paintnpete`**, three projects
+- Netlify team slug is currently `kanwalconsulting297` — that is the consulting
+  mailbox and **must not own the business site**. Transfer `www.paintnpete.com`
+  to an account under `paintnpete@gmail.com` or `noah@paintnpete.com` before
+  deleting anything. Site slug **`paintnpete`**, three projects on the old team.
   on the account (paintnpete.com, noahkanwal.com, and one unused).
 - **Deploys are from the CLI, not from git.** There is no continuous deployment
   connected, so every publish is a manual `netlify deploy` from the folder on

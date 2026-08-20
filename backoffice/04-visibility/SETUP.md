@@ -16,12 +16,11 @@ Nothing sends without it.
 
 > **Sign in as `paintnpete@gmail.com` first.** Resolved 2026-08-19: Google
 > reports the profile is managed by `pa…@gmail.com`, which is that account.
-> The browser was signed into `kanwalconsulting297@gmail.com`, which owns no
-> business profiles — that is the only reason the profile looked unclaimed.
 >
-> Nothing needs claiming or verifying. **Do not click "Request Access"** on the
-> ownership screen; that asks permission from yourself and starts a multi-day
-> wait for nothing.
+> `kanwalconsulting297@gmail.com` is not a Paint'n Pete account. Never use it
+> here. If the browser is on it, switch. Nothing needs claiming. **Do not
+> click "Request Access"** — that asks permission from yourself and starts a
+> multi-day wait for nothing.
 
 1. Sign in to Google with the account that manages the business.
 2. Go to <https://business.google.com>, or just search "Paint'n Pete" while
