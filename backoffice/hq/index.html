@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Paint'n Pete — Back Office HQ</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="PNP HQ" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560&family=Manrope:wght@400;500;650;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="hq.css" />
+</head>
+<body>
+  <header class="hq-header">
+    <div class="wrap">
+      <a class="brand" href="#today">Paint'n Pete<span>Back office HQ · internal</span></a>
+      <nav aria-label="Rooms">
+        <a href="#today">Today</a>
+        <a href="drawer.html">Drawer</a>
+        <a href="#front-desk">Front desk</a>
+        <a href="#estimating">Estimating</a>
+        <a href="#jobs">Jobs</a>
+        <a href="#commercial">Commercial</a>
+        <a href="#crew">Crew</a>
+        <a href="#marketing">Marketing</a>
+        <a href="#vault">Vault</a>
+        <a href="#setup">Setup</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="reception" id="today">
+      <div class="wrap">
+        <p class="eyebrow" id="hq-date">Today</p>
+        <h1>Walk in. Do the work on the desk.</h1>
+        <p class="lede">This is the office. Sheets, Gmail, Kai, and the templates live in the rooms. Nothing here is the customer website — do not publish this page.</p>
+
+        <div class="today-grid">
+          <div class="desk">
+            <p class="eyebrow">Reception</p>
+            <h2>Today’s clipboard</h2>
+            <div class="blocks">
+              <div class="block">
+                <time>7:00 AM</time>
+                <p><strong>Inbox sweep</strong> — Kai summaries, email, form, GBP, DMs. Reply before you start work. Callbacks first.</p>
+                <a class="btn" href="https://mail.google.com/mail/u/?authuser=noah@paintnpete.com#inbox">Gmail</a>
+              </div>
+              <div class="block">
+                <time>12:00 PM</time>
+                <p><strong>Post</strong> — today’s caption from the Monday batch. Tag the neighborhood. Do not write a new one.</p>
+                <a class="btn btn-ghost" href="../04-visibility/content-engine.md">Captions</a>
+              </div>
+              <div class="block">
+                <time>On site</time>
+                <p><strong>Estimate drawer</strong> — photos, measurements, notes, then Generate the letter.</p>
+                <a class="btn" href="drawer.html">Open drawer</a>
+              </div>
+            </div>
+            <div class="monday">
+              <p><strong>Monday — 30 min.</strong> Content batch, follow-ups at day 3 / 8 / 21, five outreach contacts, confirm automations ran.</p>
+              <a href="#rhythm">Monday checklist ↓</a>
+            </div>
+            <div class="monthly">
+              <p><strong>First Monday — 60 min.</strong> Job-costing actuals, scorecard, reviews, commercial pipeline, past clients.</p>
+              <a href="#rhythm">Monthly checklist ↓</a>
+            </div>
+          </div>
+          <div class="clip">
+            <p class="eyebrow">Open now</p>
+            <h2>The four tools you live in</h2>
+            <p><a href="https://docs.google.com/spreadsheets/d/18SVd9ZQPacTWd9KvwqnZz2kgNHR8y18t_S2t8J90Xvo/edit"><strong>Back office sheet</strong></a> — Leads, Jobs, Scorecard</p>
+            <p><a href="https://mail.google.com/mail/u/?authuser=noah@paintnpete.com#inbox"><strong>noah@paintnpete.com</strong></a> — every customer and vendor message</p>
+            <p><a href="https://www.kaicalls.com/dashboard"><strong>KaiCalls</strong></a> — phone, transcripts, staff alerts</p>
+            <p><a href="https://calendar.google.com"><strong>Calendar</strong></a> — put the rhythm on it once</p>
+            <p class="note">If you fall off: inbox sweep, then follow-ups, then everything else.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <div class="doors" aria-label="Rooms">
+        <a class="door" href="drawer.html"><strong>Estimate drawer</strong><span>Walkthrough → letter</span></a>
+        <a class="door" href="#front-desk"><strong>Front desk</strong><span>Leads, replies, follow-up</span></a>
+        <a class="door" href="#estimating"><strong>Estimating</strong><span>Proposal, photos, costing</span></a>
+        <a class="door" href="#jobs"><strong>Jobs</strong><span>Walkthrough, reviews, scorecard</span></a>
+        <a class="door" href="#commercial"><strong>Commercial</strong><span>Vendor packet, outreach</span></a>
+        <a class="door" href="#crew"><strong>Crew</strong><span>SOPs, hiring</span></a>
+        <a class="door" href="#marketing"><strong>Marketing</strong><span>GBP, captions, website</span></a>
+        <a class="door" href="#vault"><strong>Vault</strong><span>Brief, prompts, config</span></a>
+        <a class="door" href="#setup"><strong>Setup drawer</strong><span>What’s still gated</span></a>
+      </div>
+    </div>
+
+    <section class="room" id="front-desk">
+      <div class="wrap">
+        <p class="eyebrow">Room</p>
+        <h2>Front desk</h2>
+        <p class="intro">Every inquiry gets a real reply. The form already writes the Leads row and sends an ack email. The confirmation text is still waiting on KaiCalls. You still send the personal reply.</p>
+        <div class="tools">
+          <a class="tool live" href="https://docs.google.com/spreadsheets/d/18SVd9ZQPacTWd9KvwqnZz2kgNHR8y18t_S2t8J90Xvo/edit"><strong>Leads tab</strong><span>new → contacted → booked → proposal sent → won/lost. Enter proposal_sent the minute it goes out.</span><span class="go">Open sheet</span></a>
+          <a class="tool live" href="https://www.kaicalls.com/dashboard"><strong>Kai dashboard</strong><span>Overnight summaries. Put new phone leads in the sheet — Kai is not the system of record.</span><span class="go">Open Kai</span></a>
+          <a class="tool live" href="https://www.paintnpete.com/contact"><strong>What they see</strong><span>The live booking form. GCs should skip it and email you.</span><span class="go">Contact page</span></a>
+          <a class="tool" href="../03-leads/objection-library.md"><strong>Objections</strong><span>Driveway answers. Do not discount.</span><span class="go">Open</span></a>
+          <a class="tool" href="../03-leads/intake-form.md"><strong>Intake form spec</strong><span>For when a Google Form is linked to the sheet.</span><span class="go">Open</span></a>
+          <a class="tool" href="https://script.google.com/home/projects/1tdNt0a7__f4lFFa3RO9I25cylgmlMT89ifKhh9GJGQNASms6y4zx8Hxh/edit"><strong>Apps Script</strong><span>Form webhook, daily check, Monday reminder. Republish after any Code.gs change.</span><span class="go">Open editor</span></a>
+        </div>
+        <div class="snippets">
+          <details open>
+            <summary>Copy a reply — website inquiry [wform]</summary>
+            <p class="snippet" id="copy-wform">Thanks for reaching out — Noah here, Paint'n Pete. You're well inside the area we work. I'd rather see the space before putting numbers to it. I have [DAY] morning or [DAY] afternoon open this week — does either of those work?</p>
+            <button class="btn" type="button" data-copy="copy-wform">Copy</button>
+          </details>
+          <details>
+            <summary>Ballpark price [wball]</summary>
+            <p class="snippet" id="copy-wball">Honest answer: I could give you a number now, but it would be a guess, and guesses are how people end up with a change order halfway through. Twenty minutes at the house and I can give you a real itemized price instead. When are you around this week?</p>
+            <button class="btn" type="button" data-copy="copy-wball">Copy</button>
+          </details>
+          <details>
+            <summary>Outside the area [warea]</summary>
+            <p class="snippet" id="copy-warea">Thanks for thinking of us. You're outside where I can get a crew reliably, and I'd rather tell you that than stretch and do it badly. Happy to point you toward someone decent closer to you — want me to?</p>
+            <button class="btn" type="button" data-copy="copy-warea">Copy</button>
+          </details>
+          <details>
+            <summary>Follow-up day 3 — subject: Your proposal</summary>
+            <p class="snippet" id="copy-d3">[NAME] — just confirming the proposal reached you on [DATE]. They occasionally land in spam.
+
+No rush on a decision. If any line item is unclear — why a surface needs the prep it does, or why I specified one product over another — I'm happy to walk you through it on the phone. That usually takes ten minutes, and it's the reason the proposal is itemized in the first place.
+
+Noah</p>
+            <button class="btn" type="button" data-copy="copy-d3">Copy</button>
+          </details>
+          <details>
+            <summary>Follow-up day 8 — subject: One thing about your [PROJECT]</summary>
+            <p class="snippet" id="copy-d8">[NAME] — something I didn't spell out in the proposal.
+
+[SPECIFIC OBSERVATION about their house. If you cannot write this honestly, do not send the email.]
+
+Worth knowing whoever you end up hiring. Happy to talk it through if it's useful.
+
+Noah</p>
+            <button class="btn" type="button" data-copy="copy-d8">Copy</button>
+          </details>
+          <details>
+            <summary>Follow-up day 21 — subject: Holding your slot?</summary>
+            <p class="snippet" id="copy-d21">[NAME] — I'm scheduling into [MONTH] now and I've been holding a slot with your project on it.
+
+If you'd still like to go ahead, say so and I'll firm up dates. If you've gone another direction or shelved it for now, that's completely fine — just let me know and I'll release it to someone else.
+
+Either answer works. I'd rather know than guess.
+
+Noah</p>
+            <button class="btn" type="button" data-copy="copy-d21">Copy</button>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="room" id="estimating">
+      <div class="wrap">
+        <p class="eyebrow">Room</p>
+        <h2>Estimating</h2>
+        <p class="intro">Walkthrough measurements × your rates. The drawer prices the letter; job-costing sheets still record what the job actually took.</p>
+        <div class="tools">
+          <a class="tool live" href="drawer.html"><strong>Estimate drawer</strong><span>On-site photos, measurements, notes. Generate builds the letter.</span><span class="go">Open</span></a>
+          <a class="tool live" href="../02-estimating/proposal.html"><strong>Proposal letter</strong><span>Fixed layout. Filled from the drawer or from job.js.</span><span class="go">Open</span></a>
+          <a class="tool" href="../02-estimating/proposal-template.md"><strong>How to fill it</strong><span>Walkthrough → letter. Drawer prices from rates.js.</span><span class="go">Open</span></a>
+          <a class="tool" href="../02-estimating/photo-to-scope.md"><strong>Photo-to-scope</strong><span>Walkthrough photos → prep list and surfaces.</span><span class="go">Open</span></a>
+          <a class="tool" href="../02-estimating/job-costing.md"><strong>Job costing</strong><span>How the sheet works. One file per job, not a tab in Leads.</span><span class="go">Open</span></a>
+          <a class="tool" href="../02-estimating/job-costing-estimate.csv"><strong>Estimate CSV</strong><span>Import to Sheets for a new job.</span><span class="go">Download</span></a>
+          <a class="tool" href="../02-estimating/job-costing-actuals.csv"><strong>Actuals CSV</strong><span>Log hours against the estimate at close-out.</span><span class="go">Download</span></a>
+          <a class="tool" href="../02-estimating/exclusions-assumptions.md"><strong>Exclusions</strong><span>Source for the letter’s not-included list. Warranty carve-outs still need your pass.</span><span class="go">Open</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="room" id="jobs">
+      <div class="wrap">
+        <p class="eyebrow">Room</p>
+        <h2>Jobs &amp; reviews</h2>
+        <p class="intro">Ask at the walkthrough, then text the link within the hour. One follow-up two days later. Never a third. Never pay for a review.</p>
+        <div class="tools">
+          <a class="tool live" href="https://docs.google.com/spreadsheets/d/18SVd9ZQPacTWd9KvwqnZz2kgNHR8y18t_S2t8J90Xvo/edit"><strong>Jobs + Scorecard</strong><span>completed_date triggers the review reminder. Four numbers a month: inquiries, proposals, won, reviews.</span><span class="go">Open sheet</span></a>
+          <a class="tool" href="../04-visibility/review-engine.md"><strong>Review engine</strong><span>The texts, the pacing (5 a day on a backlog, not 30 at once), the replies.</span><span class="go">Open</span></a>
+          <a class="tool" href="../04-visibility/review-tracker.csv"><strong>Backlog tracker</strong><span>Last 30 clients when you are ready to run it.</span><span class="go">Download</span></a>
+          <a class="tool live" href="https://business.google.com"><strong>Google Business Profile</strong><span>Respond within 48 hours. Posts, photos, Q&amp;A.</span><span class="go">Open GBP</span></a>
+        </div>
+        <div class="snippets">
+          <details>
+            <summary>Review ask — evening of walkthrough</summary>
+            <p class="snippet" id="copy-rev1">Noah here. Thanks again for having us in the house — the [SPECIFIC DETAIL] came out the way I hoped it would. If you were happy with the work, a Google review helps more than you'd guess. Takes about a minute: [REVIEW_LINK]</p>
+            <button class="btn" type="button" data-copy="copy-rev1">Copy</button>
+          </details>
+          <details>
+            <summary>Review follow-up — two days later, once</summary>
+            <p class="snippet" id="copy-rev2">Following up once and then I'll leave you alone. If you have a minute for a Google review, it genuinely helps people find us: [REVIEW_LINK]. Either way, thanks for the work — enjoy the [ROOM / HOUSE].</p>
+            <button class="btn" type="button" data-copy="copy-rev2">Copy</button>
+          </details>
+        </div>
+        <p class="note">Review link is still yours to paste in. Get it from GBP → Ask for reviews. Do not invent one.</p>
+      </div>
+    </section>
+
+    <section class="room" id="commercial">
+      <div class="wrap">
+        <p class="eyebrow">Room</p>
+        <h2>Commercial</h2>
+        <p class="intro">The public vendor packet is live. The two-page capabilities PDF still does not go to a GC until three trade references are in and bonding is filled or deleted.</p>
+        <div class="tools">
+          <a class="tool live" href="https://www.paintnpete.com/commercial#vendor-packet"><strong>Vendor packet (live)</strong><span>What GCs see. COI, W-9, registration sent on request — not posted.</span><span class="go">Open site</span></a>
+          <a class="tool gated" href="../05-commercial/capabilities-statement.md"><strong>Capabilities statement</strong><span>Gated. Do not attach until references and bonding are done.</span><span class="go">Open</span></a>
+          <a class="tool" href="../05-commercial/outreach.md"><strong>Outreach sequences</strong><span>GC, designer, property manager. Five a week. Send from noah@.</span><span class="go">Open</span></a>
+          <a class="tool" href="../05-commercial/bid-analysis.md"><strong>Bid analyzer</strong><span>Prompt for reading a GC bid package.</span><span class="go">Open</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="room" id="crew">
+      <div class="wrap">
+        <p class="eyebrow">Room</p>
+        <h2>Crew</h2>
+        <p class="intro">English SOPs are ready. Spanish drafts need a fluent read before they go in the van.</p>
+        <div class="tools">
+          <a class="tool" href="../06-crew/sop-interior-protection.md"><strong>Interior protection</strong><span class="go">Open SOP</span></a>
+          <a class="tool" href="../06-crew/sop-exterior-prep.md"><strong>Exterior prep</strong><span class="go">Open SOP</span></a>
+          <a class="tool" href="../06-crew/sop-final-walkthrough.md"><strong>Final walkthrough</strong><span class="go">Open SOP</span></a>
+          <a class="tool" href="../06-crew/hiring.md"><strong>Hiring</strong><span>Ad and screening questions.</span><span class="go">Open</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="room" id="marketing">
+      <div class="wrap">
+        <p class="eyebrow">Room</p>
+        <h2>Marketing &amp; site</h2>
+        <p class="intro">GBP is the #1 lead source in the blueprint. The customer site is a separate repo and deploys from the CLI, not from git.</p>
+        <div class="tools">
+          <a class="tool live" href="https://www.paintnpete.com"><strong>paintnpete.com</strong><span>Customer site. Commercial is live.</span><span class="go">Open</span></a>
+          <a class="tool" href="../04-visibility/gbp-content-pack.md"><strong>GBP content pack</strong><span>Description, categories, Q&amp;A, posts. Use verified licence wording only.</span><span class="go">Open</span></a>
+          <a class="tool" href="../04-visibility/content-engine.md"><strong>Weekly content batch</strong><span>Monday, 10 minutes, last week’s photos.</span><span class="go">Open</span></a>
+          <a class="tool" href="../04-visibility/web-templates.md"><strong>Page templates</strong><span>Service-area and case study specs. No doorway city pages.</span><span class="go">Open</span></a>
+          <a class="tool live" href="https://app.netlify.com/projects/paintnpete"><strong>Netlify</strong><span>Customer-site deploys. Login paintnpete@gmail.com.</span><span class="go">Open</span></a>
+          <a class="tool live" href="https://www.canva.com"><strong>Canva</strong><span>Capabilities PDF and before/after frames, when references exist.</span><span class="go">Open</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="room" id="vault">
+      <div class="wrap">
+        <p class="eyebrow">Room</p>
+        <h2>The vault</h2>
+        <p class="intro">Paste the Business Brief above every new AI chat. That is the standing rule from the blueprint.</p>
+        <div class="tools">
+          <a class="tool" href="../01-foundation/business-brief.md"><strong>Business Brief</strong><span>Goes above every prompt.</span><span class="go">Open</span></a>
+          <a class="tool" href="../prompt-library.md"><strong>Prompt library</strong><span>Every prompt in one index.</span><span class="go">Open</span></a>
+          <a class="tool" href="../config/business-profile.yml"><strong>Business profile</strong><span>The only file that knows who the operator is.</span><span class="go">Open</span></a>
+          <a class="tool" href="../README.md"><strong>Back office map</strong><span>Guide sections, status, franchise notes.</span><span class="go">Open</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="room" id="rhythm">
+      <div class="wrap">
+        <p class="eyebrow">Rhythm</p>
+        <h2>Put this on the calendar once</h2>
+        <p class="intro">A routine in your head is a routine you skip in week three. Full checklists live in the operating-rhythm file. These buttons open a Google Calendar event you save as repeating.</p>
+        <div class="tools">
+          <a class="tool live" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Inbox%20sweep&amp;details=1.%20Kai%20lead%20summaries%20into%20Leads%0A2.%20Email%2C%20website%20form%2C%20GBP%2C%20DMs%0A3.%20Reply%20to%20every%20one%20before%20starting%20work%0A4.%20Urgent%20Kai%20escalations%20first&amp;recur=RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"><strong>Inbox sweep</strong><span>Weekdays, 7:00 AM, 10 min.</span><span class="go">Add event</span></a>
+          <a class="tool live" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Post&amp;details=Post%20today%27s%20pre-written%20caption.%20Tag%20the%20neighborhood.&amp;recur=RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"><strong>Post</strong><span>Weekdays, 12:00 PM, 2 min.</span><span class="go">Add event</span></a>
+          <a class="tool live" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Close%20the%20day&amp;details=1.%20Update%20Leads%0A2.%20Log%20hours%0A3.%20Photos%20into%20Drive%0A4.%20Review%20text%20if%20a%20job%20finished&amp;recur=RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"><strong>Close the day</strong><span>Weekdays, 5:30 PM, 5 min.</span><span class="go">Add event</span></a>
+          <a class="tool live" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Monday%20routine&amp;details=10%20min%20content%20batch%0A10%20min%20follow-ups%20d3%2Fd8%2Fd21%0A5%20min%20outreach%0A5%20min%20audit%20automations%20%2B%20GBP&amp;recur=RRULE:FREQ=WEEKLY;BYDAY=MO"><strong>Monday routine</strong><span>Mondays, 7:00 AM, 30 min.</span><span class="go">Add event</span></a>
+          <a class="tool" href="../08-routines/operating-rhythm.md"><strong>Full checklists</strong><span>Daily, Monday, monthly, quarterly, and how to recover when you fall off.</span><span class="go">Open</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="room" id="setup">
+      <div class="wrap">
+        <p class="eyebrow">Drawer</p>
+        <h2>Not ready to send — on purpose</h2>
+        <p class="intro">These are empty or unverified. They stay in the drawer until you fill them. Copying insurance from another operator is a legal problem, not a shortcut.</p>
+        <div class="tools">
+          <a class="tool gated" href="../05-commercial/capabilities-statement.md"><strong>Trade references</strong><span>Three named contacts with permission. Then the capabilities PDF can go out.</span><span class="go">Where they go</span></a>
+          <a class="tool gated" href="../05-commercial/capabilities-statement.md"><strong>Bonding</strong><span>Capacity, or delete the row. Do not leave a blank on a sent packet.</span><span class="go">Where it goes</span></a>
+          <a class="tool gated" href="../02-estimating/exclusions-assumptions.md"><strong>Warranty exclusions</strong><span>Must match the walkthrough and the proposal.</span><span class="go">Open</span></a>
+          <a class="tool gated" href="../config/business-profile.yml"><strong>What you decline</strong><span>Roof coatings, insurance work, client-supplied paint — you fill this.</span><span class="go">Config</span></a>
+          <a class="tool gated" href="../03-leads/kai-setup.md"><strong>Kai SMS + inbound</strong><span>Developer ticket. Booking confirmation texts still 404. Do not keep test-calling 762.</span><span class="go">Status</span></a>
+          <a class="tool" href="https://drive.google.com"><strong>Compliance Drive folder</strong><span>Create “Compliance — send on request” on noah@. COI, W-9, registration. Not git.</span><span class="go">Open Drive</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="hq-footer">
+    <div class="wrap">
+      <p>Internal HQ for Kanwal Consulting LLC DBA Paint'n Pete. Bookmark this file. Do not deploy it to paintnpete.com.</p>
+      <p>AI drafts, you verify. Your name is on the work.</p>
+    </div>
+  </footer>
+  <script src="hq.js"></script>
+</body>
+</html>

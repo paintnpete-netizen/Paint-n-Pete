@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Estimate drawer — Paint'n Pete</title>
+  <meta name="robots" content="noindex" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Manrope:wght@400;500;650;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="drawer.css" />
+</head>
+<body>
+  <header class="bar">
+    <a href="index.html">HQ</a>
+    <strong>Estimate drawer</strong>
+    <a href="#list">All</a>
+  </header>
+
+  <div class="path" aria-label="Job path">
+    <span>Kai / form</span>
+    <span>→</span>
+    <span>Booked</span>
+    <span>→</span>
+    <span>Rep call</span>
+    <span>→</span>
+    <span class="here">On site</span>
+    <span>→</span>
+    <span>Generate</span>
+    <span>→</span>
+    <span>Send</span>
+  </div>
+
+  <datalist id="room-presets">
+    <option>Living room</option>
+    <option>Kitchen</option>
+    <option>Primary bedroom</option>
+    <option>Bedroom</option>
+    <option>Bathroom</option>
+    <option>Hallway</option>
+    <option>Laundry</option>
+    <option>Dining</option>
+    <option>Front elevation</option>
+    <option>Rear elevation</option>
+    <option>Street side</option>
+    <option>Garage</option>
+    <option>Fascia &amp; soffit</option>
+    <option>Exterior</option>
+  </datalist>
+
+  <section data-view="list">
+    <div class="wrap">
+      <h1>Estimates</h1>
+      <p class="lede">One folder per walkthrough. Photos, measurements, and notes stay on this device until you generate the letter.</p>
+      <div id="job-list"></div>
+    </div>
+    <div class="dock">
+      <button class="btn" type="button" data-act="new">New estimate</button>
+    </div>
+  </section>
+
+  <section data-view="job" hidden>
+    <div class="wrap">
+      <p class="pill" id="job-num">PNP</p>
+      <h1>Walkthrough</h1>
+      <p class="lede">From the booking: name, address, phone. Tap Interior, Exterior, or Both. Then rooms or elevations. Generate builds the letter — you still type the dollars.</p>
+
+      <div class="card">
+        <h2>Client</h2>
+        <label>Name</label>
+        <input id="f-client" autocomplete="name" />
+        <label>Job-site address</label>
+        <input id="f-site" autocomplete="street-address" />
+        <div class="grid2">
+          <div>
+            <label>Their phone</label>
+            <input id="f-phone" type="tel" autocomplete="tel" />
+          </div>
+          <div>
+            <label>Their email</label>
+            <input id="f-email" type="email" autocomplete="email" />
+          </div>
+        </div>
+        <label>Work</label>
+        <input type="hidden" id="f-kind" value="interior" />
+        <div class="seg" role="group" aria-label="Interior or exterior">
+          <button type="button" data-kind="interior" aria-pressed="true">Interior</button>
+          <button type="button" data-kind="exterior" aria-pressed="false">Exterior</button>
+          <button type="button" data-kind="both" aria-pressed="false">Both</button>
+        </div>
+        <div class="grid2">
+          <div>
+            <label>Occupancy</label>
+            <select id="f-occupancy">
+              <option value="occupied">Occupied</option>
+              <option value="vacant">Vacant</option>
+            </select>
+          </div>
+          <div>
+            <label>Walkthrough date</label>
+            <input id="f-date" type="date" />
+          </div>
+        </div>
+        <label>Specified product line</label>
+        <select id="f-line">
+          <option value="aura">Benjamin Moore Aura</option>
+          <option value="regal">Benjamin Moore Regal Select</option>
+          <option value="duration">Sherwin-Williams Duration</option>
+        </select>
+        <label>Time on site (for the letter)</label>
+        <input id="f-days" placeholder="three to four working days" />
+        <label>Color direction</label>
+        <input id="f-colors" placeholder="what they asked for, or “confirm on site”" />
+        <label>House notes</label>
+        <textarea id="f-notes" placeholder="Pets, HOA, lead-era house, parking, who will be home…"></textarea>
+      </div>
+
+      <h2 id="rooms-heading" style="font-family:var(--font-display);font-weight:500">Rooms</h2>
+      <p id="sqft-out" class="sqft" hidden></p>
+      <div id="rooms"></div>
+      <p class="no-print"><button class="btn" type="button" data-act="add-room" id="add-room-btn" style="width:100%;margin:0.5rem 0">Add a room</button></p>
+
+      <div class="card">
+        <h2>Cabinets</h2>
+        <p class="meta">Leave at 0 if this job is not cabinets. Piece rates are a published 2026 contractor model until you replace them in Rates.</p>
+        <div class="grid2">
+          <div>
+            <label>Doors</label>
+            <input id="c-doors" inputmode="numeric" placeholder="0" />
+          </div>
+          <div>
+            <label>Drawers</label>
+            <input id="c-drawers" inputmode="numeric" placeholder="0" />
+          </div>
+          <div>
+            <label>Frames</label>
+            <input id="c-frames" inputmode="numeric" placeholder="0" />
+          </div>
+          <div>
+            <label>Boxes</label>
+            <input id="c-boxes" inputmode="numeric" placeholder="0" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Quote</h2>
+        <p id="quote-out" class="sqft">Measure rooms or elevations. The total is measurements × your rates.</p>
+        <ul id="quote-lines" class="quote-lines"></ul>
+      </div>
+
+      <div class="card">
+        <h2>Rates</h2>
+        <p class="meta">Your numbers. Change them here if a job is different; the letter uses whatever is on this estimate.</p>
+        <div class="grid2">
+          <div>
+            <label>Paint / sq ft</label>
+            <input id="r-paintPerSqft" inputmode="decimal" />
+          </div>
+          <div>
+            <label>Pressure wash / sq ft</label>
+            <input id="r-washPerSqft" inputmode="decimal" />
+          </div>
+          <div>
+            <label>Interior door</label>
+            <input id="r-doorInterior" inputmode="decimal" />
+          </div>
+          <div>
+            <label>Exterior door</label>
+            <input id="r-doorExterior" inputmode="decimal" />
+          </div>
+          <div>
+            <label>Cabinet door</label>
+            <input id="r-cabinetDoor" inputmode="decimal" />
+          </div>
+          <div>
+            <label>Cabinet drawer</label>
+            <input id="r-cabinetDrawer" inputmode="decimal" />
+          </div>
+          <div>
+            <label>Cabinet frame</label>
+            <input id="r-cabinetFrame" inputmode="decimal" />
+          </div>
+          <div>
+            <label>Cabinet box</label>
+            <input id="r-cabinetBox" inputmode="decimal" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dock">
+      <button class="btn ghost" type="button" data-act="save">Save notes</button>
+      <button class="btn ghost" type="button" data-act="send">Email client</button>
+      <button class="btn" type="button" data-act="generate">Generate letter</button>
+    </div>
+  </section>
+
+  <script src="../02-estimating/rates.js"></script>
+  <script src="drawer.js"></script>
+</body>
+</html>
