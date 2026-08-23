@@ -24,33 +24,23 @@ matters — the first one is the one that costs real money when it fails.
 | `DEPLOY.md` | Install, authorise, and set triggers |
 | `scorecard.csv` | The four monthly numbers |
 
-**⚠️ Workflow 1 does not fire for website leads.** Audited 2026-08-19: the
-contact form on paintnpete.com posts to **Netlify Forms**, which does not write
-to Google Sheets and cannot trigger Apps Script.
+**Workflow 1 is live for website leads as of 2026-08-20.** The contact form
+still posts to Netlify Forms. Netlify emails `noah@paintnpete.com` and also
+POSTs to the Apps Script web app. `doPost` writes a Leads row (`source=website`),
+sends the customer an acknowledgment, and alerts `noah@paintnpete.com`.
+Estimate times are exclusive: a booked 3:30–6:30 weekday slot is written to
+the `Bookings` tab and Google Calendar, then hidden on the contact form.
 
-Netlify does email `noah@paintnpete.com` on every submission, so Noah is told.
-What does not happen is everything after that: the customer gets no
-acknowledgment, no row appears in Leads, and the day 3 / 8 / 21 follow-ups never
-start because they read from that sheet.
+If a Code.gs change ships, republish the web app as a **new version** or Netlify
+keeps hitting the old copy. Slot hiding also needs that new version. Secret
+stays in Script properties only. See `DEPLOY.md`.
 
-Nothing has been lost so far — the form has two submissions, both tests.
-
-The trigger here is `onFormSubmit` on a linked **Google Form**, which is a
-different form that does not exist yet. Both halves are real; they are just not
-connected to each other.
-
-**The fix is written and waiting to be deployed.** `doPost` in `Code.gs` accepts
-Netlify's webhook payload and produces the same Leads row, acknowledgment, and
-alert as a Google Form submission would. Step 6 of `DEPLOY.md` connects it.
-
-Do the first part of that step regardless of when you deploy: open the Netlify
-Forms inbox and see what is sitting in it. Those are leads nobody answered. See
-`../09-website/live-site-audit.md`.
-
-**Kai owns the phone.** Calls are answered, qualified, and booked by KaiCalls,
-which also sends the SMS lead alert that Apps Script cannot. That supersedes
-workflow 3 and the missed-call path — see `../03-leads/kai-setup.md`. Web form
-leads still run through workflow 1 here.
+**Kai owns the phone — when inbound works.** The live agent collects name and
+service, does not quote prices, texts `https://www.paintnpete.com/contact`, and
+promises follow-up within one business day. Calendar booking is not the live
+path. Public inbound on 762 is a developer ticket as of 2026-08-20; do not
+keep testing that DID while they work. See `../03-leads/kai-setup.md`. Website
+form leads still run through workflow 1 here.
 
 **Reminders alert Noah — they never message a client automatically.** Every
 follow-up, review request, and check-in is drafted by a human before it sends.

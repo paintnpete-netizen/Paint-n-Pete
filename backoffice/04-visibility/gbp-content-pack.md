@@ -100,9 +100,10 @@ what's underneath drives the labour more than the square footage does. We do a
 walkthrough and send a written proposal.
 
 **Q8. Are you licensed and insured?**
-[BLOCKED — do not post this answer until `credentials` is filled in and verified
-in `config/business-profile.yml`. Post the exact licence wording and carrier
-detail, nothing softer and nothing more generous.]
+Yes. Paint'n Pete is a licensed Florida business. Pinellas County does not
+require a contractor license for painting. We carry $1,000,000 general
+liability through Next Insurance and workers' compensation through Biberk.
+Two-year workmanship warranty.
 
 ---
 

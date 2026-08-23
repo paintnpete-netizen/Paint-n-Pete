@@ -19,56 +19,24 @@ worked from.** It assumes Wix, and every one of its five "Day 1" emergency
 fixes is already done — including the dead quote button and the schema phone
 number that was publishing Noah's personal cell.
 
-What follows are the gaps that remain. There are eight, and one of them is
-costing money right now.
+What follows are the gaps that remain. Lead capture is no longer one of them.
 
 ---
 
-## 1. Website leads reach Noah, but not the system
+## 1. Website leads now reach the system
 
-**Checked in the Netlify dashboard 2026-08-19.** The first draft of this audit
-assumed the worst here and was too pessimistic. The facts:
+**Resolved 2026-08-20.** The contact form still posts to Netlify Forms. Netlify
+emails `noah@paintnpete.com` **and** POSTs to the Apps Script web app. `doPost`
+writes a Leads row (`source=website`), acknowledges the submitter, and alerts
+`noah@paintnpete.com`. Live form test succeeded the same day; Noah marked the
+test rows `outcome=test`.
 
-**No leads have been lost.** The form has **two submissions ever**, both from
-the same IP on the day the site was deployed, both obviously tests — one named
-"Deploy Verify" at `123 Test St`, one from a family address at the exact minute
-of the CLI deploy. Nothing is sitting unanswered.
+Keep both channels. Do not add `onFormSubmit` until a Google Form is linked.
+After any `Code.gs` change, republish the web app as a new version.
 
-**An email notification is already configured:** *Email noah@paintnpete.com on
-new submission from any form.* So a real submission does reach Noah. That is
-the single most important thing and it works.
-
-**What still does not happen**, because Netlify Forms cannot write to a
-spreadsheet or fire an Apps Script trigger:
-
-- The customer gets **no acknowledgment**. They submit into apparent silence and
-  wait, while comparing three contractors.
-- There is **no row in the Leads tab**, so the lead does not exist to the rest
-  of the system.
-- Therefore **no day 3 / 8 / 21 follow-up** — those read from the sheet.
-- **No text alert.** Email only, which is slower to notice than a text.
-
-So this is not the black hole the Kai alerts were. It is a lead that lands in an
-inbox and then falls out of the pipeline. The timing is fortunate: the fix can
-go in before real traffic arrives rather than after.
-
-**Also confirmed:** *No webhooks set up yet* — so the outgoing webhook below is
-the missing piece, and adding it does not disturb the email notification, which
-should stay as a belt-and-braces second channel.
-
-**Pick one of three:**
-
-| Option | Effort | Trade-off |
-|---|---|---|
-| Netlify notification → email → Apps Script parses it | Low | Fragile; parsing email is always brittle |
-| Netlify outgoing webhook → Apps Script web app | Medium | Clean, real-time, the right answer |
-| Replace the form with an embedded Google Form | Low | Works today with zero code, but worse on the page |
-
-The webhook is the correct one, and **the code is already written**: `doPost` in
-`../07-automation/Code.gs` accepts Netlify's payload and produces the same Leads
-row, acknowledgment, and alert as a Google Form submission. Step 6 of
-`../07-automation/DEPLOY.md` connects it. What it needs is the script published
-as a web app, which requires the Google account.
+The 2026-08-19 inbox check still stands: the first two submissions were tests
+and nothing was sitting unanswered. The webhook was the missing piece; it is
+no longer missing. See `../07-automation/DEPLOY.md`.
 
 ### Account facts worth keeping
 
@@ -80,29 +48,17 @@ as a web app, which requires the Google account.
   a password or `paintnpete@gmail.com` Google login is connected.
 - **Deploys are from the CLI, not from git.** There is no continuous deployment
   connected, so every publish is a manual `netlify deploy` from the folder on
-  Noah's machine — which is also why the uncommitted work in item 7 is riskier
-  than it looks. The deployed site and the repo can silently diverge.
+  Noah's machine. The deployed site and the repo can silently diverge.
 - Form name `consultation-details`, honeypot spam prevention enabled.
 
 ---
 
 ## 2. The published review count is stale
 
-Homepage `AggregateRating` markup reads:
-
-```
-ratingValue 5.0 · ratingCount 14 · reviewCount 14
-```
-
-Google shows **21**. The number was hardcoded when the site was built and has
-been drifting ever since — and it will keep drifting, faster once the review
-engine in `../04-visibility/` starts running. That is the whole point of the
-review engine.
-
-Two things to settle, not one:
-
-**The number is wrong.** Update it, and add it to the monthly routine in
-`../08-routines/` so it gets re-checked rather than rotting again.
+**Source updated 2026-08-20, not live until CLI deploy.** Homepage copy and
+`AggregateRating` markup now read **21**, matching Google as of 2026-08-19.
+The number is still hardcoded and will drift again — the monthly routine in
+`../08-routines/operating-rhythm.md` already includes a re-check.
 
 **The markup may not be doing anything.** Google's structured data policy
 restricts *self-serving* review markup — a business publishing an aggregate
@@ -111,17 +67,15 @@ results. If that applies here, the block is decorative at best. Worth
 validating in Google's Rich Results Test before spending effort maintaining a
 number that earns nothing. The stars in search come from the Google Business
 Profile regardless, which is another argument for the review engine being the
-higher-value work.
+higher-value work. Leave that engine parked until Noah starts it.
 
 ---
 
 ## 3. Business hours are not in the schema
 
-`openingHoursSpecification` is absent from the `HousePainter` block, even
-though hours are now verified: 8:00 AM – 8:00 PM, seven days.
-
-Cheap to add and genuinely useful — hours are one of the fields local search
-surfaces directly, and "open now" filtering depends on it.
+**Source updated 2026-08-20, not live until CLI deploy.** `openingHoursSpecification`
+is now `Mo–Su 08:00–20:00` on the homepage `HousePainter` block, matching
+verified GBP hours.
 
 ---
 
@@ -135,39 +89,34 @@ surfaces directly, and "open now" filtering depends on it.
 | `work.html` | none | `ImageGallery`, or `CreativeWork` per project |
 | `products.html` | none | `FAQPage` if it answers questions |
 | `about.html` | none | `AboutPage` + `Person` for Noah |
-| `contact.html` | none | `ContactPage` + `LocalBusiness` |
+| `contact.html` | `ContactPage` (source, 2026-08-20) | live after CLI deploy |
 
 `contact.html` is the one worth doing. It is the page most likely to be
-surfaced for "paint'n pete phone number" style queries.
+surfaced for "paint'n pete phone number" style queries. Markup is in the
+website repo; it is not live until `netlify deploy --prod`.
 
 ---
 
-## 5. The service area contradicts itself
+## 5. The service area is confirmed
 
-- Homepage `areaServed`: **St. Petersburg, Clearwater, Tampa**, plus Pinellas
-  and Hillsborough counties — five entries.
-- `service-areas.html`: **eight cities** — St. Petersburg, Clearwater, Tampa,
-  Gulfport, Pinellas Park, St. Pete Beach, Tierra Verde, Treasure Island.
+Noah confirmed 2026-08-20. The eight live cities stay: **St. Petersburg,
+Clearwater, Tampa, Gulfport, Pinellas Park, St. Pete Beach, Tierra Verde,
+Treasure Island**, plus Pinellas and Hillsborough counties.
 
-Pick one list and use it in both places.
-
-There is a second-order point here. `service_area.boundary` is `todo` in the
-config, and several documents in this back office refuse to publish a
-service-area page until it is confirmed. **That gate is fictional — the page is
-already live with eight cities on it.** The decision was made when the site
-shipped. The config should record what is published rather than pretend the
-question is open, and if any of those eight cities is one Noah does not
-actually want work in, that is a live problem today, not a future one.
+Homepage `areaServed` is aligned to that same list in source (live after CLI
+deploy). `service_area.boundary` in config is `verified`.
 
 ---
 
 ## 6. One homepage image is missing alt text
 
-Five of six have it. `work.html` is clean — all 24 images carry alt text.
+**Source updated 2026-08-20, not live until CLI deploy.** The hero image
+(`living-shutters-sectional.jpg`) now has alt text. `work.html` was already
+clean — all 24 images carry alt text.
 
 ---
 
-## 7. The site source is a separate repo, with uncommitted work
+## 7. The site source is a separate repo
 
 The live site is **not** in this repository. It lives at
 `~/Projects/paintnpete-website` and deploys to Netlify site
@@ -209,19 +158,18 @@ intent — the homepage copy and the products page structure are still the sourc
 of truth for tone — but the build plan, platform notes, and Day 1 fix list are
 all obsolete and will mislead anyone who reads them cold.
 
-Its confirmation checklist is still live, though, and overlaps exactly with
-what is blocking the commercial packet: licence wording, warranty terms,
-founding year. Same questions, asked in July, still unanswered.
+Its confirmation checklist is still live, though. Licence wording, warranty
+terms, and founding year were answered 2026-08-20–21. Remaining commercial
+blockers are trade references, bonding, and warranty exclusions — not this
+site.
 
 ---
 
 ## Suggested order
 
-1. **Wire the webhook** — `DEPLOY.md` step 6. Nothing has been lost yet, so this
-   is preventive rather than a rescue. Do it before the site gets real traffic.
-2. **Commit the website repo.** Uncommitted work is one bad afternoon from gone,
-   and with CLI-only deploys there is no git copy of what is actually live.
-3. Fix the review count, add opening hours, reconcile the city list — one small
-   pass, all in the schema.
-4. Add `ContactPage` schema and the missing alt attribute.
-5. Decide whether the `AggregateRating` block earns its keep at all.
+1. **Commit and CLI-deploy the website repo** so the 2026-08-20 schema pass
+   (review count 21, hours, contact markup, hero alt) is actually live. Lead
+   capture is already live; do not re-wire the webhook.
+2. Service area is confirmed — the eight live cities stay.
+3. Decide whether the `AggregateRating` block earns its keep at all. Do not
+   start the review engine until Noah asks.

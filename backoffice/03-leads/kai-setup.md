@@ -203,21 +203,28 @@ produced the error voicemail.
 
 Kai rules published the same day: collect name + service, no prices, say
 Paintin' Pete, text https://www.paintnpete.com/contact, promise a follow-up
-call within 1 business day. Actions on: Text callers + Send saved links
-(existing short link `kaicalls.com/l/ZRWyz1UI` → contact page). Staff alerts
-already go to +17279021986 and paintnpete@gmail.com.
+call within 1 business day. Saved link exists (`kaicalls.com/l/ZRWyz1UI` →
+contact page). **Text callers / Send saved links still will not stay on after
+Save** — 2026-08-20 9:57 PM ET inbound: Kai promised the text, sent nothing
+(zero tool calls, no SMS). A2P is already enabled via KaiCalls. Staff alerts
+already go to +17279021986 and noah@paintnpete.com.
 
 Do not port 727. Do not buy another number.
 
 ### What he should hear (after routing is Direct)
 
-The **corrected Paintin' Pete prompt is still draft** — it was not applied.
-Expect the current live greeting, which previously mis-said the name
-("Peyton Pete" / "Paint and Pete") and played the recording disclosure,
-then asked how it can help / offered a free estimate.
+Greeting is live as: “Hi, this is Kai with Paintin' Pete. May I get your name
+and what kind of painting service you need?”
 
-If it works: Kai talks. Report back the greeting wording.
-If it fails: still error voicemail, or dead air — say which.
+**Pronunciation clinic published 2026-08-20:** four TTS overrides, all
+`PAYN-tin PEET`, covering `Paintin' Pete`, `Paint'n Pete`, `Paint N Pete`,
+and `Paint and Pete`. The 8:03 PM ET inbound still said “Paint and Pete” /
+“paint in peat” because the apostrophe was being read aloud; the overrides
+are the voice-layer fix. Call **762-316-2584 from a phone that is not 727**
+to confirm.
+
+If it works: Kai talks and says Paintin' Pete, not Paint and Pete.
+If it fails: still the old name, error voicemail, or dead air — say which.
 
 Optional second call: ask for a ballpark price. Kai must not give a number
 (see the no-price rule). That rule has never been tested on a live caller.
@@ -243,8 +250,9 @@ phone, and they were not being acted on.
 **Now configured** (verified through `get_operational_settings`):
 
 - Alert phone `+17279021986`, SMS alerts enabled
-- Alert email `paintnpete@gmail.com` — set explicitly rather than relying on
-  the fallback. Change to the Workspace address once it exists.
+- Alert email `noah@paintnpete.com` — customer and vendor interaction only.
+  `paintnpete@gmail.com` is admin-only and must not receive call or lead
+  mail. Changed 2026-08-20 after a test-call notice landed on Gmail.
 - Four escalation rules, each firing an urgent text and email:
   1. Caller wanted an estimate or callback but no appointment was booked
   2. Caller needs work urgently, or said tomorrow / this week / as soon as possible

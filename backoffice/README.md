@@ -12,10 +12,10 @@ inherits the entire system. See `config/README.md`.
 
 ## Start here
 
-1. Read `config/business-profile.yml` — the config layer. Fill in every `todo`.
-2. Read `01-foundation/business-brief.md` — paste it above every AI prompt.
-3. Read `prompt-library.md` — the index of every prompt in the system.
-4. Work the roadmap below in order.
+1. Open `hq/index.html` — the office. Bookmark it. That is the daily front door.
+2. Read `config/business-profile.yml` — the config layer. Fill in every `todo`.
+3. Read `01-foundation/business-brief.md` — paste it above every AI prompt.
+4. Read `prompt-library.md` — the index of every prompt in the system.
 
 ---
 
@@ -40,11 +40,12 @@ not on the website, not in the capabilities packet.
 | `02-estimating/` | Proposals, exclusions, photo-to-scope, job costing | 2 | **Built** |
 | `03-leads/` | Response standards, follow-up, objections, intake form | 3 | **Built** |
 | `04-visibility/` | Review engine, Google Business Profile, content | 4 | **Built** — needs your review link |
-| `05-commercial/` | Capabilities packet, GC and PM outreach, bid analysis | 5 | **Built** — ⛔ blocked on credentials |
+| `05-commercial/` | Capabilities packet, GC and PM outreach, bid analysis | 5 | **Built** — ⛔ blocked on trade references / bonding |
 | `06-crew/` | SOPs (EN + ES), hiring, onboarding | 6 | **Built** — Spanish needs native review |
-| `07-automation/` | Apps Script workflows | 7 | **Built** — needs deploying |
+| `07-automation/` | Apps Script workflows | 7 | **Live** — form → sheet, daily + Monday triggers |
 | `08-routines/` | Daily, weekly, monthly operating rhythm | 9 | **Built** |
-| `09-website/` | Live site audit and publishing gates | 4 | **Audited** — ⛔ lead capture broken |
+| `hq/` | Internal Workspace HQ — one page, all tools | — | **Built** — bookmark `hq/index.html`; estimate drawer is `hq/drawer.html` |
+| `09-website/` | Live site audit and publishing gates | 4 | **Audited** — form capture live; schema pass in source |
 | `prompt-library.md` | Index of every prompt, plus the standalone ones | 10 | **Built** |
 
 ---
@@ -61,13 +62,15 @@ Noah's Google review link and the client backlog — see
 **Phase 2 — The money path.** *Built.* Lead capture through proposal to
 follow-up: four standard responses, three-touch sequence, objection library,
 intake form spec, leads tracker, proposal and exclusions templates,
-photo-to-scope, and job-costing sheets with live formulas. Open items are
-production rates (backfill three jobs), the service-area boundary, and a legal
-review of the exclusions block.
+photo-to-scope, and job-costing sheets with live formulas. Service-area
+boundary confirmed 2026-08-20 (eight cities). Production rates and a legal
+review of the exclusions block are parked until Noah asks.
 
-**Phase 2b — Automation.** *Built, not deployed.* All six workflows from guide
-§7 on Apps Script, plus the master workbook. About 20 minutes to install — see
-`07-automation/DEPLOY.md`.
+**Phase 2b — Automation.** *Live as of 2026-08-20.* Website form submissions
+land in the Leads tab, the submitter gets an acknowledgment, and
+`dailyCheck` / `mondayReminder` are installed. See `07-automation/DEPLOY.md`.
+Workflows that depend on a Google Form (`onFormSubmit`) or on Kai writing
+into the sheet are still waiting on those pieces, not on Apps Script.
 
 **Phase 3 — Visibility, crew, commercial, rhythm.** *Built.* Google Business
 Profile content pack, the weekly content engine, service-area and case study page
@@ -76,12 +79,13 @@ capabilities statement and outreach sequences, the bid analyser, the calendar
 routines, and the prompt library.
 
 Three gates remain on this phase, and they are deliberate:
-- Commercial documents cannot be sent until `credentials` is verified.
+- Commercial documents cannot be sent until trade references are filled and
+  bonding is either stated or deleted. Licence wording, W-9, current Next GL
+  and biBERK WC from the COIs, legal name, founded year, and warranty are
+  now verified.
 - Spanish SOPs are AI first drafts and need a fluent speaker before they go in
   the van.
-- ~~No service-area page publishes for a city until `service_area.boundary` is
-  confirmed.~~ **Overtaken by events** — `service-areas.html` has been live with
-  eight cities on it. See Phase 4.
+- Service area is confirmed: the eight live cities stay.
 
 **Phase 4 — Website.** *Audited 2026-08-19 — see `09-website/`.* Better than
 this document previously assumed: eleven pages, all returning 200, all with meta
@@ -90,17 +94,16 @@ data across the homepage and every service page, and the right phone number
 throughout. The Phase 1 rebuild in `../paintnpete-redesign/` has already been
 executed, so those documents are stale and should not be worked from.
 
-**One gap, preventive rather than urgent.** The contact form posts to Netlify
-Forms, which cannot reach Google Sheets or Apps Script, so workflow 1 never
-fires for a website lead — no acknowledgment to the customer, no Leads row, no
-follow-up sequence. Netlify does email Noah, and the inbox was checked on
-2026-08-19: two submissions, both tests, nothing lost. The fix is written and
-waiting in `07-automation/DEPLOY.md` step 6.
+**Lead capture is live.** The contact form still posts to Netlify Forms; an
+outgoing webhook now fires `doPost` so a Leads row, customer acknowledgment,
+and alert all happen. Netlify also still emails Noah. End-to-end tested
+2026-08-20. Remaining website work is the schema pass in `09-website/`
+(review count, hours, contact markup) and a CLI deploy — not the form.
 
-The site source is a separate repository (`~/Projects/paintnpete-website`) with
-one commit and a large body of uncommitted work, and it deploys from the CLI
-rather than from git — so nothing guarantees the repo matches what is live.
-Commit it before touching it.
+The site source is a separate repository (`~/Projects/paintnpete-website`),
+private GitHub `paintnpete-netizen/paintnpete-website`, last committed as
+`9389cc5`. Deploys are from the CLI, not from git, so a schema change is not
+live until `netlify deploy --prod` runs from that folder.
 
 **Phase 5 — Franchise packaging.** Clonable operator kit.
 
@@ -111,11 +114,12 @@ Commit it before touching it.
 Resolved 2026-08-19: **Google Workspace**, so the supporting layer is Gmail on
 the domain, Google Forms, Sheets, Drive, and Calendar.
 
-**Phone: KaiCalls.** Answers 24/7, qualifies, books onto Google Calendar, and
-texts the lead summary. It owns everything that happens on a call and closes the
-SMS gap Apps Script couldn't. It is not the system of record — leads still land
-in the `Leads` tab, because Kai's job ends at the booked appointment and the
-money is made after it. See `03-leads/kai-setup.md`.
+**Phone: KaiCalls.** Intended to answer 24/7, qualify, and text a booking
+link. Public inbound on the 762 DID is currently with a KaiCalls developer —
+do not keep testing that line while they work. Live booking path is
+`https://www.paintnpete.com/contact`, not calendar slots. Kai is not the
+system of record — website leads already land in the `Leads` tab. See
+`03-leads/kai-setup.md`.
 
 Automation runs on **Google Apps Script**, not Make.com. The guide defaults to
 Make.com and correctly flags its free tier as the system's only hard limit — two

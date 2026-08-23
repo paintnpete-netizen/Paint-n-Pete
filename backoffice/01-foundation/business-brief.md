@@ -15,7 +15,8 @@ quarter or whenever a service or standard changes.
 ## The brief
 
 Paint'n Pete is a residential and light-commercial painting company based in
-St. Petersburg, Florida, owned and operated by Noah Kanwal. Kanwal has worked in
+St. Petersburg, Florida, owned and operated by Noah Kanwal. The legal entity is
+Kanwal Consulting LLC, DBA Paint'n Pete, founded in 2022. Kanwal has worked in
 the trade for approximately fifteen years and has completed more than three
 hundred projects across Pinellas and Hillsborough counties.
 
@@ -45,9 +46,15 @@ and coordinates with designers and general contractors.
 work you turn down and why. This does more work than anything else in the brief,
 because it stops the AI from writing you into jobs you don't want.
 
-<!-- TODO(noah): credentials, once verified -->
-**[PENDING VERIFICATION: licensing, insurance, and warranty terms.]** These stay
-out of the brief until confirmed in the config file.
+**Insurance, licence, and warranty (verified 2026-08-21).** Two-year
+workmanship warranty. Licensed Florida business; Pinellas County does not
+require a contractor license for painting — never say licensed contractor,
+never invent a license number. GL in force through 2027-07-15: Next
+Insurance US Company policy NXTWWCT4Q3-03-GL, $1,000,000 each occurrence /
+$1,000,000 aggregate. WC in force through 2027-01-13: biBERK / National
+Liability & Fire policy N9WC614678, statutory plus employers liability
+$100k / $100k / $500k — not $1M. Policy numbers do not go on the public
+website.
 
 Written and spoken communication is direct and plainspoken, in the register of a
 craftsman describing his work rather than a business advertising itself. It
@@ -69,5 +76,5 @@ avoids superlatives, marketing language, and exclamation points.
 |---|---|
 | Core brief | Drafted, awaiting Noah's read-through |
 | What you decline to do | **Needed from Noah** |
-| License / insurance / warranty | **Needed from Noah**, held out until verified |
-| Founding year | **Needed from Noah** |
+| License / insurance / warranty | Verified 2026-08-21 from COIs. Licensed Florida business (no Pinellas contractor license for painting). GL $1M/$1M Next through 2027-07-15. WC statutory + $100k/$100k/$500k EL through 2027-01-13. 2-year workmanship. |
+| Founding year | 2022 |

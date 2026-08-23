@@ -23,16 +23,14 @@ phone number is right everywhere. The Phase 1 rebuild described in
 `../../paintnpete-redesign/` has already happened — those documents are stale
 and describe a Wix site that no longer exists.
 
-**One gap, and it is preventive rather than urgent.** The contact form posts to
-Netlify Forms, which cannot talk to Google Sheets or Apps Script. Netlify does
-email `noah@paintnpete.com` on every submission, so a lead does reach Noah — but
-the customer gets no acknowledgment, no row appears in the Leads tab, and no
-follow-up sequence starts.
+**Lead capture is live as of 2026-08-20.** The contact form still posts to
+Netlify Forms. Netlify emails `noah@paintnpete.com` and POSTs to the Apps Script
+web app, which writes the Leads row, acknowledges the submitter, and alerts
+`noah@paintnpete.com`. Tested end-to-end.
 
-Checked the Netlify inbox on 2026-08-19: **two submissions, both tests, nothing
-lost.** The fix is written (`doPost` in `../07-automation/Code.gs`) and needs
-deploying — `../07-automation/DEPLOY.md` step 6 — ideally before the site sees
-real traffic.
+What is still open on the site is markup, not capture: homepage review count
+and hours, contact-page schema, and a CLI deploy so those edits actually go
+live. Service area is confirmed — all eight cities stay.
 
 ---
 
@@ -41,11 +39,11 @@ real traffic.
 Same two gates as the rest of the system:
 
 - Nothing marked `todo` or `unverified` in `../config/business-profile.yml`
-  goes on a public page — that means no licence, insurance, or warranty claim
-  until `credentials` is filled in.
+  goes on a public page. Licence, GL ($1M Next), WC (Biberk, not $1M), and
+  two-year workmanship are verified. Never "licensed contractor." Policy
+  numbers stay off the website.
 - Page copy comes from `../04-visibility/web-templates.md` and the tone rules
   in `../01-foundation/business-brief.md`.
 
-One gate has already been overtaken by events: `service_area.boundary` is still
-`todo`, but `service-areas.html` is live with eight cities on it. Reconcile the
-config to what is published rather than treating the question as open.
+One gate has already been overtaken by events: `service_area.boundary` is
+`verified` as of 2026-08-20. The eight live cities stay.

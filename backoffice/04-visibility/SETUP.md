@@ -83,9 +83,11 @@ personalise, and it's the part that makes the message work.
 
 **`noah@paintnpete.com` is the client outreach address.** Decided 2026-08-19.
 Everything client-facing sends from it: proposals, follow-ups, objection
-replies, and all commercial outreach. `paintnpete@gmail.com` stays as the
-internal system address — it owns the Google Business Profile and receives
-KaiCalls alerts — and never appears on a document a client sees.
+replies, and all commercial outreach. As of 2026-08-20 it also receives all
+customer and vendor interaction, including KaiCalls call/lead alerts and
+website form staff alerts. `paintnpete@gmail.com` stays as the admin mailbox
+(subscriptions, compliance, insurance, GBP owner, KaiCalls/Netlify login)
+and never appears on a document a client sees.
 
 **The domain is already on Google Workspace.** Checked the DNS directly on
 2026-08-19:

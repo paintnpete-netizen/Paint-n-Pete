@@ -127,7 +127,11 @@ Before any page from these templates goes live, check `config/business-profile.y
   published city is one you actually take work in, and reconcile the homepage
   `areaServed` (three cities) with the page (eight). See
   `../09-website/live-site-audit.md`.
-- `credentials` — currently `todo`. No licence, insurance, or warranty claim
-  appears on any page until those are verified.
+- `credentials` — licence, warranty, and insurance **verified from COIs.**
+  Public claims may use: licensed Florida business (not "licensed
+  contractor"); Pinellas does not require a contractor license for painting;
+  $1,000,000 GL through Next; workers' compensation through Biberk (do not
+  say $1M WC); two-year workmanship warranty. Policy numbers stay off the
+  website.
 - `contact.address` — `unverified`. Not in schema until confirmed publishable.
 - Client permission for every photo of a private home.

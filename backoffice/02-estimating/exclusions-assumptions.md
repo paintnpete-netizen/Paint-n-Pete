@@ -65,5 +65,6 @@ The tone target is a homeowner reading this as helpful clarity rather than a
 contractor covering himself. If any line starts sounding like a contract,
 rewrite it in the words you would use standing in their kitchen.
 
-Warranty language references `credentials.warranty` in the config, which is
-currently `todo`. Confirm your actual terms before this goes out.
+Warranty language references `credentials.warranty` in the config: two-year
+workmanship, verified 2026-08-20. Do not invent exclusions. Confirm any
+carve-outs before this block goes out.

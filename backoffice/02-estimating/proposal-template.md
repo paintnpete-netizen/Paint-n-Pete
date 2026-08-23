@@ -1,10 +1,13 @@
 # The Proposal
 
 You already win work by delivering an itemized written proposal before anyone
-else does. This makes that a Tuesday afternoon instead of a Sunday night.
+else does. **The letter layout is fixed** (the Danielle PNP-2026-0817 design).
+Client, address, scope, products, and prices change every time.
 
-**Target: proposal out the same day as the walkthrough.** Speed is a large part
-of why you win, and it costs nothing.
+**Target: proposal out the same day as the walkthrough.**
+
+The letter lives at `proposal.html`. Fill `job.js` with that job’s facts, open
+the HTML, Print → Save as PDF. Do not send a Google Doc or a markdown dump.
 
 ---
 
@@ -14,66 +17,61 @@ Take rough notes on: rooms and areas, surfaces, ceiling heights, condition,
 repairs needed, colors, sheens, access, and timeline. Photograph every problem
 area — those feed `photo-to-scope.md`.
 
-You do not need to write neatly. Fragments are fine. The messier the notes, the
-more the next step earns its keep.
-
 ---
 
 ## Generating the draft
 
-Paste `../01-foundation/business-brief.md`, then the prompt below, then your
-notes. You can do this in a Claude conversation or just hand it to me here.
+1. Copy `jobs/_blank.js` over `job.js` (or start from a similar past job in
+   `jobs/`).
+2. Paste `../01-foundation/business-brief.md` and the walkthrough notes into
+   the chat (or the prompt below). The draft is a filled `job.js`, not a
+   prose letter.
+3. **The drawer prices from `rates.js` × measurements.** If you fill `job.js`
+   by hand, copy the quote lines from the drawer (or leave `[PRICE]`).
+4. Open `proposal.html` in Chrome. File → Print → Save as PDF, paper size
+   **Letter**, **Background graphics** on.
+5. Name it `Paint'n Pete — Estimate PNP-YYYY-MMDD — Firstname.pdf`.
+6. Save a copy of `job.js` into `jobs/PNP-YYYY-MMDD-lastname.js` so the job
+   can be reprinted.
 
-> Write a complete, client-ready painting proposal from my walkthrough notes
-> below. Structure:
-> 1. Brief personal opening referencing their specific project
-> 2. Itemized scope of work by area, listing surfaces and prep for each
-> 3. Products and sheens specified by surface
-> 4. What is included
-> 5. Exclusions and assumptions
-> 6. Sequence and estimated timeline
-> 7. Payment terms placeholder
-> 8. Short closing paragraph on why prep drives the five-year result
->
-> Leave all dollar figures as [PRICE] for me to fill in. Professional but warm;
-> no superlatives; no exclamation points.
+Prompt:
+
+> Fill `backoffice/02-estimating/job.js` from my walkthrough notes, matching
+> the Danielle estimate (PNP-2026-0817): numbered scope with "what's
+> included," products table, included / not included lists, sequence, terms,
+> two price options only if I specified both. Price from rates.js × the
+> measurements in the notes. No superlatives, no exclamation points. Use two-year workmanship
+> warranty. Never "licensed contractor."
 >
 > WALKTHROUGH NOTES: [paste]
 
-Section 5 pulls from `exclusions-assumptions.md` — that block is written once and
-reused, not regenerated per job.
+`exclusions-assumptions.md` is the source for the not-included list and the
+terms. Distill it into the short checklist style of the letter — do not paste
+the 340-word essay onto the PDF.
 
 ---
 
-## The rule that protects you
+## How the letter is priced
 
-**AI never sets a price.** Every figure comes out of `job-costing.md`, from your
-production rates and your crew. The draft arrives with `[PRICE]` placeholders and
-you fill them in.
-
-This is not caution for its own sake. A model that has never seen your crew work
-will guess at production rates, and a guess that is 20% optimistic is your money,
-not its.
+The estimate drawer multiplies walkthrough measurements by `rates.js`:
+interior/exterior paint $2.10/sq ft, pressure wash $0.75/sq ft, interior doors
+$200, exterior doors $250, cabinets per door/drawer/frame/box. Edit rates on
+the estimate if a job is different.
 
 ---
 
 ## Before it sends
 
-- [ ] Every `[PRICE]` replaced with a real number from the costing sheet
-- [ ] Scope matches your notes — check nothing was invented or quietly dropped
+- [ ] Quote matches the walkthrough measurements and current rates
+- [ ] Printed from `proposal.html` — same letter as PNP-2026-0817
+- [ ] Scope matches your notes — nothing invented or quietly dropped
 - [ ] Products and sheens are ones you actually intend to use
 - [ ] Timeline reflects cure times, not just working days
-- [ ] Exclusions block attached
-- [ ] Read start to finish, out loud if it's a large job
-
-The last one catches more than you'd expect. A proposal that reads smoothly but
-describes the wrong house is the one that costs you the client.
+- [ ] Read start to finish
 
 ---
 
 ## Log it
 
-Enter the send date in your tracking sheet the moment it goes out. That date is
-what fires the day 3, 8, and 21 follow-ups in `../03-leads/follow-up-sequence.md`.
-Quotes go quiet because nobody remembered to check, not because the price was
-wrong.
+Enter the send date in the Leads tab the moment it goes out. That date fires
+the day 3 / 8 / 21 follow-ups.

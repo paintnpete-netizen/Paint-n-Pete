@@ -17,7 +17,7 @@ Every prompt in the system, in one place.
 
 | What you need | Where |
 |---|---|
-| Write a client proposal | `02-estimating/proposal-template.md` |
+| Write a client proposal | `02-estimating/proposal-template.md` → `proposal.html` |
 | Read job photos into a scope and prep list | `02-estimating/photo-to-scope.md` |
 | Respond to a review | `04-visibility/review-engine.md` |
 | Weekly social content batch | `04-visibility/content-engine.md` |
@@ -211,8 +211,8 @@ Not a pricing tool — a second pair of eyes on your own logic.
 
 ## Prompts to never use
 
-- Anything that asks AI to produce a price, a rate, or a range. Every number
-  comes from the job-costing sheet.
+- Anything that asks AI to invent a price, a rate, or a range. Quotes come
+  from `02-estimating/rates.js` × walkthrough measurements.
 - Anything that asks it to write a warranty, a licence claim, or a contract
   clause you'll actually use.
 - Anything that asks it to invent a client testimonial or a project you didn't

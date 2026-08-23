@@ -27,6 +27,10 @@ string-handling that breaks on import.
 
 ## Using the estimate sheet
 
+The **letter** is priced in the HQ drawer from `rates.js` × measurements. Use
+this sheet when you want a cost-build (hours, burden, margin) to check a
+quote, and always for actuals after the job.
+
 Fill the white columns per area: **Area, Surface, Sq ft, Prep level, Rate**.
 Everything else calculates.
 

@@ -22,8 +22,10 @@ respond when actually asked.)*
 that touches Google works — review link, review responses, posts, Q&A,
 services. See `SETUP.md`.
 
-Still needed: the last 30 completed clients with contact details, and
-`credentials` before any licence/insurance/warranty claim is published.
+Still needed: the last 30 completed clients with contact details. Licence,
+insurance, and warranty wording is verified — use the exact lines in
+`gbp-content-pack.md` Q8; do not invent a contractor license number and do
+not say $1M workers' compensation.
 
 **Asset already on hand:** ~30 real project photographs in `../../images/work/`.
 Service-area pages and content run on these. Stock imagery defeats the point.

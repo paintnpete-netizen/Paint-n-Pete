@@ -9,6 +9,7 @@ never in the middle**, or update the `LEAD` and `JOB` maps in the script.
 | `Leads` | `../03-leads/leads-tracker.csv` | Every inquiry, from first contact to won or lost |
 | `Jobs` | `../04-visibility/review-tracker.csv` | Completed work, review status, repaint windows |
 | `Scorecard` | `scorecard.csv` | The four monthly numbers |
+| `Bookings` | created by the script | Taken estimate slots (date + time). One row per slot. |
 
 Job costing stays separate — one file per job, not a tab here.
 

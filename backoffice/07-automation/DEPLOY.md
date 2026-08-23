@@ -16,8 +16,10 @@ About 20 minutes. Build the workbook first — see `sheets-setup.md`.
 
 At the top of the file. These come from `../config/business-profile.yml`:
 
-- `alertEmail` — where reminders land. `paintnpete@gmail.com` is correct: these
-  are internal notes to yourself and no client ever sees them.
+- `alertEmail` — where pipeline alerts land (form submissions, follow-up
+  reminders, review prompts). `noah@paintnpete.com` as of 2026-08-20: all
+  customer and vendor interaction. `paintnpete@gmail.com` is admin-only
+  (subscriptions, compliance, insurance) and must not receive these.
 - `clientEmail` — `noah@paintnpete.com`. Set as Reply-To on the two messages
   this script sends to clients, so replies land on the business address rather
   than a Gmail one.
@@ -26,6 +28,13 @@ At the top of the file. These come from `../config/business-profile.yml`:
 - `intakeFormUrl` — from `../03-leads/intake-form.md`.
 - `webhookSecret` — leave empty in git. Put the live value in **Project
   Settings → Script properties** as `webhookSecret`. Needed for step 6.
+- `kaiCallsApiKey` — Script properties only, never git. Needs `sms:write`.
+  Used to text the booking confirmation from Kai's 762 line after the
+  website form is submitted. After adding this, run `authorizeExternalSms`
+  once in the editor and approve **Connect to external services**. The
+  web app also needs that scope in `appsscript.json`
+  (`script.external_request`). Then Deploy → Manage deployments → New
+  version, or the live webhook keeps the old copy.
 
 ## 3. Authorise
 
@@ -95,6 +104,20 @@ webhook**.
 Netlify also offers a JWS signature secret. Skip it: Apps Script's `doPost`
 cannot read request headers, so the signature is unverifiable. The query-string
 secret is doing that job.
+
+Apps Script web apps always 302. Netlify counts that as failure and **disables
+the webhook after six tries**. Re-enable by editing the notification and
+saving. The durable path is `netlify/functions/submission-created.js` on the
+website, which returns HTTP 200, texts via KaiCalls, and forwards to this
+script. That function needs Netlify env `BOOKING_SCRIPT_URL` and
+`KAICALLS_API_KEY`.
+
+**Estimate slots (no double-booking).** After you paste an updated `Code.gs`,
+**Deploy → Manage deployments → Edit → New version**. Then in the editor run
+`setupWorkbook` once so the `Bookings` tab exists (the first live booking will
+also create it). The contact form loads taken times from
+`/.netlify/functions/slots` and removes them from the list. A booked time is
+held on Google Calendar for 30 minutes starting at that slot.
 
 **c. Test it end to end.** Submit the real form on the live site with your own
 details. Within a minute you should get the acknowledgment email, a row in

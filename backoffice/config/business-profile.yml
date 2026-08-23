@@ -17,7 +17,7 @@
 meta:
   operator_id: paintnpete-stpete
   profile_version: 1
-  last_reviewed: 2026-08-19
+  last_reviewed: 2026-08-21
   review_cadence: quarterly   # per guide 2.1
 
 # -----------------------------------------------------------------------------
@@ -36,11 +36,17 @@ company:
       produces "Paint N Pete". The live KaiCalls agent has said "Peyton Pete",
       "Paint and Pete", and "paints and peas" on recorded calls.
   legal_name:
-    value: null
-    status: todo              # registered entity name for contracts, W-9, COI
+    value: "Kanwal Consulting LLC"
+    dba: "Paint'n Pete"
+    status: verified
+    note: >
+      Confirmed 2026-08-20. Legal entity on contracts, W-9, and COI is
+      Kanwal Consulting LLC. Trade name / DBA is Paint'n Pete. Fifteen
+      years in the trade is Noah's, not the LLC's age.
   founded:
-    value: null
-    status: todo              # distinct from owner's 15 years in the trade
+    value: 2022
+    status: verified
+    note: "Company founded 2022. Distinct from owner's 15 years in the trade."
   tagline: null               # deliberately empty; see voice.forbidden
 
 owner:
@@ -80,20 +86,25 @@ contact:
     status: unverified
     role: "Client outreach — everything a client, GC, designer, or PM sees"
     note: >
-      Decided 2026-08-19. Proposals, follow-ups, objection replies, and all
-      commercial outreach send from this address. Mailbox exists — Google
-      accepted noah@paintnpete.com at the sign-in identifier screen on
-      2026-08-19. Flip to verified once a test message sends and receives.
+      Decided 2026-08-19; customer-channel rule tightened 2026-08-20.
+      All customer and vendor interaction lives here: proposals, follow-ups,
+      objection replies, commercial outreach, KaiCalls call/lead alerts,
+      website form staff alerts, and Apps Script pipeline reminders.
+      Mailbox exists — Google accepted noah@paintnpete.com at the sign-in
+      identifier screen on 2026-08-19. Flip to verified once a test message
+      sends and receives.
 
   email_internal:
     value: "paintnpete@gmail.com"
     status: verified
     role: "System address — never client-facing"
     note: >
-      Owns the Google Business Profile and receives KaiCalls lead alerts and
-      Apps Script notifications. Deliberately kept separate from the outreach
-      address so that a free Gmail never appears on a document a client or a
-      general contractor reads.
+      Admin mailbox only: subscriptions, compliance, insurance, personal
+      company matters, Google Business Profile owner, KaiCalls dashboard
+      login, and Netlify login. Never client-facing, and never a destination
+      for call, lead, or vendor notifications — those go to
+      noah@paintnpete.com. Kept so a free Gmail never appears on a document
+      a client or a general contractor reads.
 
   # The only two addresses that may touch Paint'n Pete. Decided 2026-08-19.
   # "noaha@" in that instruction is treated as noah@ — say so if that was wrong.
@@ -190,9 +201,10 @@ web:
       are stale and describe a Wix site that no longer exists.
 
       The source is NOT in this repository. This repo is Noah's portfolio site
-      (different Netlify site) and merely carries backoffice/ inside it. The
-      website repo has one commit and a large body of uncommitted changes —
-      commit it before touching anything there.
+      (different Netlify site) and merely carries backoffice/ inside it.
+      Website repo HEAD was 9389cc5 and clean as of 2026-08-20. Schema and
+      review-count edits after that date live in that working tree until they
+      are committed and CLI-deployed.
     lead_capture:
       mechanism: "Netlify Forms — form name consultation-details"
       status: live
@@ -240,8 +252,8 @@ web:
       note: >
         Live 2026-08-20. The website form posts to Netlify Forms; the webhook
         fires doPost; a Leads row lands with source=website; the submitter
-        gets an acknowledgment (Reply-To noah@paintnpete.com); paintnpete@gmail.com
-        gets an alert whose subject begins [Paint'n Pete].
+        gets an acknowledgment (Reply-To noah@paintnpete.com); noah@paintnpete.com
+        also gets the staff alert whose subject begins [Paint'n Pete].
 
         End-to-end test: submitted the live contact form as
         "Noah Kanwal (webhook test)". Two Leads rows appeared (the test
@@ -295,8 +307,10 @@ web:
       note: "Linked from the Google profile. ~140 followers as of 2026-08-19."
     facebook:
       value: null
-      status: todo
-      note: "Not linked from the Google profile and did not surface in search."
+      status: skipped
+      note: >
+        No business page found. Noah 2026-08-20: skip a Facebook business
+        page for now. Do not create one.
 
 # -----------------------------------------------------------------------------
 # What the business sells
@@ -344,8 +358,8 @@ service_area:
     - Gulfport
     - St. Pete Beach
   boundary:
-    status: published_unconfirmed
-    published_cities:          # live on service-areas.html, read 2026-08-19
+    status: verified
+    published_cities:          # confirmed by Noah 2026-08-20; live on service-areas.html
       - St. Petersburg
       - Clearwater
       - Tampa
@@ -355,18 +369,9 @@ service_area:
       - Tierra Verde
       - Treasure Island
     note: >
-      This was `todo`, and several documents in the back office refuse to
-      publish a service-area page until it is confirmed. That gate was already
-      overtaken by events: service-areas.html has been live with these eight
-      cities on it. The decision was made when the site shipped.
-
-      Still needs Noah's yes or no, but the question has changed. It is no
-      longer "which cities should we publish" — it is "is any of these eight a
-      city you don't actually want work in", and if so that is a live problem
-      today rather than a future one.
-
-      Note the homepage disagrees with the page: its areaServed lists only
-      St. Petersburg, Clearwater, and Tampa. Reconcile both to one list.
+      Noah confirmed 2026-08-20 that all eight published cities stay.
+      Homepage areaServed is aligned to the same eight plus Pinellas and
+      Hillsborough counties.
 
 # -----------------------------------------------------------------------------
 # Products
@@ -408,26 +413,96 @@ voice:
     - apologising for price
 
 # -----------------------------------------------------------------------------
-# Credentials — NOTHING HERE IS PUBLISHABLE YET
+# Credentials
 # -----------------------------------------------------------------------------
 credentials:
   license:
     number: null
-    exact_wording: null
-    status: todo
-    note: "Required for the commercial capabilities packet (guide 5.2)."
+    type: "Florida licensed business — not a contractor license"
+    pinellas_contractor_license_required: false
+    exact_wording: >
+      Licensed Florida business. Pinellas County does not require a
+      contractor license for painting.
+    status: verified
+    note: >
+      Confirmed by Noah 2026-08-21. Kanwal Consulting LLC DBA Paint'n Pete
+      is a licensed business. Painters in Pinellas County are not required
+      to hold a DBPR contractor license, so there is no contractor license
+      number to publish. Never say "licensed contractor." Never invent a
+      license number. Local business-tax receipt / Sunbiz docs go in the
+      Drive ready folder; they do not go on the website.
   insurance:
-    carrier: null
-    limits: null
-    status: todo
+    general_liability:
+      policy: "NXTWWCT4Q3-03-GL"
+      carrier: "Next Insurance US Company"
+      naic: "16285"
+      producer: "Next First Insurance Agency, Inc."
+      form: occurrence
+      each_occurrence: "$1,000,000"
+      general_aggregate: "$1,000,000"
+      products_completed_ops: "$1,000,000"
+      personal_advertising: "$1,000,000"
+      damage_rented_premises: "$100,000"
+      medical_expense: "$10,000"
+      contractors_eo: "$10,000 each occurrence / $20,000 aggregate"
+      additional_insured: "automatic status endorsement when required by written agreement"
+      effective: "2026-07-15"
+      expires: "2027-07-15"
+      certificate_date: "2026-07-15"
+      certificate_number: "182544434"
+      status: verified
+    workers_comp:
+      policy: "N9WC614678"
+      carrier: "National Liability & Fire Insurance Company"
+      producer: "biBERK"
+      naic: "20052"
+      statutory: true
+      employers_liability:
+        each_accident: "$100,000"
+        disease_each_employee: "$100,000"
+        disease_policy_limit: "$500,000"
+      effective: "2026-01-13"
+      expires: "2027-01-13"
+      certificate_date: "2026-01-15"
+      status: verified
+    note: >
+      Read from ACORD 25 PDFs Noah supplied 2026-08-21. Do not copy those
+      PDFs into git. Keep current send copies in Drive folder Compliance
+      — send on request.
+
+      GL: current certificate NXTWWCT4Q3-03-GL, Next Insurance US Company,
+      2026-07-15 to 2027-07-15. $1,000,000 each occurrence / $1,000,000
+      general aggregate, occurrence form. Certificate 182544434 dated
+      2026-07-15 is issued to BNB Networks LLC as additional insured
+      (automatic-status endorsement). That holder is job-specific — do
+      not publish the name. For any other GC, request a new cert in
+      their name. The prior -02-GL cert expired 2026-07-15; do not send it.
+
+      WC: statutory Florida workers' compensation plus employers
+      liability $100,000 / $100,000 / $500,000 — not $1,000,000. In
+      force through 2027-01-13.
+
+      Contractors E&O on the Next form is $10k/$20k — do not list it on
+      the capabilities statement.
   warranty:
-    years: null
-    covers: null
-    status: todo
+    years: 2
+    covers: "workmanship"
+    status: verified
+    note: >
+      Confirmed 2026-08-20: two-year workmanship warranty. Do not invent
+      exclusions, paint-failure carve-outs, or a different duration.
+      Proposal language must match this.
   w9_on_file:
-    value: false
-    status: todo
-    note: "GCs and property managers expect W-9 + COI within the hour. See guide 5.2."
+    value: true
+    signed: "2024-12-09"
+    status: verified
+    note: >
+      Signed W-9 dated 2024-12-09. Line 1 Kanwal Consulting LLC, Line 2
+      Paint'n Pete, address 1105 18th St. South, St. Petersburg, FL 33712
+      — matches company.legal_name. Form checks both LLC and
+      individual/sole proprietor; no C/S/P letter. PDF stays out of git.
+      Keep the send copy in Drive folder Compliance — send on request as
+      Kanwal-Consulting-LLC-W9.pdf. Do not record EIN here.
 
 # -----------------------------------------------------------------------------
 # Pricing posture
@@ -438,8 +513,10 @@ pricing:
     status: todo
     note: "Competitor research suggested transparent ranges build trust. Your call."
   rule: >
-    AI never sets a price. Every figure comes from the job-costing sheet.
-    Proposals are generated with [PRICE] placeholders that Noah fills in.
+    The estimate drawer prices from rates.js × field measurements
+    (paint $2.10/sq ft, wash $0.75/sq ft, doors $200 interior / $250 exterior,
+    cabinets per piece). Do not invent a different number. If a job needs
+    different rates, change them on that estimate.
 
 # -----------------------------------------------------------------------------
 # Tool stack — resolved 2026-08-19
@@ -480,11 +557,12 @@ stack:
       727-902-1986 until caller ID is verified and a human handoff destination
       exists.
   phone_note: >
-    Answers 24/7, runs intake, books onto Google Calendar, texts missed callers
-    back, and sends a lead summary by SMS and email. Replaces the missed-call
-    text-back, the consultation-booking workflow, and the SMS alert that Apps
-    Script cannot send. Not the system of record — leads still land in the Leads
-    tab. Configuration procedure in 03-leads/kai-setup.md.
+    Intended: answers 24/7, runs intake, texts a booking link, texts missed
+    callers back, and sends a lead summary by SMS and email. Live as of
+    2026-08-20: public inbound on +17623162584 is a KaiCalls developer ticket;
+    calendar booking is not configured — Kai texts https://www.paintnpete.com/contact.
+    Not the system of record — website leads already land in the Leads tab.
+    Configuration in 03-leads/kai-setup.md.
   phone_rules:
     - "Never quotes a price, not even a range."
     - "Declines out-of-area work gracefully."
