@@ -567,3 +567,15 @@ stack:
     - "Never quotes a price, not even a range."
     - "Declines out-of-area work gracefully."
     - "Escalates rather than improvising on anything it wasn't told."
+  payments: "Stripe Checkout"
+  payments_status: todo
+  payments_note: >
+    Locked 2026-08-24 for the client portal (10-portal/). Deposit and balance
+    via hosted Checkout; webhooks update ActiveJobs. Account not created yet —
+    flip to verified when Stripe is live under the business entity.
+  client_portal:
+    status: spec
+    url_planned: "https://portal.paintnpete.com"
+    invite: "estimate-sent SMS (not booking SMS)"
+    legal: "Florida contractor attorney for contract + bill of sale"
+    spec: "10-portal/portal.md"

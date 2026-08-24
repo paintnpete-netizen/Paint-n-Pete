@@ -10,6 +10,7 @@ never in the middle**, or update the `LEAD` and `JOB` maps in the script.
 | `Jobs` | `../04-visibility/review-tracker.csv` | Completed work, review status, repaint windows |
 | `Scorecard` | `scorecard.csv` | The four monthly numbers |
 | `Bookings` | created by the script | Taken estimate slots (date + time). One row per slot. |
+| `ActiveJobs` | `../10-portal/active-jobs.csv` | **Planned** — deposit → BOS for the client portal. Do not overload `Jobs`. |
 
 Job costing stays separate — one file per job, not a tab here.
 
@@ -57,6 +58,15 @@ else 4.
 
 `batch_day` is only used for the one-time backlog push described in
 `../04-visibility/review-engine.md`. Leave it blank going forward.
+
+---
+
+## ActiveJobs (portal — planned)
+
+Import `../10-portal/active-jobs.csv` as a new tab when portal build starts.
+Statuses: `estimate_sent` → `estimate_accepted` → `deposit_paid` → `scheduled`
+→ `in_progress` → `balance_due` → `paid` → `closed`. Spec:
+`../10-portal/portal.md`. The review `Jobs` tab stays review/repaint only.
 
 ---
 

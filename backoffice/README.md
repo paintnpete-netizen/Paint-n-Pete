@@ -46,6 +46,7 @@ not on the website, not in the capabilities packet.
 | `08-routines/` | Daily, weekly, monthly operating rhythm | 9 | **Built** |
 | `hq/` | Internal Workspace HQ — one page, all tools | — | **Built** — bookmark `hq/index.html`; estimate drawer is `hq/drawer.html` |
 | `09-website/` | Live site audit and publishing gates | 4 | **Audited** — form capture live; schema pass in source |
+| `10-portal/` | Client portal — docs, chat, Stripe (prospect → active) | — | **Spec** — not built |
 | `prompt-library.md` | Index of every prompt, plus the standalone ones | 10 | **Built** |
 
 ---
@@ -105,7 +106,13 @@ private GitHub `paintnpete-netizen/paintnpete-website`, last committed as
 `9389cc5`. Deploys are from the CLI, not from git, so a schema change is not
 live until `netlify deploy --prod` runs from that folder.
 
-**Phase 5 — Franchise packaging.** Clonable operator kit.
+**Phase 5 — Client portal.** *Spec only — see `10-portal/`.* Bridges estimate
+acceptance to deposit, chat, and bill of sale. Stripe for card payments;
+portal link rides the estimate-sent text (not the booking SMS). Contract and
+bill of sale wait on Florida contractor attorney review. Build order is in
+`10-portal/portal.md`.
+
+**Phase 6 — Franchise packaging.** Clonable operator kit.
 
 ---
 

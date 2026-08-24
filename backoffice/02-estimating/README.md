@@ -21,6 +21,10 @@ a large part of why Paint'n Pete wins work.
 cabinet piece rates). Production-rate sheets below are for actuals vs that
 quote — they do not price the letter.
 
+**Portal handoff:** when the estimate is published, the client portal invite
+goes out with the estimate-sent text — see `../10-portal/`. The letter PDF is
+what they download there. Do not redesign the letter for the portal.
+
 **Before the exclusions block becomes standard**, it needs one review by an
 attorney or insurance agent. AI writes clear language; it does not give legal
 advice.
