@@ -1,0 +1,1407 @@
+/**
+ * Paint'n Pete — back office automation
+ *
+ * Implements the six workflows in guide §7 on Google Apps Script.
+ * Deployment and trigger setup: see DEPLOY.md
+ *
+ * FRANCHISE NOTE: everything operator-specific lives in CONFIG below. It
+ * mirrors config/business-profile.yml, which remains the source of truth.
+ * A new operator edits CONFIG and nothing else in this file.
+ */
+
+const CONFIG = {
+  operator: "Noah",
+  company: "Paint'n Pete",
+  phone: "727-902-1986",
+
+  // Pipeline alerts: form submissions, follow-up reminders, review prompts.
+  // All customer/vendor interaction goes to noah@. Client-facing mail still
+  // uses clientEmail as Reply-To. paintnpete@gmail.com is admin-only.
+  alertEmail: "noah@paintnpete.com",
+
+  // Reply-To on anything this script sends that a client could see.
+  clientEmail: "noah@paintnpete.com",
+
+  // Optional carrier email-to-SMS gateway for genuine text alerts.
+  // Leave empty to rely on Gmail push notifications instead. See DEPLOY.md —
+  // Apps Script cannot send SMS directly and carriers are retiring these
+  // gateways, so treat this as best-effort, not as a guarantee.
+  smsGateway: "",
+
+  reviewLink: "",              // from 04-visibility/SETUP.md
+  intakeFormUrl: "",           // from 03-leads/intake-form.md
+
+  // Shared secret for the Netlify webhook, passed as ?key= on the web app URL.
+  // Invent a long random string. Leave empty only while testing — the endpoint
+  // is public, and without this anyone who finds the URL can write to Leads.
+  // The live secret is set in the deployed Apps Script project, not in git.
+  webhookSecret: "",
+
+  // Bound workbook. Used when the script runs as a web app (getActive is empty).
+  spreadsheetId: "18SVd9ZQPacTWd9KvwqnZz2kgNHR8y18t_S2t8J90Xvo",
+  leadsSheetUrl: "https://docs.google.com/spreadsheets/d/18SVd9ZQPacTWd9KvwqnZz2kgNHR8y18t_S2t8J90Xvo/edit",
+  netlifyFormsUrl: "https://app.netlify.com/projects/paintnpete/forms",
+
+  // Booking-confirmation SMS via KaiCalls. The API key lives in Script
+  // properties as kaiCallsApiKey — never git. Empty key means skip the text.
+  kaiAgentId: "4cf219a6-8468-4f2f-b757-217918365ffd",
+  kaiSmsUrl: "https://www.kaicalls.com/api/v1/sms/send",
+  bookingSms: "Thank you for booking your estimate with Paint'n Pete! A representative will be in touch within one business day to confirm and help you prepare for your booking.",
+  // Owner gets a separate booking text (name / address / email / phone + calendar).
+  staffAlertPhone: "727-902-1986",
+  // Portal invite SMS — sent when HQ submits an estimate to the client portal.
+  estimateSentSms: "[First name], your Paint'n Pete estimate is ready. Claim your client portal to view it and message us: [portal_url]\n\nQuestions? Call [phone].",
+
+  // Client portal invite links. Use Netlify app URL until portal.paintnpete.com DNS points at Netlify.
+  portalBaseUrl: "https://paintnpete-portal.netlify.app",
+
+  // Repaint windows, in years, per guide §8
+  repaintYears: { interior: 4, exterior: 5 }
+};
+
+const TABS = {
+  leads: "Leads",
+  jobs: "Jobs",
+  scorecard: "Scorecard",
+  bookings: "Bookings"
+};
+
+const SLOT_TIMES = [
+  "3:30 PM", "4:00 PM", "4:30 PM", "5:00 PM", "5:30 PM", "6:00 PM", "6:30 PM"
+];
+const SLOT_MINUTES = 30;
+
+/**
+ * Leads tab columns, 1-based, matching 03-leads/leads-tracker.csv.
+ * If you reorder columns in the sheet, change these numbers and nothing else.
+ */
+const LEAD = {
+  received: 1, name: 2, phone: 3, email: 4, source: 5, projectType: 6,
+  address: 7, zip: 8, status: 9, consultDate: 10, proposalSent: 11,
+  d3: 12, d8: 13, d21: 14, outcome: 15, value: 16, notes: 17
+};
+
+/** Jobs tab columns, matching 04-visibility/review-tracker.csv. */
+const JOB = {
+  name: 1, phone: 2, email: 3, projectType: 4, neighborhood: 5,
+  completed: 6, batchDay: 7, askedVerbally: 8, requestSent: 9,
+  followupSent: 10, reviewReceived: 11, notes: 12
+};
+
+/**
+ * Maps your intake/inquiry form's question titles to Leads columns.
+ * Form question titles must match these strings exactly — copy them from the
+ * live form rather than retyping.
+ */
+const FORM_FIELDS = {
+  "Name": LEAD.name,
+  "Phone": LEAD.phone,
+  "Email": LEAD.email,
+  "How did you find us?": LEAD.source,
+  "What kind of project is this?": LEAD.projectType,
+  "Address": LEAD.address,
+  "ZIP": LEAD.zip
+};
+
+// ---------------------------------------------------------------------------
+// Workflow 1 — form submitted
+// ---------------------------------------------------------------------------
+
+function onFormSubmit(e) {
+  const row = blankLeadRow_();
+
+  Object.keys(FORM_FIELDS).forEach(function (title) {
+    const answer = e && e.namedValues && e.namedValues[title];
+    if (answer && answer.length) row[FORM_FIELDS[title] - 1] = answer[0];
+  });
+
+  saveAndAnnounceLead_(row);
+}
+
+/**
+ * Workflow 1, web half — Netlify form submissions.
+ *
+ * The website's contact form posts to Netlify Forms, which cannot write to a
+ * spreadsheet or fire a trigger on its own. Netlify sends the submission here
+ * as JSON via an outgoing webhook; this turns it into the same Leads row and
+ * the same alerts that a Google Form submission produces.
+ *
+ * Deploy: Deploy → New deployment → Web app, execute as yourself, access
+ * "Anyone". Netlify's webhook cannot send an auth header Apps Script can read,
+ * so the shared secret rides in the query string instead. See DEPLOY.md.
+ */
+function doGet(e) {
+  try {
+    if (e && e.parameter && e.parameter.action === "slots") {
+      return jsonResponse_({ v: 2, taken: listTakenSlots_() });
+    }
+    return textResponse_("ok");
+  } catch (err) {
+    return jsonResponse_({ v: 2, taken: [], error: String(err) });
+  }
+}
+
+function doPost(e) {
+  try {
+    const secret = webhookSecret_();
+    if (secret && (!e || !e.parameter || e.parameter.key !== secret)) {
+      return textResponse_("forbidden");
+    }
+
+    const payload = JSON.parse(e.postData.contents);
+
+    if (payload.action && String(payload.action).indexOf("portal_") === 0) {
+      try {
+        return handlePortalPost_(payload);
+      } catch (portalErr) {
+        if (String(portalErr) === "Error: forbidden") {
+          return textResponse_("forbidden");
+        }
+        return jsonResponse_({ ok: false, error: String(portalErr) });
+      }
+    }
+
+    if (payload.action === "slots") {
+      return jsonResponse_({ v: 2, taken: listTakenSlots_() });
+    }
+
+    if (payload.action === "claim") {
+      const ok = claimConsultSlot_(payload);
+      return jsonResponse_({ v: 2, ok: ok, taken: !ok });
+    }
+
+    if (payload.action === "clear_estimate_bookings") {
+      return jsonResponse_(clearEstimateBookings_());
+    }
+
+    // Ops: copy Script property kaiCallsApiKey into Netlify without putting it in git.
+    // Requires operator_key (same secret as portal_publish) — never public.
+    if (payload.action === "ops_kai_key") {
+      try {
+        requireOperator_(payload);
+      } catch (opsErr) {
+        return textResponse_("forbidden");
+      }
+      return jsonResponse_({ key: kaiCallsApiKey_() || "" });
+    }
+
+    // Clear any leftover quiet-hours queue + daily trigger from older deploys.
+    if (payload.action === "ops_clear_sms_queue") {
+      return jsonResponse_(clearBookingSmsQueue_());
+    }
+
+    // Netlify retries on any non-2xx. Only mark seen AFTER a successful
+    // save+SMS attempt — marking first caused silent lost confirmation texts
+    // when acknowledgment email or sheet write failed mid-flight.
+    if (payload.id && isSeen_(payload.id)) return textResponse_("duplicate");
+
+    const d = payload.data || {};
+
+    const row = blankLeadRow_();
+
+    row[LEAD.name - 1] = d.name || "";
+    row[LEAD.email - 1] = d.email || "";
+    row[LEAD.phone - 1] = d.phone || "";
+    row[LEAD.address - 1] = d.address || "";
+    row[LEAD.zip - 1] = zipFrom_(d.address);
+    row[LEAD.source - 1] = "website";
+    row[LEAD.notes - 1] = webNotes_(d);
+
+    var claimed = false;
+    if (d.date && d.time) {
+      claimed = claimConsultSlot_({
+        date: d.date,
+        time: d.time,
+        name: d.name,
+        phone: d.phone,
+        email: d.email,
+        address: d.address
+      });
+      var when = slotDate_(d.date, d.time);
+      if (when) row[LEAD.consultDate - 1] = when;
+      row[LEAD.status - 1] = claimed ? "consultation booked" : "new";
+      if (!claimed) {
+        row[LEAD.notes - 1] = (row[LEAD.notes - 1] ? row[LEAD.notes - 1] + " — " : "") +
+          "Requested time was already taken. Rebook them.";
+      }
+    }
+
+    // Website bookings always get the confirmation text. The live form
+    // requires the SMS checkbox; Netlify has dropped that field before, and
+    // a completed booking is the consent. Do not skip the text.
+    // Idempotency matches claim path so claim + doPost do not double-text.
+    saveAndAnnounceLead_(row, {
+      smsOptIn: true,
+      idempotencyKey: bookingSmsIdempotency_(d),
+      booking: d.date && d.time
+        ? { date: d.date, time: d.time, address: d.address }
+        : null
+    });
+    markSeen_(payload.id);
+    return textResponse_("ok");
+  } catch (err) {
+    // Swallowing the error would make Netlify retry forever. Record it, tell
+    // Noah a lead came in that the script could not parse, and accept it.
+    alert_(
+      "Website lead FAILED to record",
+      [
+        "A submission arrived from the website and this script could not process it.",
+        "",
+        "Error: " + err,
+        "",
+        "The submission is still in Netlify — open the site's Forms tab and",
+        "reply to it by hand.",
+        "",
+        "Raw payload:",
+        (e && e.postData && e.postData.contents) || "(none)"
+      ].join("\n")
+    );
+    return textResponse_("error");
+  }
+}
+
+/** The date, time, and free-text description have no column of their own. */
+function webNotes_(d) {
+  const parts = [];
+  if (d.date || d.time) {
+    parts.push("Booked: " + [d.date, d.time].filter(String).join(" "));
+  }
+  if (d.description) parts.push(d.description);
+  if (optedInSms_(d)) parts.push("SMS opt-in: yes");
+  return parts.join(" — ");
+}
+
+function zipFrom_(address) {
+  const m = String(address || "").match(/\b(\d{5})\b(?!.*\b\d{5}\b)/);
+  return m ? m[1] : "";
+}
+
+function webhookSecret_() {
+  return PropertiesService.getScriptProperties().getProperty("webhookSecret")
+    || CONFIG.webhookSecret
+    || "";
+}
+
+function isSeen_(id) {
+  if (!id) return false;
+  return !!PropertiesService.getScriptProperties().getProperty("seen_" + id);
+}
+
+function markSeen_(id) {
+  if (!id) return;
+  PropertiesService.getScriptProperties().setProperty("seen_" + id, String(Date.now()));
+}
+
+/** Shared KaiCalls idempotency for claim + form webhook (one text per slot). */
+function bookingSmsIdempotency_(who) {
+  who = who || {};
+  const phone = String(who.phone || "").replace(/\D/g, "").slice(-10);
+  const dateStr = String(who.date || "").trim();
+  const timeStr = normTime_(who.time);
+  if (phone && dateStr && timeStr) {
+    return "booking-" + dateStr + "-" + timeStr + "-" + phone;
+  }
+  return "booking-" + phone + "-" + Date.now();
+}
+
+/** Separate key so owner + client texts never collide on KaiCalls idempotency. */
+function staffSmsIdempotency_(who) {
+  return "staff-" + bookingSmsIdempotency_(who);
+}
+
+function jsonResponse_(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function textResponse_(text) {
+  return ContentService.createTextOutput(text)
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+
+function blankLeadRow_() {
+  const row = new Array(LEAD.notes).fill("");
+  row[LEAD.received - 1] = new Date();
+  row[LEAD.status - 1] = "new";
+  return row;
+}
+
+/** Append the lead, acknowledge the sender, and alert Noah. */
+function saveAndAnnounceLead_(row, extras) {
+  extras = extras || {};
+  sheet_(TABS.leads).appendRow(row);
+
+  const name = row[LEAD.name - 1] || "Someone";
+  const email = row[LEAD.email - 1];
+
+  // Confirmation text first — email ack must not block SMS if MailApp throws.
+  var smsNote = "Booking SMS: not requested.";
+  if (extras.smsOptIn) {
+    smsNote = sendBookingSms_(row[LEAD.phone - 1], extras.idempotencyKey, extras.booking)
+      ? "Booking SMS: sent."
+      : "Booking SMS: failed — see the alert if one arrived.";
+  }
+
+  var staffWho = {
+    name: name,
+    phone: row[LEAD.phone - 1],
+    email: email,
+    address: row[LEAD.address - 1],
+    date: extras.booking && extras.booking.date,
+    time: extras.booking && extras.booking.time
+  };
+  var staffSmsNote = sendStaffBookingSms_(staffWho)
+    ? "Staff SMS: sent."
+    : "Staff SMS: failed — see the alert if one arrived.";
+
+  try {
+    if (email) sendAcknowledgment_(email, name);
+  } catch (ackErr) {
+    alert_(
+      "Booking acknowledgment email failed",
+      "Lead and SMS were still processed.\n\n" + String(ackErr)
+    );
+  }
+
+  var bookingLine = "";
+  if (extras.booking && extras.booking.date && extras.booking.time) {
+    bookingLine = "Booked: " + extras.booking.date + " at " + extras.booking.time + "\n";
+  }
+
+  alert_(
+    "New lead: " + name,
+    [
+      name + " just submitted the booking form.",
+      bookingLine,
+      "Phone: " + (row[LEAD.phone - 1] || "not given"),
+      "Email: " + (email || "not given"),
+      "Address: " + (row[LEAD.address - 1] || "not given"),
+      "Project: " + (row[LEAD.projectType - 1] || "not specified"),
+      "Source: " + (row[LEAD.source - 1] || "unknown"),
+      "Notes: " + (row[LEAD.notes - 1] || "none"),
+      smsNote,
+      staffSmsNote,
+      "",
+      "Open Leads tab:",
+      CONFIG.leadsSheetUrl,
+      "",
+      "Netlify form submissions:",
+      CONFIG.netlifyFormsUrl,
+      "",
+      "The acknowledgment has gone out. That is not the personal reply —",
+      "send response 1 from 03-leads/standard-responses.md within five minutes."
+    ].filter(Boolean).join("\n")
+  );
+}
+
+function sendAcknowledgment_(to, name) {
+  MailApp.sendEmail({
+    to: to,
+    name: CONFIG.company,
+    replyTo: CONFIG.clientEmail,
+    subject: "Thanks for getting in touch — " + CONFIG.company,
+    body: [
+      name.split(" ")[0] + ",",
+      "",
+      "Thanks for reaching out. I've got your message and I'll come back to you",
+      "personally shortly — usually within the hour during the working day.",
+      "",
+      "If it's easier to talk, call me directly on " + CONFIG.phone + ".",
+      "",
+      CONFIG.operator,
+      CONFIG.company
+    ].join("\n")
+  });
+}
+
+function optedInSms_(d) {
+  const v = String((d && d.sms_opt_in) || "").trim().toLowerCase();
+  return v === "yes" || v === "true" || v === "on" || v === "1";
+}
+
+function toE164_(raw) {
+  const digits = String(raw || "").replace(/\D/g, "");
+  if (digits.length === 10) return "+1" + digits;
+  if (digits.length === 11 && digits.charAt(0) === "1") return "+" + digits;
+  return "";
+}
+
+function kaiCallsApiKey_() {
+  return PropertiesService.getScriptProperties().getProperty("kaiCallsApiKey") || "";
+}
+
+/**
+ * Run this once from the editor (Run ▶ authorizeExternalSms). Google will ask
+ * to connect to external services. Without that grant, booking texts never
+ * leave the script — UrlFetchApp to KaiCalls is silently unauthorized.
+ */
+function authorizeExternalSms() {
+  UrlFetchApp.fetch("https://www.google.com", { muteHttpExceptions: true });
+}
+
+/**
+ * Customer booking-confirmation text from Kai's 762 line.
+ * Failures must not undo the Leads row or the email.
+ * Sends immediately on booking — no quiet-hours queue.
+ */
+function sendBookingSms_(phone, idempotencyKey, booking) {
+  const key = kaiCallsApiKey_();
+  const to = toE164_(phone);
+  if (!key) {
+    alert_(
+      "Booking SMS skipped — no API key",
+      "Set Script property kaiCallsApiKey. The lead was still recorded."
+    );
+    return false;
+  }
+  if (!to) {
+    alert_(
+      "Booking SMS skipped — bad phone",
+      "Could not parse a US number from: " + (phone || "(empty)")
+    );
+    return false;
+  }
+
+  var message = CONFIG.bookingSms;
+  var calUrl = googleCalendarUrl_(booking);
+  if (calUrl) message = message + " Add to your calendar: " + calUrl;
+  var idem = String(idempotencyKey || ("sms-" + to + "-" + Date.now()));
+
+  try {
+    const res = UrlFetchApp.fetch(CONFIG.kaiSmsUrl, {
+      method: "post",
+      contentType: "application/json",
+      headers: {
+        Authorization: "Bearer " + key,
+        "Idempotency-Key": idem
+      },
+      payload: JSON.stringify({
+        to: to,
+        from_agent_id: CONFIG.kaiAgentId,
+        message: message
+      }),
+      muteHttpExceptions: true
+    });
+
+    const code = res.getResponseCode();
+    if (code >= 200 && code < 300) return true;
+
+    alert_(
+      "Booking SMS failed (" + code + ")",
+      [
+        "The lead was recorded and the email went out. The confirmation text did not.",
+        "To: " + to,
+        "",
+        res.getContentText()
+      ].join("\n")
+    );
+    return false;
+  } catch (err) {
+    alert_(
+      "Booking SMS failed",
+      [
+        "The lead was recorded and the email went out. The confirmation text did not.",
+        "To: " + to,
+        "",
+        String(err)
+      ].join("\n")
+    );
+    return false;
+  }
+}
+
+/**
+ * Owner booking alert to CONFIG.staffAlertPhone.
+ * Includes name, address, email, callback, and a calendar add link.
+ * Idempotent with Netlify so claim + webhook + Netlify do not triple-text.
+ */
+function sendStaffBookingSms_(who) {
+  who = who || {};
+  const key = kaiCallsApiKey_();
+  const to = toE164_(CONFIG.staffAlertPhone || CONFIG.phone);
+  if (!key || !to) return false;
+
+  var name = String(who.name || "").trim() || "(no name)";
+  var address = String(who.address || "").trim() || "(no address)";
+  var email = String(who.email || "").trim() || "(no email)";
+  var phone = String(who.phone || "").trim() || "(no phone)";
+  var when = [who.date, who.time].filter(Boolean).join(" ") || "(no time chosen)";
+  var calUrl = googleCalendarUrl_({
+    date: who.date,
+    time: who.time,
+    address: who.address,
+    name: name,
+    phone: phone,
+    email: email,
+    forStaff: true
+  });
+  var message = [
+    "New estimate booking",
+    "Name: " + name,
+    "Address: " + address,
+    "Email: " + email,
+    "Callback: " + phone,
+    "When: " + when
+  ].join("\n");
+  if (calUrl) message = message + "\nAdd to calendar: " + calUrl;
+
+  var idem = staffSmsIdempotency_(who);
+  try {
+    const res = UrlFetchApp.fetch(CONFIG.kaiSmsUrl, {
+      method: "post",
+      contentType: "application/json",
+      headers: {
+        Authorization: "Bearer " + key,
+        "Idempotency-Key": idem
+      },
+      payload: JSON.stringify({
+        to: to,
+        from_agent_id: CONFIG.kaiAgentId,
+        message: message
+      }),
+      muteHttpExceptions: true
+    });
+    const code = res.getResponseCode();
+    if (code >= 200 && code < 300) return true;
+    alert_(
+      "Staff booking SMS failed (" + code + ")",
+      [
+        "Client confirmation may still have sent. Owner alert did not.",
+        "To: " + to,
+        "",
+        res.getContentText()
+      ].join("\n")
+    );
+    return false;
+  } catch (err) {
+    alert_(
+      "Staff booking SMS failed",
+      "Client confirmation may still have sent. Owner alert did not.\n\n" + String(err)
+    );
+    return false;
+  }
+}
+
+/** Drop quiet-hours queue leftovers and the morning flush trigger. */
+function clearBookingSmsQueue_() {
+  var props = PropertiesService.getScriptProperties();
+  props.deleteProperty("pendingBookingSms");
+  var removed = 0;
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() === "flushPendingBookingSms") {
+      ScriptApp.deleteTrigger(triggers[i]);
+      removed++;
+    }
+  }
+  return { ok: true, triggers_removed: removed };
+}
+
+/**
+ * Estimate-sent text when HQ submits to the client portal.
+ * Idempotent per publish attempt so accidental retries of the same submit
+ * do not double-text, but re-publish can send a fresh invite SMS.
+ */
+function sendEstimateSentSms_(phone, jobNumber, portalUrl, clientName, attemptId) {
+  const key = kaiCallsApiKey_();
+  const to = toE164_(phone);
+  if (!key) return { sent: false, error: "no KaiCalls API key" };
+  if (!to) return { sent: false, error: "invalid phone on estimate" };
+
+  var first = String(clientName || "there").trim().split(/\s+/)[0] || "there";
+  var message = String(CONFIG.estimateSentSms || "")
+    .replace("[First name]", first)
+    .replace("[portal_url]", portalUrl)
+    .replace("[phone]", CONFIG.phone);
+
+  var jobSafe = String(jobNumber).replace(/[^a-zA-Z0-9_-]/g, "_");
+  var attemptSafe = String(attemptId || "").replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 24);
+  // Per-attempt key: same publish call retries share one key; a later
+  // re-publish gets a new attemptId and can text the client again.
+  var idemKey = attemptSafe
+    ? ("estimate-sent-" + jobSafe + "-" + attemptSafe)
+    : ("estimate-sent-" + jobSafe + "-" + Date.now());
+
+  try {
+    const res = UrlFetchApp.fetch(CONFIG.kaiSmsUrl, {
+      method: "post",
+      contentType: "application/json",
+      headers: {
+        Authorization: "Bearer " + key,
+        "Idempotency-Key": idemKey
+      },
+      payload: JSON.stringify({
+        to: to,
+        from_agent_id: CONFIG.kaiAgentId,
+        message: message
+      }),
+      muteHttpExceptions: true
+    });
+
+    const code = res.getResponseCode();
+    if (code >= 200 && code < 300) return { sent: true };
+
+    const bodyText = String(res.getContentText() || "").slice(0, 500);
+    var kaiCode = "";
+    try {
+      const parsed = JSON.parse(bodyText);
+      kaiCode = String((parsed && (parsed.code || (parsed.error && parsed.error.code))) || "");
+    } catch (parseErr) {}
+
+    // Same attempt replayed — KaiCalls already recorded the send. Do not
+    // treat as failure or fall back to email for a duplicate submit.
+    if (code === 409 && kaiCode === "idempotency_conflict") {
+      return { sent: true, already: true };
+    }
+
+    var friendly = kaiCode
+      ? ("KaiCalls " + code + " " + kaiCode)
+      : ("KaiCalls returned " + code + (bodyText ? (": " + bodyText.slice(0, 160)) : ""));
+    if (kaiCode === "number_opted_out") {
+      friendly = "KaiCalls blocked SMS (no prior SMS consent on this number).";
+    } else if (kaiCode === "tcpa_violation") {
+      friendly = "KaiCalls quiet hours blocked SMS (8am–9pm ET).";
+    } else if (kaiCode === "number_on_dnc") {
+      friendly = "Number is on the Do-Not-Call list.";
+    }
+
+    alert_(
+      "Estimate-sent SMS failed (" + code + ")",
+      [
+        "The estimate was published to the portal. The invite text did not send.",
+        "Job: " + jobNumber,
+        "To: " + to,
+        kaiCode ? ("KaiCalls code: " + kaiCode) : "",
+        "",
+        bodyText
+      ].filter(Boolean).join("\n")
+    );
+    return { sent: false, error: friendly };
+  } catch (err) {
+    alert_(
+      "Estimate-sent SMS failed",
+      [
+        "The estimate was published to the portal. The invite text did not send.",
+        "Job: " + jobNumber,
+        "To: " + to,
+        "",
+        String(err)
+      ].join("\n")
+    );
+    return { sent: false, error: String(err) };
+  }
+}
+
+/**
+ * Parallel estimate-sent email — used when KaiCalls SMS is blocked
+ * (no consent / quiet hours) so the client still gets the portal link.
+ */
+function sendEstimateSentEmail_(email, portalUrl, clientName, jobNumber) {
+  const to = String(email || "").trim().toLowerCase();
+  if (!to || to.indexOf("@") < 0) return { sent: false, error: "no client email" };
+
+  var first = String(clientName || "there").trim().split(/\s+/)[0] || "there";
+  var body = [
+    first + ",",
+    "",
+    "Thanks for walking the job with me. Your estimate is ready in your client portal:",
+    "",
+    portalUrl,
+    "",
+    "There you can:",
+    "- View your written estimate",
+    "- Create your account for messages and color confirmation",
+    "- Pay the deposit by card when you're ready to schedule",
+    "",
+    "If anything looks off, reply to this email or call me on " + CONFIG.phone + ".",
+    "",
+    CONFIG.operator,
+    CONFIG.company
+  ].join("\n");
+
+  try {
+    MailApp.sendEmail({
+      to: to,
+      replyTo: CONFIG.clientEmail,
+      subject: "Your estimate is ready — " + CONFIG.company,
+      body: body
+    });
+    return { sent: true };
+  } catch (err) {
+    alert_(
+      "Estimate-sent email failed",
+      [
+        "Job: " + jobNumber,
+        "To: " + to,
+        "Portal: " + portalUrl,
+        "",
+        String(err)
+      ].join("\n")
+    );
+    return { sent: false, error: String(err) };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Workflows 2, 4, 6 — daily scan
+// ---------------------------------------------------------------------------
+
+function dailyCheck() {
+  proposalFollowUps_();
+  reviewReminders_();
+  repaintWindow_();
+}
+
+/** Workflow 2 — day 3 / 8 / 21 proposal follow-ups. */
+function proposalFollowUps_() {
+  const sheet = sheet_(TABS.leads);
+  const rows = sheet.getDataRange().getValues();
+  const touches = [
+    { day: 3, col: LEAD.d3 },
+    { day: 8, col: LEAD.d8 },
+    { day: 21, col: LEAD.d21 }
+  ];
+
+  for (let i = 1; i < rows.length; i++) {
+    const sent = toDate_(rows[i][LEAD.proposalSent - 1]);
+    if (!sent) continue;
+    if (String(rows[i][LEAD.outcome - 1] || "").trim()) continue;
+
+    const age = daysSince_(sent);
+
+    touches.forEach(function (t) {
+      if (age < t.day) return;
+      if (String(rows[i][t.col - 1] || "").trim()) return;
+
+      alert_(
+        "Follow-up due (day " + t.day + "): " + rows[i][LEAD.name - 1],
+        [
+          "Proposal sent " + fmt_(sent) + " — that's " + age + " days ago.",
+          "",
+          "Client: " + rows[i][LEAD.name - 1],
+          "Email: " + rows[i][LEAD.email - 1],
+          "Phone: " + rows[i][LEAD.phone - 1],
+          "Project: " + rows[i][LEAD.projectType - 1],
+          "",
+          "Use the day " + t.day + " template in",
+          "03-leads/follow-up-sequence.md.",
+          "",
+          "No discount. Never apologise for the price."
+        ].join("\n")
+      );
+
+      sheet.getRange(i + 1, t.col).setValue("reminded " + fmt_(today_()));
+    });
+  }
+}
+
+/** Workflow 4 — review request the evening of completion, follow-up at +2 days. */
+function reviewReminders_() {
+  const sheet = sheet_(TABS.jobs);
+  const rows = sheet.getDataRange().getValues();
+
+  for (let i = 1; i < rows.length; i++) {
+    if (String(rows[i][JOB.reviewReceived - 1] || "").trim()) continue;
+
+    const completed = toDate_(rows[i][JOB.completed - 1]);
+    const requested = toDate_(rows[i][JOB.requestSent - 1]);
+    const name = rows[i][JOB.name - 1];
+    if (!name) continue;
+
+    if (completed && daysSince_(completed) >= 0 && !requested &&
+        !String(rows[i][JOB.requestSent - 1] || "").trim()) {
+      alert_(
+        "Review request: " + name,
+        [
+          "Job completed " + fmt_(completed) + ".",
+          "",
+          "Send message 1 from 04-visibility/review-engine.md tonight, while",
+          "you're still fresh in their mind.",
+          "",
+          "Phone: " + rows[i][JOB.phone - 1],
+          "Link: " + (CONFIG.reviewLink || "NOT SET — see 04-visibility/SETUP.md"),
+          "",
+          "Fill in the specific detail. That clause is what makes it work."
+        ].join("\n")
+      );
+      sheet.getRange(i + 1, JOB.requestSent).setValue("reminded " + fmt_(today_()));
+      continue;
+    }
+
+    if (requested && daysSince_(requested) >= 2 &&
+        !String(rows[i][JOB.followupSent - 1] || "").trim()) {
+      alert_(
+        "Review follow-up: " + name,
+        [
+          "Asked " + fmt_(requested) + ", no review yet.",
+          "",
+          "Send message 2 from 04-visibility/review-engine.md.",
+          "",
+          "This is the only follow-up. Never a third."
+        ].join("\n")
+      );
+      sheet.getRange(i + 1, JOB.followupSent).setValue("reminded " + fmt_(today_()));
+    }
+  }
+}
+
+/** Workflow 6 — clients reaching their repaint window. */
+function repaintWindow_() {
+  const sheet = sheet_(TABS.jobs);
+  const rows = sheet.getDataRange().getValues();
+  const due = [];
+
+  for (let i = 1; i < rows.length; i++) {
+    const completed = toDate_(rows[i][JOB.completed - 1]);
+    if (!completed) continue;
+
+    const type = String(rows[i][JOB.projectType - 1] || "").toLowerCase();
+    const years = type.indexOf("exterior") > -1
+      ? CONFIG.repaintYears.exterior
+      : CONFIG.repaintYears.interior;
+
+    if (daysSince_(completed) >= years * 365) {
+      due.push("- " + rows[i][JOB.name - 1] + " (" + rows[i][JOB.projectType - 1] +
+               ", finished " + fmt_(completed) + ") — " + rows[i][JOB.phone - 1]);
+    }
+  }
+
+  if (!due.length) return;
+
+  alert_(
+    "Repaint window: " + due.length + " past client(s)",
+    [
+      "These are at or past their repaint window:",
+      "",
+      due.join("\n"),
+      "",
+      "Queue a seasonal check-in. Review before sending — this list is a",
+      "prompt, not an outbox.",
+      "",
+      "The cheapest work you will ever win."
+    ].join("\n")
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Consultation slots — one booking per weekday 3:30–6:30 PM half-hour
+// ---------------------------------------------------------------------------
+
+function ensureBookingsTab_() {
+  ensureTab_(spreadsheet_(), TABS.bookings, [
+    "date", "time", "name", "phone", "email", "address", "created"
+  ]);
+}
+
+function normTime_(t) {
+  // Sheets often stores "4:00 PM" as a time-only Date (1899-12-30).
+  if (Object.prototype.toString.call(t) === "[object Date]" && !isNaN(t.getTime())) {
+    return Utilities.formatDate(t, Session.getScriptTimeZone(), "h:mm a")
+      .replace(/\u202f/g, " ")
+      .replace(/\s+(am|pm)$/i, function (_, ap) {
+        return " " + ap.toUpperCase();
+      });
+  }
+  const m = String(t || "").trim().match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  if (!m) return String(t || "").trim();
+  return parseInt(m[1], 10) + ":" + m[2] + " " + m[3].toUpperCase();
+}
+
+function slotDate_(dateStr, timeStr) {
+  const m = String(timeStr || "").trim().match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  const parts = String(dateStr || "").split("-");
+  if (!m || parts.length !== 3) return null;
+  let h = parseInt(m[1], 10);
+  const min = parseInt(m[2], 10);
+  const ap = m[3].toUpperCase();
+  if (ap === "PM" && h !== 12) h += 12;
+  if (ap === "AM" && h === 12) h = 0;
+  const y = parseInt(parts[0], 10);
+  const mo = parseInt(parts[1], 10) - 1;
+  const d = parseInt(parts[2], 10);
+  const when = new Date(y, mo, d, h, min, 0);
+  return isNaN(when.getTime()) ? null : when;
+}
+
+/** Google Calendar add-event link for a booked consult (30 min, America/New_York). */
+function googleCalendarUrl_(booking) {
+  booking = booking || {};
+  if (!booking.date || !booking.time) return "";
+  const m = String(booking.time || "").trim().match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  const parts = String(booking.date || "").split("-");
+  if (!m || parts.length !== 3) return "";
+  let h = parseInt(m[1], 10);
+  const min = parseInt(m[2], 10);
+  const ap = m[3].toUpperCase();
+  if (ap === "PM" && h !== 12) h += 12;
+  if (ap === "AM" && h === 12) h = 0;
+  const pad = function(n) { return (n < 10 ? "0" : "") + n; };
+  const y = parts[0];
+  const mo = parts[1];
+  const d = parts[2];
+  const start = y + mo + d + "T" + pad(h) + pad(min) + "00";
+  var endH = h;
+  var endMin = min + 30;
+  if (endMin >= 60) {
+    endH += 1;
+    endMin -= 60;
+  }
+  const end = y + mo + d + "T" + pad(endH) + pad(endMin) + "00";
+  const loc = booking.address ? String(booking.address).slice(0, 200) : "";
+  var title = "Paint'n Pete — free estimate";
+  var details =
+    "On-site painting estimate with Paint'n Pete. Questions? Call " + CONFIG.phone + ".";
+  if (booking.forStaff || booking.name) {
+    var clientName = String(booking.name || "").trim();
+    if (clientName) title = "Estimate — " + clientName;
+    var detailParts = [];
+    if (clientName) detailParts.push("Client: " + clientName);
+    if (booking.phone) detailParts.push("Callback: " + booking.phone);
+    if (booking.email) detailParts.push("Email: " + booking.email);
+    if (booking.address) detailParts.push("Address: " + booking.address);
+    detailParts.push("Booked from paintnpete.com");
+    details = detailParts.join("\n");
+  }
+  const q = [
+    "action=TEMPLATE",
+    "text=" + encodeURIComponent(title),
+    "dates=" + start + "/" + end,
+    "details=" + encodeURIComponent(details),
+    "ctz=America/New_York"
+  ];
+  if (loc) q.push("location=" + encodeURIComponent(loc));
+  return "https://calendar.google.com/calendar/render?" + q.join("&");
+}
+
+function dateKey_(d) {
+  return Utilities.formatDate(d, Session.getScriptTimeZone(), "yyyy-MM-dd");
+}
+
+function samePerson_(row, who) {
+  const phoneA = String(row[3] || "").replace(/\D/g, "").slice(-10);
+  const phoneB = String((who && who.phone) || "").replace(/\D/g, "").slice(-10);
+  const emailA = String(row[4] || "").trim().toLowerCase();
+  const emailB = String((who && who.email) || "").trim().toLowerCase();
+  return (phoneA && phoneB && phoneA === phoneB) || (emailA && emailB && emailA === emailB);
+}
+
+function findBookingRow_(dateStr, timeStr) {
+  ensureBookingsTab_();
+  const sheet = sheet_(TABS.bookings);
+  const values = sheet.getDataRange().getValues();
+  const wantDate = String(dateStr || "").trim();
+  const wantTime = normTime_(timeStr);
+  for (let i = 1; i < values.length; i++) {
+    const rowDate = values[i][0] instanceof Date ? dateKey_(values[i][0]) : String(values[i][0] || "").trim();
+    if (rowDate === wantDate && normTime_(values[i][1]) === wantTime) {
+      return { index: i + 1, row: values[i] };
+    }
+  }
+  return null;
+}
+
+function calendarBlocksSlot_(dateStr, timeStr) {
+  const start = slotDate_(dateStr, timeStr);
+  if (!start) return false;
+  const end = new Date(start.getTime() + SLOT_MINUTES * 60 * 1000);
+  const events = CalendarApp.getDefaultCalendar().getEvents(start, end);
+  for (let i = 0; i < events.length; i++) {
+    if (events[i].isAllDayEvent()) continue;
+    if (events[i].getStartTime() < end && events[i].getEndTime() > start) return true;
+  }
+  return false;
+}
+
+function listTakenSlots_() {
+  ensureBookingsTab_();
+  const taken = {};
+  function mark(dateStr, timeStr) {
+    const t = normTime_(timeStr);
+    if (!dateStr || !t) return;
+    taken[dateStr + "|" + t] = { date: dateStr, time: t };
+  }
+
+  const sheet = sheet_(TABS.bookings);
+  const values = sheet.getDataRange().getValues();
+  for (let i = 1; i < values.length; i++) {
+    const dateStr = values[i][0] instanceof Date ? dateKey_(values[i][0]) : String(values[i][0] || "").trim();
+    mark(dateStr, values[i][1]);
+  }
+
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+  const end = new Date(start.getTime() + 90 * 86400000);
+  const events = CalendarApp.getDefaultCalendar().getEvents(start, end);
+  for (let i = 0; i < events.length; i++) {
+    const ev = events[i];
+    if (ev.isAllDayEvent()) continue;
+    const evStart = ev.getStartTime();
+    const evEnd = ev.getEndTime();
+    const day = dateKey_(evStart);
+    for (let s = 0; s < SLOT_TIMES.length; s++) {
+      const slotStart = slotDate_(day, SLOT_TIMES[s]);
+      if (!slotStart) continue;
+      const slotEnd = new Date(slotStart.getTime() + SLOT_MINUTES * 60 * 1000);
+      if (evStart < slotEnd && evEnd > slotStart) mark(day, SLOT_TIMES[s]);
+    }
+  }
+
+  const out = [];
+  Object.keys(taken).forEach(function (k) { out.push(taken[k]); });
+  return out;
+}
+
+/**
+ * Wipe estimate/consultation bookings for a clean test slate.
+ * - Clears the Bookings sheet (keeps header)
+ * - Deletes Google Calendar events titled "Estimate — …" or "Consultation — …"
+ *   that look like paintnpete.com bookings (does NOT wipe personal calendar)
+ * Run from editor, or POST { action: "clear_estimate_bookings" } with ?key=
+ */
+function clearEstimateBookings() {
+  return clearEstimateBookings_();
+}
+
+function clearEstimateBookings_() {
+  ensureBookingsTab_();
+  const sheet = sheet_(TABS.bookings);
+  const last = sheet.getLastRow();
+  var bookingsCleared = 0;
+  if (last > 1) {
+    bookingsCleared = last - 1;
+    sheet.getRange(2, 1, last - 1, sheet.getLastColumn()).clearContent();
+    // Prefer deleting data rows so the sheet stays tidy
+    try {
+      sheet.deleteRows(2, bookingsCleared);
+    } catch (err) {
+      /* clearContent is enough if delete fails */
+    }
+  }
+
+  const cal = CalendarApp.getDefaultCalendar();
+  const start = new Date();
+  start.setDate(start.getDate() - 30);
+  start.setHours(0, 0, 0, 0);
+  const end = new Date();
+  end.setDate(end.getDate() + 120);
+  end.setHours(23, 59, 59, 999);
+
+  const events = cal.getEvents(start, end);
+  var eventsDeleted = 0;
+  var titles = [];
+  for (let i = 0; i < events.length; i++) {
+    const ev = events[i];
+    const title = String(ev.getTitle() || "");
+    const desc = String(ev.getDescription() || "");
+    const isEstimate = title.indexOf("Estimate —") === 0 || title.indexOf("Estimate -") === 0;
+    const isConsult = title.indexOf("Consultation —") === 0 || title.indexOf("Consultation -") === 0;
+    const fromSite = desc.indexOf("Booked from paintnpete.com") >= 0 ||
+      desc.indexOf("Phone:") >= 0 && (isEstimate || isConsult);
+    if ((isEstimate || isConsult) && (fromSite || isEstimate || isConsult)) {
+      titles.push(title + " @ " + ev.getStartTime().toISOString());
+      ev.deleteEvent();
+      eventsDeleted++;
+    }
+  }
+
+  return {
+    ok: true,
+    bookings_cleared: bookingsCleared,
+    events_deleted: eventsDeleted,
+    deleted_titles: titles
+  };
+}
+
+/**
+ * Holds a weekday 3:30–6:30 slot. Returns true if this person has the slot
+ * (already or newly). Returns false if someone else already has it.
+ */
+function claimConsultSlot_(who) {
+  who = who || {};
+  const dateStr = String(who.date || "").trim();
+  const timeStr = normTime_(who.time);
+  if (!dateStr || SLOT_TIMES.indexOf(timeStr) === -1) return false;
+  const when = slotDate_(dateStr, timeStr);
+  if (!when) return false;
+  const dow = when.getDay();
+  if (dow === 0 || dow === 6) return false;
+
+  const lock = LockService.getScriptLock();
+  lock.waitLock(15000);
+  try {
+    const existing = findBookingRow_(dateStr, timeStr);
+    if (existing) return samePerson_(existing.row, who);
+    if (calendarBlocksSlot_(dateStr, timeStr)) return false;
+
+    sheet_(TABS.bookings).appendRow([
+      dateStr,
+      timeStr,
+      who.name || "",
+      who.phone || "",
+      who.email || "",
+      who.address || "",
+      new Date()
+    ]);
+
+    const end = new Date(when.getTime() + SLOT_MINUTES * 60 * 1000);
+    CalendarApp.getDefaultCalendar().createEvent(
+      "Estimate — " + (who.name || "consultation"),
+      when,
+      end,
+      {
+        location: who.address || "",
+        description: [
+          "Phone: " + (who.phone || ""),
+          "Email: " + (who.email || ""),
+          "Booked from paintnpete.com"
+        ].join("\n")
+      }
+    );
+
+    // Hold the slot as soon as the form claims it — do not wait for the
+    // Netlify Forms webhook. Same idempotency key as doPost, so no double text.
+    if (who.phone) {
+      try {
+        sendBookingSms_(who.phone, bookingSmsIdempotency_(who), {
+          date: dateStr,
+          time: timeStr,
+          address: who.address
+        });
+      } catch (smsErr) {
+        alert_(
+          "Booking SMS failed on claim",
+          "Slot is held. Confirmation text did not send.\n\n" + String(smsErr)
+        );
+      }
+    }
+    try {
+      sendStaffBookingSms_({
+        name: who.name,
+        phone: who.phone,
+        email: who.email,
+        address: who.address,
+        date: dateStr,
+        time: timeStr
+      });
+    } catch (staffErr) {
+      alert_(
+        "Staff booking SMS failed on claim",
+        "Slot is held. Owner alert did not send.\n\n" + String(staffErr)
+      );
+    }
+    return true;
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Workflow 3 — consultation booked
+// ---------------------------------------------------------------------------
+
+/**
+ * Run after entering a consultation date on a lead row. Sends the intake form
+ * and creates the calendar event. Pass the row number as shown in the sheet.
+ */
+function sendIntakeForRow(rowNumber) {
+  const sheet = sheet_(TABS.leads);
+  const row = sheet.getRange(rowNumber, 1, 1, LEAD.notes).getValues()[0];
+  const when = toDate_(row[LEAD.consultDate - 1]);
+  const email = row[LEAD.email - 1];
+  const name = String(row[LEAD.name - 1] || "there").split(" ")[0];
+
+  if (!when) throw new Error("Row " + rowNumber + " has no consultation date.");
+  if (!CONFIG.intakeFormUrl) throw new Error("CONFIG.intakeFormUrl is not set.");
+
+  if (email) {
+    MailApp.sendEmail({
+      to: email,
+      name: CONFIG.company,
+      replyTo: CONFIG.clientEmail,
+      subject: "Before I come out — a few quick questions",
+      body: [
+        name + ",",
+        "",
+        "Looking forward to seeing the space on " + fmt_(when) + ".",
+        "",
+        "If you have five minutes beforehand, this short form means I arrive",
+        "already knowing the basics and we can spend the time on the actual",
+        "surfaces instead:",
+        "",
+        CONFIG.intakeFormUrl,
+        "",
+        "Not essential — if you'd rather just talk it through on the day,",
+        "that's completely fine.",
+        "",
+        CONFIG.operator
+      ].join("\n")
+    });
+  }
+
+  const end = new Date(when.getTime() + 60 * 60 * 1000);
+  CalendarApp.getDefaultCalendar().createEvent(
+    "Consultation — " + row[LEAD.name - 1],
+    when,
+    end,
+    {
+      location: row[LEAD.address - 1] || "",
+      description: [
+        "Phone: " + row[LEAD.phone - 1],
+        "Project: " + row[LEAD.projectType - 1],
+        "Source: " + row[LEAD.source - 1],
+        "Notes: " + row[LEAD.notes - 1]
+      ].join("\n")
+    }
+  );
+
+  sheet.getRange(rowNumber, LEAD.status).setValue("consultation booked");
+}
+
+// ---------------------------------------------------------------------------
+// Workflow 5 — Monday routine
+// ---------------------------------------------------------------------------
+
+function mondayReminder() {
+  const leads = sheet_(TABS.leads).getDataRange().getValues();
+  let open = 0;
+  for (let i = 1; i < leads.length; i++) {
+    if (toDate_(leads[i][LEAD.proposalSent - 1]) &&
+        !String(leads[i][LEAD.outcome - 1] || "").trim()) open++;
+  }
+
+  alert_(
+    "Monday, 30 minutes",
+    [
+      "10 min — weekly content batch. Seven captions.",
+      "10 min — follow-up list. " + open + " proposal(s) still open.",
+      " 5 min — Canva: last week's photos into the before/after frame.",
+      " 5 min — confirm nothing fell through.",
+      "",
+      "Four numbers that matter: inquiries, proposals sent, jobs won,",
+      "reviews earned. Everything else is decoration."
+    ].join("\n")
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function sheet_(name) {
+  const ss = spreadsheet_();
+  const s = ss.getSheetByName(name);
+  if (!s) throw new Error('Missing tab "' + name + '". See sheets-setup.md.');
+  return s;
+}
+
+function spreadsheet_() {
+  try {
+    const active = SpreadsheetApp.getActive();
+    if (active) return active;
+  } catch (e) {}
+  if (!CONFIG.spreadsheetId) {
+    throw new Error("No active spreadsheet and CONFIG.spreadsheetId is empty.");
+  }
+  return SpreadsheetApp.openById(CONFIG.spreadsheetId);
+}
+
+/**
+ * One-time: install the time-driven triggers from DEPLOY.md step 4.
+ * Safe to re-run — skips a function that already has a trigger.
+ * Does not add onFormSubmit; that waits until a Google Form is linked.
+ */
+function installTriggers() {
+  const existing = ScriptApp.getProjectTriggers().map(function (t) {
+    return t.getHandlerFunction();
+  });
+  if (existing.indexOf("dailyCheck") === -1) {
+    ScriptApp.newTrigger("dailyCheck").timeBased().everyDays(1).atHour(7).create();
+  }
+  if (existing.indexOf("mondayReminder") === -1) {
+    ScriptApp.newTrigger("mondayReminder")
+      .timeBased()
+      .onWeekDay(ScriptApp.WeekDay.MONDAY)
+      .atHour(7)
+      .create();
+  }
+}
+
+/**
+ * One-time: create the three tabs and header rows from sheets-setup.md.
+ * Run this from the editor before anything else. Safe to re-run — it will
+ * not wipe existing data, only add a missing tab or a missing header row.
+ */
+function setupWorkbook() {
+  const ss = spreadsheet_();
+  ensureTab_(ss, TABS.leads, [
+    "date_received", "name", "phone", "email", "source", "project_type",
+    "address", "zip", "status", "consult_date", "proposal_sent",
+    "followup_d3", "followup_d8", "followup_d21", "outcome", "value", "notes"
+  ]);
+  ensureTab_(ss, TABS.jobs, [
+    "client_name", "phone", "email", "project_type", "neighborhood",
+    "completed_date", "batch_day", "asked_verbally", "request_sent",
+    "followup_sent", "review_received", "notes"
+  ]);
+  ensureTab_(ss, TABS.scorecard, [
+    "month", "inquiries", "proposals_sent", "jobs_won", "reviews_earned",
+    "close_rate"
+  ]);
+  ensureTab_(ss, TABS.bookings, [
+    "date", "time", "name", "phone", "email", "address", "created"
+  ]);
+  setupPortalTabs_();
+  const leftover = ss.getSheetByName("Sheet1");
+  if (leftover && ss.getSheets().length > 1) ss.deleteSheet(leftover);
+}
+
+function ensureTab_(ss, name, headers) {
+  let s = ss.getSheetByName(name);
+  if (!s) s = ss.insertSheet(name);
+  if (!String(s.getRange(1, 1).getValue() || "").trim()) {
+    s.getRange(1, 1, 1, headers.length).setValues([headers]);
+    s.setFrozenRows(1);
+  }
+}
+
+function alert_(subject, body) {
+  MailApp.sendEmail({
+    to: CONFIG.alertEmail,
+    subject: "[" + CONFIG.company + "] " + subject,
+    body: body
+  });
+
+  // Gateways cap around 160 characters and silently truncate past it.
+  if (CONFIG.smsGateway) {
+    MailApp.sendEmail({
+      to: CONFIG.smsGateway,
+      subject: "",
+      body: subject.substring(0, 150)
+    });
+  }
+}
+
+function toDate_(v) {
+  if (!v) return null;
+  if (v instanceof Date) return isNaN(v.getTime()) ? null : v;
+  const s = String(v).trim();
+  if (!s || s.indexOf("reminded") === 0) return null;
+  const d = new Date(s);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function today_() {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+function daysSince_(date) {
+  const a = new Date(date);
+  a.setHours(0, 0, 0, 0);
+  return Math.floor((today_().getTime() - a.getTime()) / 86400000);
+}
+
+function fmt_(d) {
+  return Utilities.formatDate(d, Session.getScriptTimeZone(), "d MMM yyyy");
+}

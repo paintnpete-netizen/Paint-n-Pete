@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Paint'n Pete — HQ</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="PNP HQ" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560&family=Manrope:wght@400;500;650;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="hq.css?v=20260827b" />
+</head>
+<body>
+  <header class="hq-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#top">Paint'n Pete<span>Back office</span></a>
+      <nav class="header-nav" aria-label="Jump to section">
+        <a href="#doors">Doors</a>
+        <a href="#tools">Tools</a>
+        <a href="#books">Money</a>
+        <a href="#maintenance">Systems</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow" id="hq-date">Today</p>
+        <h1 id="hq-greeting">Your office</h1>
+        <p class="hero-lede">Open a door for daily work. Grab a tool on a call or at an estimate. Everything else stays out of the way until you need it.</p>
+        <div class="quick-bar" aria-label="Quick actions">
+          <button class="quick-chip primary" type="button" id="copy-booking-quick">Copy booking link</button>
+          <a class="quick-chip" href="drawer.html">Estimate drawer</a>
+          <a class="quick-chip" href="https://mail.google.com/mail/u/?authuser=noah@paintnpete.com#inbox" target="_blank" rel="noopener">Email</a>
+          <a class="quick-chip" href="https://paintnpete-portal.netlify.app/admin.html" target="_blank" rel="noopener">Portal</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="doors">
+      <div class="wrap">
+        <header class="panel-head">
+          <div>
+            <p class="eyebrow">Doors</p>
+            <h2>Where you go every day</h2>
+          </div>
+          <p class="panel-hint">Tap to open — each opens in a new tab</p>
+        </header>
+        <div class="door-grid">
+          <a class="door" href="https://paintnpete-portal.netlify.app/admin.html" target="_blank" rel="noopener">
+            <span class="door-icon" aria-hidden="true">P</span>
+            <span class="door-body">
+              <strong>Client portal</strong>
+              <span>Jobs, messages, deposits paid</span>
+            </span>
+            <span class="door-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="door" href="https://calendar.google.com/calendar/u/0/r?authuser=noah@paintnpete.com" target="_blank" rel="noopener">
+            <span class="door-icon" aria-hidden="true">Cal</span>
+            <span class="door-body">
+              <strong>Calendar</strong>
+              <span>noah@paintnpete.com</span>
+            </span>
+            <span class="door-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="door" href="https://mail.google.com/mail/u/?authuser=noah@paintnpete.com#inbox" target="_blank" rel="noopener">
+            <span class="door-icon" aria-hidden="true">@</span>
+            <span class="door-body">
+              <strong>Email</strong>
+              <span>noah@paintnpete.com</span>
+            </span>
+            <span class="door-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="door" href="https://www.kaicalls.com/dashboard" target="_blank" rel="noopener">
+            <span class="door-icon" aria-hidden="true">Kai</span>
+            <span class="door-body">
+              <strong>Kai Calls</strong>
+              <span>Phone line, transcripts, alerts</span>
+            </span>
+            <span class="door-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="door door-grow" href="marketing.html">
+            <span class="door-icon door-icon-gold" aria-hidden="true">↑</span>
+            <span class="door-body">
+              <strong>Marketing &amp; lead gen</strong>
+              <span>Slow week? Posts, LSA, Nextdoor, commercial bids</span>
+            </span>
+            <span class="door-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel panel-tools" id="tools">
+      <div class="wrap">
+        <header class="panel-head">
+          <div>
+            <p class="eyebrow">Tools</p>
+            <h2>On a call or at the estimate</h2>
+          </div>
+        </header>
+        <div class="tools-grid">
+          <article class="tool-card tool-featured" id="booking-link">
+            <div class="tool-badge">Most used</div>
+            <h3>Booking link</h3>
+            <p class="tool-lede">Send this when you answer the phone — same form Kai texts. Client picks a walkthrough time.</p>
+            <p class="booking-url" id="booking-url-display">https://www.paintnpete.com/contact</p>
+            <div class="btn-row">
+              <button class="btn btn-lg" type="button" id="copy-booking-link">Copy link</button>
+              <button class="btn btn-ghost" type="button" id="sms-booking-link">Text to client</button>
+            </div>
+          </article>
+          <article class="tool-card">
+            <h3>Estimate drawer</h3>
+            <p class="tool-lede">At the house: photos, measurements, price the letter, preview, then submit to the portal.</p>
+            <a class="btn btn-lg btn-block" href="drawer.html">Open estimate drawer</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="books">
+      <div class="wrap">
+        <header class="panel-head">
+          <div>
+            <p class="eyebrow">Money</p>
+            <h2>Deposits &amp; books</h2>
+          </div>
+        </header>
+        <p class="flow-line">Client pays in the <strong>portal</strong> → money lands in <strong>Stripe</strong> → job profit in <strong>Job money</strong> → bank truth in <strong>QuickBooks</strong> (only debit + credit cards + Stripe; memo = job number).</p>
+        <div class="door-grid door-grid-3">
+          <a class="door door-compact" href="books.html">
+            <span class="door-body">
+              <strong>Job money</strong>
+              <span>Charged · spent · profit by job</span>
+            </span>
+            <span class="door-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="door door-compact" href="https://paintnpete-portal.netlify.app/admin.html" target="_blank" rel="noopener">
+            <span class="door-body">
+              <strong>Portal</strong>
+              <span>Who paid deposit / balance</span>
+            </span>
+            <span class="door-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="door door-compact" href="https://dashboard.stripe.com" target="_blank" rel="noopener">
+            <span class="door-body">
+              <strong>Stripe</strong>
+              <span>Payouts &amp; card history</span>
+            </span>
+            <span class="door-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="door door-compact" href="https://qbo.intuit.com/app/banking" target="_blank" rel="noopener">
+            <span class="door-body">
+              <strong>QuickBooks</strong>
+              <span>Link debit, credit &amp; Stripe only</span>
+            </span>
+            <span class="door-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel panel-systems" id="maintenance">
+      <div class="wrap">
+        <details class="systems-drawer">
+          <summary>
+            <span class="systems-summary">
+              <span class="eyebrow">Systems</span>
+              <strong>Maintenance &amp; backend</strong>
+              <span class="systems-sub">Sheets, hosting, scripts — for you or someone helping you</span>
+            </span>
+            <span class="systems-chevron" aria-hidden="true"></span>
+          </summary>
+          <div class="maint-groups">
+            <div class="maint-group">
+              <h3>Sheets &amp; automation</h3>
+              <ul>
+                <li><a href="https://docs.google.com/spreadsheets/d/18SVd9ZQPacTWd9KvwqnZz2kgNHR8y18t_S2t8J90Xvo/edit" target="_blank" rel="noopener">Back office sheet</a></li>
+                <li><a href="https://script.google.com/home/projects/1tdNt0a7__f4lFFa3RO9I25cylgmlMT89ifKhh9GJGQNASms6y4zx8Hxh/edit" target="_blank" rel="noopener">Apps Script</a></li>
+              </ul>
+            </div>
+            <div class="maint-group">
+              <h3>Hosting</h3>
+              <ul>
+                <li><a href="https://app.netlify.com/projects/paintnpete-hq" target="_blank" rel="noopener">HQ site</a></li>
+                <li><a href="https://app.netlify.com/projects/paintnpete-portal" target="_blank" rel="noopener">Client portal</a></li>
+                <li><a href="https://app.netlify.com/projects/paintnpete" target="_blank" rel="noopener">paintnpete.com</a></li>
+              </ul>
+            </div>
+            <div class="maint-group">
+              <h3>Payments &amp; phone</h3>
+              <ul>
+                <li><a href="https://dashboard.stripe.com" target="_blank" rel="noopener">Stripe</a></li>
+                <li><a href="https://paintnpete-portal.netlify.app/stripe-setup.html" target="_blank" rel="noopener">Portal Stripe setup</a></li>
+                <li><a href="https://www.kaicalls.com/dashboard/agents" target="_blank" rel="noopener">Kai agent settings</a></li>
+              </ul>
+            </div>
+            <div class="maint-group">
+              <h3>Site &amp; profiles</h3>
+              <ul>
+                <li><a href="https://www.paintnpete.com" target="_blank" rel="noopener">paintnpete.com</a></li>
+                <li><a href="https://business.google.com" target="_blank" rel="noopener">Google Business Profile</a></li>
+                <li><a href="https://www.canva.com" target="_blank" rel="noopener">Canva</a></li>
+              </ul>
+            </div>
+            <div class="maint-group">
+              <h3>Docs &amp; config</h3>
+              <ul>
+                <li><a href="../config/business-profile.yml">Business profile</a></li>
+                <li><a href="../README.md">Back office map</a></li>
+                <li><a href="../01-foundation/business-brief.md">Business brief</a></li>
+                <li><a href="../10-portal/DEPLOY-PORTAL.md">Portal deploy notes</a></li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="hq-footer">
+    <div class="wrap">
+      <p>Kanwal Consulting LLC DBA Paint'n Pete · internal only</p>
+    </div>
+  </footer>
+  <script src="hq.js?v=20260827b"></script>
+</body>
+</html>

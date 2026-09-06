@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KLIS Method — Case Study</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0b1220;
+      --muted: #5a6578;
+      --paper: #f7f8fb;
+      --line: #d8dee8;
+      --steel: #121a2b;
+      --accent: #3dd6c6;
+      --accent-ink: #0d9488;
+      --warn: #c45c26;
+      --font-d: "Syne", system-ui, sans-serif;
+      --font: "IBM Plex Sans", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: var(--font);
+      color: var(--ink);
+      background: var(--steel);
+      overflow: hidden;
+    }
+    .deck { height: 100%; position: relative; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(1.25rem, 4vw, 3.5rem) clamp(1.25rem, 5vw, 4.5rem);
+      padding-bottom: 4.5rem;
+      background:
+        radial-gradient(ellipse 70% 55% at 85% 15%, rgba(61, 214, 198, 0.14), transparent 55%),
+        linear-gradient(155deg, #0e1626 0%, #121a2b 50%, #0a101c 100%);
+      color: #e8edf5;
+    }
+    .slide.on { display: flex; animation: in 0.3s ease; }
+    @keyframes in {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: none; }
+    }
+    .slide.light {
+      background: linear-gradient(165deg, #f7f8fb 0%, #eef1f6 100%);
+      color: var(--ink);
+    }
+    .logo {
+      font-family: var(--font-d);
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      color: var(--accent);
+    }
+    .slide.light .logo { color: var(--accent-ink); }
+    .eyebrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.65rem;
+    }
+    .slide.light .eyebrow { color: var(--accent-ink); }
+    h1 {
+      font-family: var(--font-d);
+      font-weight: 800;
+      font-size: clamp(2.1rem, 5vw, 3.6rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      max-width: 16ch;
+    }
+    h2 {
+      font-family: var(--font-d);
+      font-weight: 700;
+      font-size: clamp(1.45rem, 3.4vw, 2.25rem);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      max-width: 28ch;
+      margin-bottom: 0.65rem;
+    }
+    .lede {
+      font-size: clamp(1rem, 1.8vw, 1.15rem);
+      line-height: 1.55;
+      max-width: 48ch;
+      opacity: 0.85;
+      margin-top: 0.85rem;
+    }
+    .slide.light .lede { color: var(--muted); opacity: 1; }
+    .meta {
+      margin-top: 1.35rem;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      opacity: 0.75;
+      max-width: 48ch;
+    }
+    .slide.light .meta { color: var(--muted); opacity: 1; }
+    .klis-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.65rem;
+      margin-top: 1.75rem;
+      max-width: 980px;
+    }
+    .klis-pill {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1rem 1.05rem;
+      background: #fff;
+    }
+    .klis-pill strong {
+      display: block;
+      font-family: var(--font-d);
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--accent-ink);
+      margin-bottom: 0.3rem;
+    }
+    .klis-pill span {
+      font-size: 0.82rem;
+      line-height: 1.4;
+      color: var(--muted);
+    }
+    .klis-pill b { color: var(--ink); font-weight: 600; }
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 1.35rem;
+      max-width: 920px;
+      width: 100%;
+    }
+    .product-card {
+      border-radius: 10px;
+      padding: 1rem 1.15rem;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+    .product-card h3 {
+      font-family: var(--font-d);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--ink);
+    }
+    .product-card p {
+      font-size: 0.86rem;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+    .slide:not(.light) .product-card {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(232,237,245,0.12);
+    }
+    .slide:not(.light) .product-card h3 { color: #e8edf5; }
+    .slide:not(.light) .product-card p { color: rgba(232,237,245,0.75); }
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(1rem, 2.5vw, 2rem);
+      align-items: start;
+      max-width: 1000px;
+      width: 100%;
+      margin-top: 0.25rem;
+    }
+    .panel {
+      border-radius: 10px;
+      padding: 1.1rem 1.2rem;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+    .panel h3 {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.55rem;
+    }
+    .panel.before h3 { color: var(--warn); }
+    .panel.after h3 { color: var(--accent-ink); }
+    .panel ul, .stack-list {
+      list-style: none;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+    .panel li + li, .stack-list li + li { margin-top: 0.35rem; }
+    .panel li::before {
+      content: "–";
+      margin-right: 0.4rem;
+      color: #9aa3b5;
+    }
+    .stack-list li::before {
+      content: "→";
+      margin-right: 0.4rem;
+      color: var(--accent-ink);
+      font-weight: 700;
+    }
+    .save-bar {
+      margin-top: 1.15rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.2rem;
+      align-items: baseline;
+    }
+    .save-bar .amt {
+      font-family: var(--font-d);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent-ink);
+    }
+    .save-bar .note {
+      font-size: 0.84rem;
+      color: var(--muted);
+      max-width: 52ch;
+    }
+    .grid3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+      max-width: 980px;
+    }
+    .stat {
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(232,237,245,0.12);
+    }
+    .slide.light .stat {
+      background: #fff;
+      border-color: var(--line);
+    }
+    .stat .n {
+      font-family: var(--font-d);
+      font-size: clamp(1.25rem, 2.5vw, 1.7rem);
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.15;
+    }
+    .slide.light .stat .n { color: var(--accent-ink); }
+    .stat p {
+      margin-top: 0.4rem;
+      font-size: 0.84rem;
+      line-height: 1.4;
+      opacity: 0.8;
+    }
+    .slide.light .stat p { color: var(--muted); opacity: 1; }
+    .big-num {
+      font-family: var(--font-d);
+      font-size: clamp(2.6rem, 7vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--accent-ink);
+      line-height: 1;
+      margin: 0.4rem 0 0.65rem;
+    }
+    .slide:not(.light) .big-num { color: var(--accent); }
+    .big-num small {
+      display: block;
+      font-size: 0.28em;
+      font-family: var(--font);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.65;
+      margin-top: 0.4rem;
+    }
+    .table {
+      width: 100%;
+      max-width: 920px;
+      margin-top: 1rem;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .table th, .table td {
+      text-align: left;
+      padding: 0.6rem 0.5rem;
+      border-bottom: 1px solid rgba(232,237,245,0.12);
+      vertical-align: top;
+    }
+    .slide.light .table th,
+    .slide.light .table td { border-color: var(--line); }
+    .table th {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.65;
+      font-weight: 700;
+    }
+    .table td:last-child, .table th:last-child { text-align: right; white-space: nowrap; }
+    .table .money { font-weight: 700; color: var(--accent); }
+    .slide.light .table .money { color: var(--accent-ink); }
+    .assumptions {
+      margin-top: 1rem;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      opacity: 0.7;
+      max-width: 56ch;
+    }
+    .slide.light .assumptions { color: var(--muted); opacity: 1; }
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+      margin-top: 1.25rem;
+      max-width: 960px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .flow span {
+      padding: 0.45rem 0.7rem;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(232,237,245,0.14);
+    }
+    .slide.light .flow span {
+      background: #fff;
+      border-color: var(--line);
+      color: var(--ink);
+    }
+    .flow i {
+      font-style: normal;
+      opacity: 0.45;
+      font-weight: 400;
+    }
+    .footer-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 1.25rem;
+      background: rgba(10, 16, 28, 0.92);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(232, 237, 245, 0.08);
+      z-index: 10;
+      color: #c5cedd;
+      font-size: 0.76rem;
+    }
+    .footer-nav button {
+      font: inherit;
+      font-weight: 600;
+      border: 1px solid rgba(232, 237, 245, 0.2);
+      background: transparent;
+      color: #e8edf5;
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .footer-nav button:hover { border-color: var(--accent); color: var(--accent); }
+    .footer-nav button:disabled { opacity: 0.3; cursor: default; }
+    .dots { display: flex; gap: 0.35rem; flex: 1; justify-content: center; }
+    .dots span {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(232, 237, 245, 0.2);
+    }
+    .dots span.on { background: var(--accent); }
+    .cta-list {
+      margin-top: 1.25rem;
+      list-style: none;
+      max-width: 46ch;
+    }
+    .cta-list li {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(232, 237, 245, 0.12);
+      font-size: 1rem;
+    }
+    .cta-list li strong { color: var(--accent); }
+    @media (max-width: 800px) {
+      .klis-row, .split, .grid3, .product-grid { grid-template-columns: 1fr; }
+      body { overflow: auto; }
+      .slide { position: relative; display: none; min-height: 100vh; }
+      .slide.on { display: flex; }
+    }
+    @media print {
+      body { overflow: visible; background: #fff; }
+      .footer-nav { display: none; }
+      .slide {
+        position: relative;
+        display: flex !important;
+        page-break-after: always;
+        min-height: 100vh;
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+
+    <!-- 0 Cover -->
+    <section class="slide on" data-i="0">
+      <p class="logo">KLIS</p>
+      <p class="eyebrow">Case study</p>
+      <h1>Installing an operating system on a crew business</h1>
+      <p class="lede">How the KLIS Method was applied to a St. Petersburg painting company — what the product is, what got built, and what it returned in time and money.</p>
+      <p class="meta">Subject: residential / light commercial painting · Owner-operator · ~8 jobs / month pilot model</p>
+    </section>
+
+    <!-- 1 What is KLIS -->
+    <section class="slide light" data-i="1">
+      <p class="logo">KLIS</p>
+      <p class="eyebrow">The product</p>
+      <h2>KLIS is a four-layer operating system for service businesses.</h2>
+      <p class="lede">Not a single app. A packaged way to run Knowledge, Leads, Intelligence, and Systems so the owner is not the bottleneck.</p>
+      <div class="klis-row">
+        <div class="klis-pill">
+          <strong>K</strong>
+          <span><b>Knowledge</b> — brand of record, rates, scripts, SOPs in one place</span>
+        </div>
+        <div class="klis-pill">
+          <strong>L</strong>
+          <span><b>Leads</b> — capture, 24/7 answer, book, track in one pipeline</span>
+        </div>
+        <div class="klis-pill">
+          <strong>I</strong>
+          <span><b>Intelligence</b> — estimate desk, proposals, follow-up, bid help</span>
+        </div>
+        <div class="klis-pill">
+          <strong>S</strong>
+          <span><b>Systems</b> — portal, payments, automation, weekly scorecard</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 What’s in the box -->
+    <section class="slide light" data-i="2">
+      <p class="logo">KLIS</p>
+      <p class="eyebrow">What’s in the box</p>
+      <h2>Concrete deliverables — not a binder of advice.</h2>
+      <div class="product-grid">
+        <div class="product-card">
+          <h3>Config spine</h3>
+          <p>Verified business profile + folder map so AI, website, phone agent, and proposals pull the same facts.</p>
+        </div>
+        <div class="product-card">
+          <h3>Lead machine</h3>
+          <p>AI phone agent (rules + booking), web form → sheet, auto-ack, staff alerts.</p>
+        </div>
+        <div class="product-card">
+          <h3>Estimate workstation</h3>
+          <p>On-site drawer: photos, measurements, service catalog, residential &amp; commercial proposal templates, rate sheets.</p>
+        </div>
+        <div class="product-card">
+          <h3>Client portal</h3>
+          <p>Job link → view proposal → accept → Stripe deposit → messages → receipt.</p>
+        </div>
+        <div class="product-card">
+          <h3>Automation layer</h3>
+          <p>Apps Script workflows: lead intake, estimate reminders (day 3/8/21), review asks, digests.</p>
+        </div>
+        <div class="product-card">
+          <h3>Ops HQ + money</h3>
+          <p>Internal dashboard, job-level P&amp;L ledger, Monday scorecard, content rhythm.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 How work flows -->
+    <section class="slide" data-i="3">
+      <p class="logo">KLIS</p>
+      <p class="eyebrow">How a job moves</p>
+      <h2>One path from ring to deposit.</h2>
+      <p class="lede">KLIS wires the steps that used to live in the owner’s head into a single flow.</p>
+      <div class="flow">
+        <span>Call / form</span><i>→</i>
+        <span>AI books walkthrough</span><i>→</i>
+        <span>Estimate desk</span><i>→</i>
+        <span>Portal proposal</span><i>→</i>
+        <span>Reminders</span><i>→</i>
+        <span>Accept + deposit</span><i>→</i>
+        <span>Job ledger</span><i>→</i>
+        <span>Review ask</span>
+      </div>
+      <div class="grid3" style="margin-top: 2rem;">
+        <div class="stat">
+          <div class="n">Owner on site</div>
+          <p>Measures and prices in the drawer — not later at a desk.</p>
+        </div>
+        <div class="stat">
+          <div class="n">System overnight</div>
+          <p>Follow-ups and review requests fire without manual chasing.</p>
+        </div>
+        <div class="stat">
+          <div class="n">Money tied to job</div>
+          <p>Charged, collected, fees, and costs land on the same job record.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 Subject -->
+    <section class="slide light" data-i="4">
+      <p class="logo">KLIS</p>
+      <p class="eyebrow">The pilot subject</p>
+      <h2>Owner-run painting company. Strong craft. Thin ops.</h2>
+      <div class="split">
+        <div class="panel before">
+          <h3>Starting point</h3>
+          <ul>
+            <li>300+ projects of experience; reviews lagging job volume</li>
+            <li>Missed / delayed calls while on ladders</li>
+            <li>Proposals written by hand, hours each</li>
+            <li>Deposits chased by text; money not per-job</li>
+            <li>Brand facts scattered across brain, site, and chats</li>
+          </ul>
+        </div>
+        <div class="panel after">
+          <h3>Why this pilot</h3>
+          <ul>
+            <li>Classic home-service bottleneck: owner = sales + ops</li>
+            <li>Enough volume to measure (~8 jobs / month model)</li>
+            <li>Needed residential + commercial path</li>
+            <li>Willing to run Sheets + portal stack (low tool cost)</li>
+          </ul>
+        </div>
+      </div>
+      <p class="meta">Pilot brand name withheld from product branding on purpose — KLIS is the system; the painter is the proof.</p>
+    </section>
+
+    <!-- 5 K install -->
+    <section class="slide light" data-i="5">
+      <p class="logo">KLIS</p>
+      <p class="eyebrow">Install · Knowledge</p>
+      <h2>One source of truth the whole stack reads.</h2>
+      <div class="split">
+        <div class="panel before">
+          <h3>Before</h3>
+          <ul>
+            <li>Rewrite bios and rates from memory</li>
+            <li>Phone agent, site, and proposals disagree</li>
+          </ul>
+        </div>
+        <div class="panel after">
+          <h3>What KLIS installed</h3>
+          <ul class="stack-list">
+            <li>Business profile config (legal name, services, facts)</li>
+            <li>Numbered back-office map (foundation → portal)</li>
+            <li>Same facts fed to AI agent, proposals, HQ</li>
+          </ul>
+        </div>
+      </div>
+      <div class="save-bar">
+        <span class="amt">~$10k / yr</span>
+        <span class="note">~2 hrs/week of rewrite tax × $100/hr — plus fewer wrong facts on bids</span>
+      </div>
+    </section>
+
+    <!-- 6 L install -->
+    <section class="slide light" data-i="6">
+      <p class="logo">KLIS</p>
+      <p class="eyebrow">Install · Leads</p>
+      <h2>The phone and the form became a machine.</h2>
+      <div class="split">
+        <div class="panel before">
+          <h3>Before</h3>
+          <ul>
+            <li>After-hours = voicemail graveyard</li>
+            <li>15–30 min chase per inquiry</li>
+          </ul>
+        </div>
+        <div class="panel after">
+          <h3>What KLIS installed</h3>
+          <ul class="stack-list">
+            <li>AI phone agent with booking rules + business knowledge</li>
+            <li>Web form → Google Sheet lead row</li>
+            <li>Auto acknowledgment + staff alert path</li>
+            <li>Shared booking link for human and AI</li>
+          </ul>
+        </div>
+      </div>
+      <div class="save-bar">
+        <span class="amt">~$43k / yr</span>
+        <span class="note">~156 hrs admin + modeled ~1 recovered job/mo from speed-to-lead</span>
+      </div>
+    </section>
+
+    <!-- 7 I install -->
+    <section class="slide light" data-i="7">
+      <p class="logo">KLIS</p>
+      <p class="eyebrow">Install · Intelligence</p>
+      <h2>Estimate at the house. Follow up without thinking.</h2>
+      <div class="split">
+        <div class="panel before">
+          <h3>Before</h3>
+          <ul>
+            <li>2–4 hrs per proposal at the desk</li>
+            <li>Inconsistent pricing; commercial = blank page</li>
+            <li>Quotes sent once, then silence</li>
+          </ul>
+        </div>
+        <div class="panel after">
+          <h3>What KLIS installed</h3>
+          <ul class="stack-list">
+            <li>Estimate drawer: catalog, measurements, photos</li>
+            <li>Residential + commercial proposal templates</li>
+            <li>Separate commercial rate sheet (market-based defaults)</li>
+            <li>Day 3 / 8 / 21 reminder automation</li>
+            <li>Post-job review request workflow</li>
+          </ul>
+        </div>
+      </div>
+      <div class="save-bar">
+        <span class="amt">~$66k / yr</span>
+        <span class="note">Estimating time (~$39k) + follow-up / review recovery (~$27k) in the pilot model</span>
+      </div>
+    </section>
+
+    <!-- 8 S install -->
+    <section class="slide light" data-i="8">
+      <p class="logo">KLIS</p>
+      <p class="eyebrow">Install · Systems</p>
+      <h2>Portal, money, automation, weekly rhythm.</h2>
+      <div class="split">
+        <div class="panel before">
+          <h3>Before</h3>
+          <ul>
+            <li>Deposit chase by text thread</li>
+            <li>No per-job P&amp;L; tool sprawl</li>
+          </ul>
+        </div>
+        <div class="panel after">
+          <h3>What KLIS installed</h3>
+          <ul class="stack-list">
+            <li>Client portal (view / accept / pay / message)</li>
+            <li>Stripe deposits + webhook → job ledger</li>
+            <li>Apps Script: intake, reminders, reviews, digests</li>
+            <li>Internal HQ: doors, estimate tools, job money</li>
+            <li>Monday scorecard + content cadence</li>
+          </ul>
+        </div>
+      </div>
+      <div class="save-bar">
+        <span class="amt">~$20k / yr</span>
+        <span class="note">Deposit/admin hours + weekly ops rhythm + avoided automation SaaS tiers</span>
+      </div>
+    </section>
+
+    <!-- 9 Results -->
+    <section class="slide" data-i="9">
+      <p class="logo">KLIS</p>
+      <p class="eyebrow">Results · pilot model</p>
+      <p class="big-num">~$118k<small>Conservative annual value</small></p>
+      <p class="lede">~850 owner hours returned · ~$85k time value · ~$54k recovered / protected revenue (gross). Combined ~$118k after trimming overlap.</p>
+      <table class="table">
+        <thead>
+          <tr><th>Layer</th><th>Installed</th><th>Annual</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Knowledge</td><td>Config + back-office spine</td><td class="money">$10.4k</td></tr>
+          <tr><td>Leads</td><td>AI phone + form pipeline</td><td class="money">$42.6k</td></tr>
+          <tr><td>Intelligence</td><td>Estimate desk + follow-up</td><td class="money">$66.0k</td></tr>
+          <tr><td>Systems</td><td>Portal + Script + rhythm</td><td class="money">$20.2k</td></tr>
+        </tbody>
+      </table>
+      <p class="assumptions">Assumptions: 8 jobs/mo · $4,500 avg · 40 inquiries/mo · 12 proposals/mo · $100/hr. Replace with measured close-rate lift after 90 days.</p>
+    </section>
+
+    <!-- 10 Stack table -->
+    <section class="slide light" data-i="10">
+      <p class="logo">KLIS</p>
+      <p class="eyebrow">Tech under the method</p>
+      <h2>Cheap to run. Designed to be owned.</h2>
+      <table class="table">
+        <thead>
+          <tr><th>Piece</th><th>Role in KLIS</th><th>Cost posture</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Business config + folders</td><td>Knowledge spine</td><td class="money">Owned</td></tr>
+          <tr><td>AI phone agent</td><td>Leads 24/7</td><td class="money">Subscription</td></tr>
+          <tr><td>Google Sheets + Apps Script</td><td>Pipeline + automation</td><td class="money">~$0 incr.</td></tr>
+          <tr><td>Estimate HQ (web)</td><td>Intelligence workstation</td><td class="money">Static host</td></tr>
+          <tr><td>Client portal + Stripe</td><td>Accept + collect</td><td class="money">Host + fees</td></tr>
+          <tr><td>Scorecard / routines</td><td>Systems rhythm</td><td class="money">Owned</td></tr>
+        </tbody>
+      </table>
+      <p class="assumptions">KLIS prefers owned docs + Script over stacking another $200/mo SaaS for every workflow.</p>
+    </section>
+
+    <!-- 11 Close -->
+    <section class="slide" data-i="11">
+      <p class="logo">KLIS</p>
+      <p class="eyebrow">Takeaway</p>
+      <h1>The product is the operating system. The pilot proved it runs.</h1>
+      <ul class="cta-list">
+        <li><strong>What you buy:</strong> K + L + I + S installed and wired end-to-end</li>
+        <li><strong>What you get:</strong> same-day quotes, always-on leads, deposits without chase, job-level money</li>
+        <li><strong>What to measure next:</strong> close-rate lift and review rate over 90 days</li>
+      </ul>
+      <p class="lede" style="margin-top: 1.75rem;">The KLIS Method — case study</p>
+    </section>
+  </div>
+
+  <nav class="footer-nav" aria-label="Deck controls">
+    <button type="button" id="prev" disabled>← Prev</button>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+    <span id="pos">1 / 12</span>
+    <button type="button" id="next">Next →</button>
+  </nav>
+
+  <script>
+    const slides = [...document.querySelectorAll(".slide")];
+    const dots = document.getElementById("dots");
+    const pos = document.getElementById("pos");
+    const prev = document.getElementById("prev");
+    const next = document.getElementById("next");
+    let i = 0;
+    slides.forEach((_, n) => {
+      const d = document.createElement("span");
+      if (n === 0) d.classList.add("on");
+      dots.appendChild(d);
+    });
+    function go(n) {
+      i = Math.max(0, Math.min(slides.length - 1, n));
+      slides.forEach((s, j) => s.classList.toggle("on", j === i));
+      [...dots.children].forEach((d, j) => d.classList.toggle("on", j === i));
+      pos.textContent = (i + 1) + " / " + slides.length;
+      prev.disabled = i === 0;
+      next.disabled = i === slides.length - 1;
+    }
+    prev.addEventListener("click", () => go(i - 1));
+    next.addEventListener("click", () => go(i + 1));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); go(i + 1); }
+      if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); go(i - 1); }
+      if (e.key === "Home") go(0);
+      if (e.key === "End") go(slides.length - 1);
+    });
+  </script>
+</body>
+</html>

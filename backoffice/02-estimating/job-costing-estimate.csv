@@ -1,0 +1,35 @@
+Area,Surface,Sq ft,Prep level,Rate (sq ft/hr),Labor hours,Labor cost,Materials ($),Direct cost
+,,,,,"=IF(E2=0,0,C2/E2)",=F2*$B$21,,=G2+H2
+,,,,,"=IF(E3=0,0,C3/E3)",=F3*$B$21,,=G3+H3
+,,,,,"=IF(E4=0,0,C4/E4)",=F4*$B$21,,=G4+H4
+,,,,,"=IF(E5=0,0,C5/E5)",=F5*$B$21,,=G5+H5
+,,,,,"=IF(E6=0,0,C6/E6)",=F6*$B$21,,=G6+H6
+,,,,,"=IF(E7=0,0,C7/E7)",=F7*$B$21,,=G7+H7
+,,,,,"=IF(E8=0,0,C8/E8)",=F8*$B$21,,=G8+H8
+,,,,,"=IF(E9=0,0,C9/E9)",=F9*$B$21,,=G9+H9
+,,,,,"=IF(E10=0,0,C10/E10)",=F10*$B$21,,=G10+H10
+,,,,,"=IF(E11=0,0,C11/E11)",=F11*$B$21,,=G11+H11
+,,,,,"=IF(E12=0,0,C12/E12)",=F12*$B$21,,=G12+H12
+,,,,,"=IF(E13=0,0,C13/E13)",=F13*$B$21,,=G13+H13
+,,,,,"=IF(E14=0,0,C14/E14)",=F14*$B$21,,=G14+H14
+,,,,,"=IF(E15=0,0,C15/E15)",=F15*$B$21,,=G15+H15
+,,,,,"=IF(E16=0,0,C16/E16)",=F16*$B$21,,=G16+H16
+,,,,,,,,
+SUBTOTAL,,=SUM(C2:C16),,,=SUM(F2:F16),=SUM(G2:G16),=SUM(H2:H16),=SUM(I2:I16)
+,,,,,,,,
+SETTINGS — edit these,,,,,,,,
+Burdened labor rate ($/hr),55,,,,,,,
+Overhead %,0.15,,,,,,,
+Target gross margin,0.45,,,,,,,
+Crew size,2,,,,,,,
+,,,,,,,,
+ROLLUP — do not edit,,,,,,,,
+Labor cost,=G18,,,,,,,
+Materials,=H18,,,,,,,
+Direct cost,=I18,,,,,,,
+Overhead $,=B29*B22,,,,,,,
+Total cost,=B29+B30,,,,,,,
+PRICE,"=IF(B23>=1,0,B31/(1-B23))",,,,,,,
+Gross profit $,=B32-B31,,,,,,,
+Effective $/sq ft,"=IF(C18=0,0,B32/C18)",,,,,,,
+Calendar days @ 8h,"=IF(B24=0,0,F18/(B24*8))",,,,,,,

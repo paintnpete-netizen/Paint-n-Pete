@@ -1,0 +1,582 @@
+# =============================================================================
+# BUSINESS PROFILE — the config layer
+# =============================================================================
+# Every template, prompt, SOP, form spec, and web page in this back office
+# reads its facts from this file. Nothing downstream hardcodes a company name,
+# a city, or a phone number.
+#
+# To stand up a second operator: copy this file, change the values, leave the
+# rest of the back office untouched. That is the whole franchise mechanism.
+#
+# STATUS FLAGS — every claim carries one:
+#   verified   Noah has confirmed it. Safe to publish, send, or print.
+#   unverified Do NOT put in front of a client, GC, or crew until confirmed.
+#   todo       Noah still needs to supply this.
+# =============================================================================
+
+meta:
+  operator_id: paintnpete-stpete
+  profile_version: 1
+  last_reviewed: 2026-08-21
+  review_cadence: quarterly   # per guide 2.1
+
+# -----------------------------------------------------------------------------
+# Identity
+# -----------------------------------------------------------------------------
+company:
+  name: "Paint'n Pete"
+  pronunciation:
+    spoken: "Paintin' Pete"
+    phonetic: "PAYN-tin-PEET"
+    status: verified
+    note: >
+      Written "Paint'n Pete", said "Paintin' Pete". Any voice agent, video
+      voiceover, or radio read must be given the spoken spelling, not the
+      written one — text-to-speech reads the apostrophe as a letter N and
+      produces "Paint N Pete". The live KaiCalls agent has said "Peyton Pete",
+      "Paint and Pete", and "paints and peas" on recorded calls.
+  legal_name:
+    value: "Kanwal Consulting LLC"
+    dba: "Paint'n Pete"
+    status: verified
+    note: >
+      Confirmed 2026-08-20. Legal entity on contracts, W-9, and COI is
+      Kanwal Consulting LLC. Trade name / DBA is Paint'n Pete. Fifteen
+      years in the trade is Noah's, not the LLC's age.
+  founded:
+    value: 2022
+    status: verified
+    note: "Company founded 2022. Distinct from owner's 15 years in the trade."
+  tagline: null               # deliberately empty; see voice.forbidden
+
+owner:
+  name: "Noah Kanwal"
+  role: "Owner"
+  years_in_trade:
+    value: 15
+    status: verified
+  projects_completed:
+    value: "300+"
+    status: verified
+
+# -----------------------------------------------------------------------------
+# Contact
+# -----------------------------------------------------------------------------
+contact:
+  phone:
+    value: "727-902-1986"
+    status: verified
+    note: >
+      Canonical business line, separate from Noah's handset. Confirmed
+      2026-08-19. To be ported into KaiCalls so Kai answers it directly —
+      procedure in 03-leads/kai-setup.md.
+  personal_cell:
+    value: "914-357-1448"
+    status: verified
+    note: >
+      NOAH'S PERSONAL CELL. FAMILY USE. NEVER PUBLISH ANYWHERE.
+      The old Wix site published this in its LocalBusiness JSON-LD. Checked
+      against the live site 2026-08-19 and it is gone — the current site
+      publishes 727-902-1986 in the schema, the tel: link, and the visible
+      copy, with no occurrence of this number anywhere. Recorded here only so
+      it is recognisable if it resurfaces on a directory, an old listing, or a
+      social profile.
+  email:
+    value: "noah@paintnpete.com"
+    status: unverified
+    role: "Client outreach — everything a client, GC, designer, or PM sees"
+    note: >
+      Decided 2026-08-19; customer-channel rule tightened 2026-08-20.
+      All customer and vendor interaction lives here: proposals, follow-ups,
+      objection replies, commercial outreach, KaiCalls call/lead alerts,
+      website form staff alerts, and Apps Script pipeline reminders.
+      Mailbox exists — Google accepted noah@paintnpete.com at the sign-in
+      identifier screen on 2026-08-19. Flip to verified once a test message
+      sends and receives.
+
+  email_internal:
+    value: "paintnpete@gmail.com"
+    status: verified
+    role: "System address — never client-facing"
+    note: >
+      Admin mailbox only: subscriptions, compliance, insurance, personal
+      company matters, Google Business Profile owner, KaiCalls dashboard
+      login, and Netlify login. Never client-facing, and never a destination
+      for call, lead, or vendor notifications — those go to
+      noah@paintnpete.com. Kept so a free Gmail never appears on a document
+      a client or a general contractor reads.
+
+  # The only two addresses that may touch Paint'n Pete. Decided 2026-08-19.
+  # "noaha@" in that instruction is treated as noah@ — say so if that was wrong.
+  email_allowed:
+    - noah@paintnpete.com
+    - paintnpete@gmail.com
+  email_forbidden:
+    value: "kanwalconsulting297@gmail.com"
+    status: never_business
+    note: >
+      Personal / consulting mailbox. Must not own, manage, receive, or appear
+      on anything Paint'n Pete: not Google Business, not KaiCalls, not Netlify,
+      not Wix, not Workspace admin, not GitHub, not invoices, not signatures.
+      If a vendor is signed in as this account, switch or transfer — do not
+      keep working under it.
+
+      Still attached as of 2026-08-19 (must move):
+      - This Cursor/Origin login and the browser session used for Admin
+      Netlify login and team were moved 2026-08-19 to paintnpete@gmail.com /
+      team slug paintnpete. Residual: Google OAuth on that Netlify user is
+      still the consulting mailbox — disconnect after a password or a
+      paintnpete@gmail.com Google login is connected, or a "Sign in with
+      Google" can bounce back to consulting. Form notification is already
+      noah@, which is correct.
+
+  email_auth:
+    spf: "present — v=spf1 include:_spf.google.com ~all"
+    dkim:
+      status: verified
+      selector: google
+      bits: 2048
+      note: >
+        Generated 2026-08-19 as noah@paintnpete.com in Admin → Authenticate
+        email. TXT at google._domainkey.paintnpete.com is live, Google status
+        is "Authenticating email with DKIM." Do not click Generate new record
+        or Stop authentication.
+    dmarc:
+      status: verified
+      record: "v=DMARC1; p=none; rua=mailto:noah@paintnpete.com"
+      note: >
+        TXT added at _dmarc.paintnpete.com in Wix 2026-08-19. Monitor-only.
+        Tighten to p=quarantine after a few weeks of reports. Never open at
+        p=reject. SPF and MX were left untouched.
+    dns_host: >
+      Wix (ns6/ns7.wixdns.net) as of 2026-08-19, even though the website itself
+      now serves from Netlify. Both TXT records go in the Wix DNS panel.
+    why: >
+      Cold outreach reaches people with no correspondence history, so receiving
+      servers judge it almost entirely on authentication. Without DKIM and
+      DMARC the mail lands in spam silently and the channel appears to simply
+      not work. Procedure in 04-visibility/SETUP.md.
+  address:
+    street: "1105 18th St S"
+    city: "St. Petersburg"
+    state: "FL"
+    zip: "33712"
+    status: verified
+    note: >
+      Already published on the Google Business Profile and on MapQuest,
+      localitybiz, and Nextdoor. The decision to make it public has effectively
+      been taken, so it is safe to use in schema and on the site.
+  hours:
+    value: "8:00 AM – 8:00 PM, seven days"
+    status: verified
+    note: >
+      Read from the Google Business Profile 2026-08-19. Kai's intake and any
+      "we'll call you back" promise must respect these — do not let the agent
+      offer a callback at 9pm.
+
+web:
+  business_site:
+    url: "https://www.paintnpete.com"
+    canonical: "www — the apex 301-redirects to it"
+    platform: "Static HTML on Netlify"
+    source_repo: "~/Projects/paintnpete-website"
+    netlify_site_id: "e5f29f47-051c-40a5-995c-08d0471a1d6c"
+    github:
+      url: "https://github.com/paintnpete-netizen/paintnpete-website"
+      visibility: private
+      branch: master
+      commit: "9389cc5"
+      status: verified
+      note: >
+        Created 2026-08-19. Private, empty README, then pushed from
+        ~/Projects/paintnpete-website. Remote HEAD matches local 9389cc5
+        (62 files). The temporary website-backup branch on Paint-n-Pete
+        has been deleted.
+    status: >
+      Audited page by page 2026-08-19 — see 09-website/live-site-audit.md.
+      Eleven pages, all 200, all with meta descriptions, H1s, and canonicals;
+      sitemap and robots.txt correct; structured data on the homepage, the five
+      service pages, and service-areas. The Phase 1 rebuild in
+      ../../paintnpete-redesign/ has already been executed, so those documents
+      are stale and describe a Wix site that no longer exists.
+
+      The source is NOT in this repository. This repo is Noah's portfolio site
+      (different Netlify site) and merely carries backoffice/ inside it.
+      Website repo HEAD was 9389cc5 and clean as of 2026-08-20. Schema and
+      review-count edits after that date live in that working tree until they
+      are committed and CLI-deployed.
+    lead_capture:
+      mechanism: "Netlify Forms — form name consultation-details"
+      status: live
+      workbook:
+        name: "Paint'n Pete — Back Office"
+        id: "18SVd9ZQPacTWd9KvwqnZz2kgNHR8y18t_S2t8J90Xvo"
+        url: "https://docs.google.com/spreadsheets/d/18SVd9ZQPacTWd9KvwqnZz2kgNHR8y18t_S2t8J90Xvo/edit"
+        owner: "noah@paintnpete.com"
+        tabs: [Leads, Jobs, Scorecard]
+      apps_script:
+        name: "Paint'n Pete Automation"
+        id: "1tdNt0a7__f4lFFa3RO9I25cylgmlMT89ifKhh9GJGQNASms6y4zx8Hxh"
+        web_app: "https://script.google.com/macros/s/AKfycbxVsao0huXM_P6_LNkk1uYxE1adS8SqxgRbiTzkAoAjhVftz5EYeBSKOMccbEluTERM/exec"
+        note: >
+          Webhook secret lives in Project Settings → Script properties
+          (key webhookSecret). Do not put it in git or this file.
+          After any Code.gs change, Deploy → Manage deployments →
+          New version, or Netlify keeps hitting the old copy.
+          Time triggers installed 2026-08-20 as noah@paintnpete.com:
+          dailyCheck (time-driven, ~7am) and mondayReminder (Monday ~7am).
+          Head deployment. Do not add onFormSubmit until a Google Form
+          is linked to the sheet.
+      netlify_team:
+        current: "paintnpete"
+        name: "Paint'n Pete"
+        login: "paintnpete@gmail.com"
+        status: verified
+        note: >
+          Moved 2026-08-19. Login email verified as paintnpete@gmail.com,
+          team renamed from kanwalconsulting297 / "kanwalconsulting297's
+          team" to slug paintnpete / "Paint'n Pete". Same Personal team,
+          same three projects (paintnpete.com, noahkanwal.com, unused).
+          Site confirmed HTTP 200 after the rename. Do not delete the team.
+          Residual: connected Google OAuth is still the consulting mailbox.
+      netlify_slug: "paintnpete"
+      deploys: >
+        From the CLI, not from git. No continuous deployment is connected, so
+        every publish is a manual netlify deploy from the local folder and the
+        live site can silently diverge from the repo.
+      notification: >
+        Email to noah@paintnpete.com on new submission from any form, verified
+        2026-08-19, plus an outgoing HTTP POST webhook to the Apps Script web
+        app, added 2026-08-20. Event: New form submission. Form: Any form.
+        JWS skipped — Apps Script cannot read request headers. Keep both.
+      note: >
+        Live 2026-08-20. The website form posts to Netlify Forms; the webhook
+        fires doPost; a Leads row lands with source=website; the submitter
+        gets an acknowledgment (Reply-To noah@paintnpete.com); noah@paintnpete.com
+        also gets the staff alert whose subject begins [Paint'n Pete].
+
+        End-to-end test: submitted the live contact form as
+        "Noah Kanwal (webhook test)". Two Leads rows appeared (the test
+        posted twice). Both rows marked outcome=test 2026-08-20.
+    schema_gaps:
+      aggregate_rating: >
+        Hardcoded at ratingCount 14 while Google shows 21. Also verify the
+        block earns anything at all — self-serving review markup is generally
+        not eligible for star rich results.
+      opening_hours: "Absent, though contact.hours is now verified."
+      pages_without_schema: "work, products, about, contact — contact matters most."
+  portfolio_site:
+    url: "https://noah-kanwal.netlify.app"
+    platform: "Static HTML/CSS/JS on Netlify"
+    status: live
+    note: "This repo. Used for designer and architect outreach."
+  google_business_profile:
+    url:
+      value: "https://www.google.com/search?q=Paint%27n+Pete&stick=H4sIAAAAAAAA_-NgU1I1qDAxMEu0SLQwMjAyTUxJsjC1MqgwNzU0N060tDQ3MLJMMU4xXMTKE5CYmVeinqcQkFqSCgCG4UQUOAAAAA"
+      status: verified
+      note: >
+        Knowledge-panel link. Still needed: the short review link for the
+        request texts (see 04-visibility/SETUP.md), which can only be generated
+        from inside a claimed profile.
+    ownership:
+      managed_by: "paintnpete@gmail.com"
+      status: verified
+      note: >
+        Google's claim screen reports the profile is "currently managed by
+        pa…@gmail.com". The masked prefix and the gmail.com domain identify
+        paintnpete@gmail.com — noah@paintnpete.com would mask as
+        no…@paintnpete.com. The profile IS claimed.
+
+        kanwalconsulting297@gmail.com is not a business account and must not
+        be used to manage this profile. If the browser is signed into it,
+        switch to paintnpete@gmail.com. Do not click "Request Access" — that
+        asks permission from yourself and starts a multi-day wait for nothing.
+    rating:
+      value: 5.0
+      status: verified
+    review_count:
+      value: 21
+      status: verified
+      note: >
+        Read live 2026-08-19, up from the 14 recorded at the start of this
+        project. Changes constantly — re-check before quoting it anywhere.
+  social:
+    instagram:
+      value: "https://www.instagram.com/paintnpete/"
+      status: verified
+      note: "Linked from the Google profile. ~140 followers as of 2026-08-19."
+    facebook:
+      value: null
+      status: skipped
+      note: >
+        No business page found. Noah 2026-08-20: skip a Facebook business
+        page for now. Do not create one.
+
+# -----------------------------------------------------------------------------
+# What the business sells
+# -----------------------------------------------------------------------------
+services:
+  - id: interior
+    label: "Interior Painting"
+    slug: /interior-painting
+  - id: exterior
+    label: "Exterior Painting"
+    slug: /exterior-painting
+  - id: cabinets
+    label: "Cabinets & Fine Finishes"
+    slug: /cabinets-and-finishes
+    note: "Highest margin, most visual. Lead with this in content."
+  - id: repair
+    label: "Drywall & Surface Repair"
+    slug: /drywall-repair
+  - id: commercial
+    label: "Commercial"
+    slug: /commercial
+
+declines:
+  status: todo
+  note: >
+    The guide (2.1) asks explicitly what you decline to do. This is one of the
+    most useful things in the brief — it stops the AI proposing work you don't
+    want and stops you being drawn into jobs you'd regret. Common candidates:
+    roof coatings, pressure-wash-only jobs, pure handyman work, insurance
+    restoration, jobs where the client supplies the paint, anything under a
+    minimum dollar value. Noah to fill in.
+
+# -----------------------------------------------------------------------------
+# Territory
+# -----------------------------------------------------------------------------
+service_area:
+  counties:
+    - Pinellas
+    - Hillsborough
+  neighborhoods:              # used for content tagging and service-area pages
+    - Old Northeast
+    - Snell Isle
+    - Kenwood
+    - Tierra Verde
+    - Gulfport
+    - St. Pete Beach
+  boundary:
+    status: verified
+    published_cities:          # confirmed by Noah 2026-08-20; live on service-areas.html
+      - St. Petersburg
+      - Clearwater
+      - Tampa
+      - Gulfport
+      - Pinellas Park
+      - St. Pete Beach
+      - Tierra Verde
+      - Treasure Island
+    note: >
+      Noah confirmed 2026-08-20 that all eight published cities stay.
+      Homepage areaServed is aligned to the same eight plus Pinellas and
+      Hillsborough counties.
+
+# -----------------------------------------------------------------------------
+# Products
+# -----------------------------------------------------------------------------
+products:
+  brands:
+    - Benjamin Moore
+    - Sherwin-Williams
+    - Florida Paints
+    - Farrow & Ball
+  selection_principle: >
+    Products are chosen for substrate and exposure, not for price per gallon.
+
+# -----------------------------------------------------------------------------
+# Craft philosophy — the source of the differentiation, so it drives all copy
+# -----------------------------------------------------------------------------
+philosophy:
+  - "Prep is most of the job."
+  - "Coatings cure on their schedule, not ours."
+  - "Products are specified for the surface and its exposure."
+  - "The last ten percent is the part nobody else finishes."
+
+ideal_client: >
+  Homeowners, interior designers, and architects who care about the last ten
+  percent — the details most people never notice.
+
+# -----------------------------------------------------------------------------
+# Voice — enforced across every generated document
+# -----------------------------------------------------------------------------
+voice:
+  register: "Direct, craftsman, factual."
+  person: "Third person for company documents; first person for texts and emails from Noah."
+  forbidden:
+    - exclamation points
+    - superlatives and hype
+    - "self-describing 'premium' or 'luxury'"
+    - "'transformation Tuesday' and similar social clichés"
+    - discount language
+    - apologising for price
+
+# -----------------------------------------------------------------------------
+# Credentials
+# -----------------------------------------------------------------------------
+credentials:
+  license:
+    number: null
+    type: "Florida licensed business — not a contractor license"
+    pinellas_contractor_license_required: false
+    exact_wording: >
+      Licensed Florida business. Pinellas County does not require a
+      contractor license for painting.
+    status: verified
+    note: >
+      Confirmed by Noah 2026-08-21. Kanwal Consulting LLC DBA Paint'n Pete
+      is a licensed business. Painters in Pinellas County are not required
+      to hold a DBPR contractor license, so there is no contractor license
+      number to publish. Never say "licensed contractor." Never invent a
+      license number. Local business-tax receipt / Sunbiz docs go in the
+      Drive ready folder; they do not go on the website.
+  insurance:
+    general_liability:
+      policy: "NXTWWCT4Q3-03-GL"
+      carrier: "Next Insurance US Company"
+      naic: "16285"
+      producer: "Next First Insurance Agency, Inc."
+      form: occurrence
+      each_occurrence: "$1,000,000"
+      general_aggregate: "$1,000,000"
+      products_completed_ops: "$1,000,000"
+      personal_advertising: "$1,000,000"
+      damage_rented_premises: "$100,000"
+      medical_expense: "$10,000"
+      contractors_eo: "$10,000 each occurrence / $20,000 aggregate"
+      additional_insured: "automatic status endorsement when required by written agreement"
+      effective: "2026-07-15"
+      expires: "2027-07-15"
+      certificate_date: "2026-07-15"
+      certificate_number: "182544434"
+      status: verified
+    workers_comp:
+      policy: "N9WC614678"
+      carrier: "National Liability & Fire Insurance Company"
+      producer: "biBERK"
+      naic: "20052"
+      statutory: true
+      employers_liability:
+        each_accident: "$100,000"
+        disease_each_employee: "$100,000"
+        disease_policy_limit: "$500,000"
+      effective: "2026-01-13"
+      expires: "2027-01-13"
+      certificate_date: "2026-01-15"
+      status: verified
+    note: >
+      Read from ACORD 25 PDFs Noah supplied 2026-08-21. Do not copy those
+      PDFs into git. Keep current send copies in Drive folder Compliance
+      — send on request.
+
+      GL: current certificate NXTWWCT4Q3-03-GL, Next Insurance US Company,
+      2026-07-15 to 2027-07-15. $1,000,000 each occurrence / $1,000,000
+      general aggregate, occurrence form. Certificate 182544434 dated
+      2026-07-15 is issued to BNB Networks LLC as additional insured
+      (automatic-status endorsement). That holder is job-specific — do
+      not publish the name. For any other GC, request a new cert in
+      their name. The prior -02-GL cert expired 2026-07-15; do not send it.
+
+      WC: statutory Florida workers' compensation plus employers
+      liability $100,000 / $100,000 / $500,000 — not $1,000,000. In
+      force through 2027-01-13.
+
+      Contractors E&O on the Next form is $10k/$20k — do not list it on
+      the capabilities statement.
+  warranty:
+    years: 2
+    covers: "workmanship"
+    status: verified
+    note: >
+      Confirmed 2026-08-20: two-year workmanship warranty. Do not invent
+      exclusions, paint-failure carve-outs, or a different duration.
+      Proposal language must match this.
+  w9_on_file:
+    value: true
+    signed: "2024-12-09"
+    status: verified
+    note: >
+      Signed W-9 dated 2024-12-09. Line 1 Kanwal Consulting LLC, Line 2
+      Paint'n Pete, address 1105 18th St. South, St. Petersburg, FL 33712
+      — matches company.legal_name. Form checks both LLC and
+      individual/sole proprietor; no C/S/P letter. PDF stays out of git.
+      Keep the send copy in Drive folder Compliance — send on request as
+      Kanwal-Consulting-LLC-W9.pdf. Do not record EIN here.
+
+# -----------------------------------------------------------------------------
+# Pricing posture
+# -----------------------------------------------------------------------------
+pricing:
+  publish_ranges:
+    value: null
+    status: todo
+    note: "Competitor research suggested transparent ranges build trust. Your call."
+  rule: >
+    The estimate drawer prices from rates.js × field measurements
+    (paint $2/sq ft, wash $0.15/sq ft, doors $200 interior / $250 exterior,
+    cabinets per piece). Optional 5–20% discount on the estimate. Do not invent
+    a different number. If a job needs different rates, change them on that estimate.
+
+# -----------------------------------------------------------------------------
+# Tool stack — resolved 2026-08-19
+# -----------------------------------------------------------------------------
+stack:
+  platform: "Google Workspace"
+  ai_writing: "Claude (long documents, proposals, SOPs, photo-to-scope)"
+  ai_quick: "ChatGPT (short drafts, captions)"
+  documents: "Google Docs"
+  spreadsheets: "Google Sheets"
+  forms: "Google Forms"
+  storage: "Google Drive"
+  calendar: "Google Calendar"
+  email: "Google Workspace on paintnpete.com — verified live 2026-08-19 (MX smtp.google.com)"
+  automation: "Google Apps Script"
+  automation_note: >
+    The guide defaults to Make.com, whose free tier allows only 2 active
+    scenarios on 1,000 credits/month — not enough for the six workflows in
+    Section 7. Apps Script is included with Workspace, has no scenario cap,
+    is native to Sheets/Forms/Gmail/Calendar, and is version-controllable in
+    this repo. Make.com is kept as a fallback only for third-party services
+    Apps Script cannot reach.
+  design: "Canva (free)"
+  research: "Perplexity"
+  web_editing: "Cursor"
+  hosting: "Netlify"
+  phone: "KaiCalls — AI phone secretary"
+  phone_plan:
+    product: Solo
+    status: trial_with_card
+    verified: 2026-08-19
+    trial_ends: 2026-08-26
+    price_after_trial: "$69/month"
+    allowance: "150 answered calls/mo"
+    first_invoice: "$0 paid 2026-08-20"
+    note: >
+      Card on file. The 25-minute free-trial cliff is gone. Do not port
+      727-902-1986 until caller ID is verified and a human handoff destination
+      exists.
+  phone_note: >
+    Intended: answers 24/7, runs intake, texts a booking link, texts missed
+    callers back, and sends a lead summary by SMS and email. Live as of
+    2026-08-20: public inbound on +17623162584 is a KaiCalls developer ticket;
+    calendar booking is not configured — Kai texts https://www.paintnpete.com/contact.
+    Not the system of record — website leads already land in the Leads tab.
+    Configuration in 03-leads/kai-setup.md.
+  phone_rules:
+    - "Never quotes a price, not even a range."
+    - "Declines out-of-area work gracefully."
+    - "Escalates rather than improvising on anything it wasn't told."
+  payments: "Stripe Checkout"
+  payments_status: in_progress
+  payments_note: >
+    Accept + deposit via Stripe Checkout in the client portal (10-portal/).
+    Test keys wired on Netlify 2026-08-26. Finish Dashboard activation + bank
+    for live payouts — see 10-portal/STRIPE-DASHBOARD.md.
+  client_portal:
+    status: v1_stripe_test
+    url_planned: "https://portal.paintnpete.com"
+    invite: "estimate-sent SMS (not booking SMS)"
+    legal: "Florida contractor attorney for contract + bill of sale"
+    spec: "10-portal/portal.md"
+    deploy: "10-portal/DEPLOY-PORTAL.md"

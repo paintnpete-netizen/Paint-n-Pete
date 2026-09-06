@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Stripe setup — Paint'n Pete</title>
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="portal.css" />
+  <style>
+    .setup-links { list-style: none; padding: 0; margin: 1rem 0; }
+    .setup-links li { margin: 0.5rem 0; }
+    .setup-links a { font-weight: 650; }
+    .values { font-size: 0.88rem; color: var(--muted); margin: 0.25rem 0 0; }
+    .status-ok { color: var(--green); font-weight: 650; }
+    .status-warn { color: var(--gold); font-weight: 650; }
+    code { font-size: 0.85em; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <p class="pill">Operator</p>
+      <h1>Stripe setup</h1>
+      <p class="lede">Finish activation in Stripe, then confirm status below. Test payments work before bank verification; live payouts need a linked account.</p>
+
+      <p id="stripe-status">Checking Stripe account…</p>
+
+      <h2>Open in Stripe</h2>
+      <ul class="setup-links">
+        <li><a href="https://dashboard.stripe.com/acct_1U8o9bFgQoPneNp3/test/setup" target="_blank" rel="noopener">Continue activation checklist</a></li>
+        <li><a href="https://dashboard.stripe.com/acct_1U8o9bFgQoPneNp3/test/settings/account" target="_blank" rel="noopener">Business details</a></li>
+        <li><a href="https://dashboard.stripe.com/acct_1U8o9bFgQoPneNp3/test/settings/branding" target="_blank" rel="noopener">Branding (color + logo)</a></li>
+        <li><a href="https://dashboard.stripe.com/acct_1U8o9bFgQoPneNp3/test/settings/public" target="_blank" rel="noopener">Statement descriptor</a></li>
+        <li><a href="https://dashboard.stripe.com/acct_1U8o9bFgQoPneNp3/test/settings/payouts" target="_blank" rel="noopener">Payouts → add bank</a></li>
+        <li><a href="https://dashboard.stripe.com/acct_1U8o9bFgQoPneNp3/test/settings/emails" target="_blank" rel="noopener">Customer receipts</a></li>
+        <li><a href="https://dashboard.stripe.com/acct_1U8o9bFgQoPneNp3/test/webhooks" target="_blank" rel="noopener">Webhooks</a></li>
+      </ul>
+
+      <h2>Copy-paste values</h2>
+      <dl class="admin-dl">
+        <dt>Legal name</dt><dd>Kanwal Consulting LLC</dd>
+        <dt>DBA</dt><dd>Paint'n Pete</dd>
+        <dt>Website</dt><dd>https://www.paintnpete.com</dd>
+        <dt>Address</dt><dd>1105 18th St S, St. Petersburg, FL 33712</dd>
+        <dt>Support phone</dt><dd>727-902-1986</dd>
+        <dt>Support email</dt><dd>noah@paintnpete.com</dd>
+        <dt>Industry</dt><dd>Home improvement / painting (MCC 1799)</dd>
+        <dt>Statement descriptor</dt><dd>PAINT N PETE</dd>
+        <dt>Brand color</dt><dd><code>#1f4a3a</code></dd>
+        <dt>Product description</dt><dd>Residential &amp; commercial painting. 50% deposit to schedule; balance at completion.</dd>
+      </dl>
+
+      <p class="link-row"><a href="admin.html">← Portal admin</a></p>
+    </section>
+  </main>
+  <script>
+    fetch("/.netlify/functions/stripe-status")
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        var el = document.getElementById("stripe-status");
+        if (!d.ok) {
+          el.innerHTML = '<span class="status-warn">Could not read Stripe status.</span>';
+          return;
+        }
+        var parts = [];
+        if (d.test_checkout_ok) parts.push("Test Checkout: <span class=\"status-ok\">working</span>");
+        if (d.charges_enabled) parts.push("Live charges: <span class=\"status-ok\">enabled</span>");
+        else parts.push("Live charges: <span class=\"status-warn\">finish activation</span>");
+        if (d.payouts_enabled) parts.push("Payouts: <span class=\"status-ok\">enabled</span>");
+        else parts.push("Payouts: <span class=\"status-warn\">add bank account</span>");
+        if (d.webhook_count) parts.push("Webhooks: <span class=\"status-ok\">" + d.webhook_count + " endpoint(s)</span>");
+        el.innerHTML = parts.join(" · ");
+      })
+      .catch(function () {
+        document.getElementById("stripe-status").textContent = "Status check unavailable.";
+      });
+  </script>
+</body>
+</html>

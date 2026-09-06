@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Portal Admin — Paint'n Pete</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Manrope:wght@400;500;650;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="portal.css" />
+</head>
+<body class="admin-body">
+  <header class="portal-header admin-header" id="header" hidden>
+    <div class="wrap admin-wrap">
+      <a class="brand" href="admin.html">Paint'n Pete<span>Portal admin</span></a>
+      <button type="button" class="sign-out" id="sign-out">Sign out</button>
+    </div>
+  </header>
+
+  <main class="wrap admin-wrap">
+    <section class="card" id="view-login" hidden>
+      <p class="pill">Operator</p>
+      <h1>Portal admin</h1>
+      <p class="lede">Supervise active jobs, read client messages, and reply from one place.</p>
+      <form id="login-form">
+        <label for="admin-email">Email</label>
+        <input id="admin-email" type="email" autocomplete="username" required />
+        <label for="admin-password">Password</label>
+        <input id="admin-password" type="password" autocomplete="current-password" required />
+        <button class="btn block" type="submit">Sign in</button>
+        <p class="err" id="login-err" hidden></p>
+      </form>
+    </section>
+
+    <section id="view-dashboard" hidden>
+      <div class="admin-top">
+        <div>
+          <h1 class="admin-title">Active jobs</h1>
+          <p class="lede admin-lede" id="dashboard-sub">Published portal jobs and client activity.</p>
+        </div>
+        <button type="button" class="btn ghost" id="refresh-jobs">Refresh</button>
+        <a class="btn ghost" href="stripe-setup.html" style="margin-left:0.5rem">Stripe setup</a>
+      </div>
+
+      <div class="card admin-table-wrap">
+        <p class="empty" id="jobs-empty" hidden>No portal jobs yet. Submit from HQ to create one.</p>
+        <table class="admin-table" id="jobs-table" hidden>
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Status</th>
+              <th>Estimate</th>
+              <th>Messages</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="jobs-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="view-job" hidden>
+      <p class="admin-back"><a href="admin.html" id="back-dashboard">← All jobs</a></p>
+
+      <div class="admin-job-head">
+        <div>
+          <p class="pill" id="job-status-pill">Estimate ready</p>
+          <h1 class="job-title" id="job-title">Client</h1>
+          <p class="job-sub" id="job-sub"></p>
+        </div>
+      </div>
+
+      <div class="admin-grid">
+        <div class="card">
+          <h2>Contact</h2>
+          <dl class="admin-dl">
+            <dt>Email</dt><dd id="job-email"></dd>
+            <dt>Phone</dt><dd id="job-phone"></dd>
+            <dt>Account</dt><dd id="job-account"></dd>
+            <dt>Portal link</dt>
+            <dd class="admin-link-row">
+              <a id="job-portal-link" href="#" target="_blank" rel="noopener">Open invite</a>
+              <button type="button" class="btn ghost small" id="copy-portal-link">Copy</button>
+            </dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h2>Estimate</h2>
+          <dl class="admin-dl">
+            <dt>Total</dt><dd id="job-total"></dd>
+            <dt>Sent</dt><dd id="job-sent"></dd>
+            <dt>Accepted</dt><dd id="job-accepted"></dd>
+          </dl>
+          <a class="btn ghost" id="view-estimate" href="estimate.html" hidden>View estimate</a>
+          <button type="button" class="btn ghost" id="mark-not-accepted" style="margin-top:0.75rem" hidden>Mark not accepted</button>
+          <button type="button" class="btn ghost" id="delete-job" style="margin-top:0.75rem;color:#a33;border-color:#e0b4b4">Delete job from portal</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Messages</h2>
+        <div class="messages admin-messages" id="message-list"></div>
+        <form id="message-form">
+          <label for="msg-body">Reply to client</label>
+          <textarea id="msg-body" required placeholder="Scheduling, colors, next steps…"></textarea>
+          <button class="btn" type="submit">Send reply</button>
+          <p class="err" id="msg-err" hidden></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="card" id="view-loading">
+      <h1>Loading…</h1>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>

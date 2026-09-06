@@ -1,0 +1,8 @@
+Phase,Est. hours,Actual hours,Hours variance,Hours variance %,Est. materials,Actual materials,Materials variance,Notes
+Setup & protection,,,=C2-B2,"=IF(B2=0,0,(C2-B2)/B2)",,,=G2-F2,
+Prep & repair,,,=C3-B3,"=IF(B3=0,0,(C3-B3)/B3)",,,=G3-F3,
+Prime,,,=C4-B4,"=IF(B4=0,0,(C4-B4)/B4)",,,=G4-F4,
+Topcoat,,,=C5-B5,"=IF(B5=0,0,(C5-B5)/B5)",,,=G5-F5,
+Detail & touch-up,,,=C6-B6,"=IF(B6=0,0,(C6-B6)/B6)",,,=G6-F6,
+Cleanup & walkthrough,,,=C7-B7,"=IF(B7=0,0,(C7-B7)/B7)",,,=G7-F7,
+TOTAL,=SUM(B2:B7),=SUM(C2:C7),=C8-B8,"=IF(B8=0,0,(C8-B8)/B8)",=SUM(F2:F7),=SUM(G2:G7),=G8-F8,

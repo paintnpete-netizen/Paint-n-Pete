@@ -1,0 +1,17 @@
+# Local tooling — reinstallable, not source
+.tools/
+node_modules/
+.DS_Store
+
+# clasp OAuth tokens (password-equivalent)
+**/.clasprc.json
+client_secret*.json
+
+# Netlify CLI local state — contains machine-specific absolute paths
+.netlify/
+
+# Photo editing scratch files
+images/work/_edits/
+
+# Vendor packet send copies (W-9 / COIs — never commit)
+backoffice/05-commercial/vendor-packet/send/

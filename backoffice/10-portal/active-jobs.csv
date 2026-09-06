@@ -1,0 +1,2 @@
+job_number,lead_row,client_name,phone,email,site_address,status,estimate_total_cents,deposit_cents,balance_cents,estimate_sent_at,estimate_accepted_at,deposit_paid_at,scheduled_start,stripe_deposit_id,stripe_balance_id,portal_invite_token,portal_url,estimate_pdf_url,contract_pdf_url,bos_pdf_url,notes
+PNP-YYYY-MMDD-lastname,,,,,,,,estimate_sent,,,,,,,,,,,,,,,,,,,,

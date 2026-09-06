@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Paint'n Pete — Vendor Packet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;650;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1c1916;
+      --muted: #5c564e;
+      --green: #1f4a3a;
+      --line: #ddd4c6;
+      --cream: #f4efe6;
+      --gold: #8a6a32;
+      --font-d: "Fraunces", Georgia, serif;
+      --font: "Manrope", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      color: var(--ink);
+      background: #e8e2d8;
+      font-size: 10.5pt;
+      line-height: 1.45;
+    }
+    .page {
+      width: 8.5in;
+      min-height: 11in;
+      margin: 0.4in auto;
+      padding: 0.65in 0.7in 0.6in;
+      background: #fffdf8;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+      position: relative;
+      page-break-after: always;
+    }
+    .page:last-child { page-break-after: auto; }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid var(--green);
+      padding-bottom: 0.55rem;
+      margin-bottom: 1rem;
+    }
+    .brand {
+      font-family: var(--font-d);
+      font-size: 1.55rem;
+      font-weight: 600;
+      color: var(--green);
+      letter-spacing: -0.02em;
+    }
+    .brand span {
+      display: block;
+      font-family: var(--font);
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+      margin-top: 0.15rem;
+    }
+    .doc-meta {
+      text-align: right;
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .doc-meta strong {
+      display: block;
+      color: var(--green);
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+    h1 {
+      font-family: var(--font-d);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--green);
+      margin: 0.85rem 0 0.45rem;
+    }
+    h2 {
+      font-family: var(--font-d);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--green);
+      margin: 1rem 0 0.4rem;
+      padding-bottom: 0.2rem;
+      border-bottom: 1px solid var(--line);
+    }
+    p { margin-bottom: 0.55rem; color: var(--ink); }
+    .lede { color: var(--muted); max-width: 42em; }
+    ul {
+      margin: 0.35rem 0 0.7rem 1.1rem;
+      color: var(--ink);
+    }
+    li { margin-bottom: 0.25rem; }
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem 1.25rem;
+      margin: 0.5rem 0 0.75rem;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0.55rem 0.65rem;
+      background: var(--cream);
+    }
+    .card strong {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--green);
+      margin-bottom: 0.2rem;
+    }
+    .card p { margin: 0; font-size: 0.9rem; color: var(--muted); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.4rem 0 0.8rem;
+      font-size: 0.92rem;
+    }
+    th, td {
+      text-align: left;
+      vertical-align: top;
+      padding: 0.4rem 0.35rem;
+      border-bottom: 1px solid var(--line);
+    }
+    th {
+      width: 28%;
+      color: var(--green);
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .contents li { margin-bottom: 0.35rem; }
+    .contents .num {
+      display: inline-block;
+      width: 1.4rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .foot {
+      position: absolute;
+      left: 0.7in;
+      right: 0.7in;
+      bottom: 0.4in;
+      font-size: 0.68rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid var(--line);
+      padding-top: 0.35rem;
+    }
+    .note {
+      font-size: 0.82rem;
+      color: var(--muted);
+      background: var(--cream);
+      border-left: 3px solid var(--gold);
+      padding: 0.45rem 0.6rem;
+      margin: 0.6rem 0;
+    }
+    @media print {
+      body { background: #fff; }
+      .page {
+        margin: 0;
+        box-shadow: none;
+        width: auto;
+        min-height: auto;
+        height: 10.8in;
+        padding: 0.55in 0.6in 0.55in;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE 1: Cover + contents -->
+  <section class="page">
+    <div class="top">
+      <div class="brand">Paint'n Pete<span>Kanwal Consulting LLC · DBA Paint'n Pete</span></div>
+      <div class="doc-meta">
+        <strong>Vendor packet</strong>
+        August 2026<br />
+        St. Petersburg, Florida
+      </div>
+    </div>
+
+    <h1>Vendor credentialing packet</h1>
+    <p class="lede">Commercial and multi-unit painting credentials for general contractors, property managers, and facilities teams. Everything needed to qualify Paint'n Pete for your vendor list or bid package.</p>
+
+    <h2>What’s enclosed</h2>
+    <ol class="contents" style="list-style:none; margin-left:0;">
+      <li><span class="num">01</span> Capabilities statement (this document)</li>
+      <li><span class="num">02</span> W-9 — Kanwal Consulting LLC DBA Paint'n Pete</li>
+      <li><span class="num">03</span> Certificate of insurance — General liability (Next)</li>
+      <li><span class="num">04</span> Certificate of insurance — Workers’ compensation (biBERK)</li>
+      <li><span class="num">05</span> Florida business registration — Kanwal Consulting LLC</li>
+    </ol>
+
+    <div class="note">
+      Additional insured certificates naming your entity are issued within one business day on request. Email <strong>noah@paintnpete.com</strong> with the exact legal name and address for the certificate holder.
+    </div>
+
+    <h2>Contact</h2>
+    <p>
+      <strong>Noah Kanwal</strong>, Owner<br />
+      727-902-1986 · noah@paintnpete.com · paintnpete.com<br />
+      1105 18th St S, St. Petersburg, FL 33712
+    </p>
+
+    <div class="foot">
+      <span>Kanwal Consulting LLC DBA Paint'n Pete</span>
+      <span>Vendor packet · Page 1 of 3</span>
+    </div>
+  </section>
+
+  <!-- PAGE 2: Capabilities -->
+  <section class="page">
+    <div class="top">
+      <div class="brand">Paint'n Pete<span>Capabilities</span></div>
+      <div class="doc-meta">
+        <strong>Capabilities</strong>
+        15 years in the trade · 300+ projects
+      </div>
+    </div>
+
+    <h2>What we do</h2>
+    <p>Commercial and multi-unit painting, interior and exterior, with a finish standard carried from high-end residential work.</p>
+    <ul>
+      <li>Interior repaint — walls, ceilings, trim, doors, corridors, common areas</li>
+      <li>Exterior repaint and coating — stucco, masonry, wood, metal</li>
+      <li>Cabinet, millwork, and fine finish work — sprayed</li>
+      <li>Drywall and surface repair, texture matching</li>
+      <li>Surface preparation and substrate remediation</li>
+    </ul>
+
+    <h2>Where we’re different</h2>
+    <div class="grid2">
+      <div class="card">
+        <strong>Occupied-space work</strong>
+        <p>Sealed zones, protected floors and furnishings, dust control at returns, space restored at the end of every shift.</p>
+      </div>
+      <div class="card">
+        <strong>After-hours &amp; phased</strong>
+        <p>Work sequenced around tenants and operations — not around our crew’s convenience.</p>
+      </div>
+      <div class="card">
+        <strong>Coastal specification</strong>
+        <p>Products chosen for Gulf-coast substrate and exposure, not price per gallon alone.</p>
+      </div>
+      <div class="card">
+        <strong>Written prep standard</strong>
+        <p>Documented procedures for protection, exterior prep, and final walkthrough — same standard every day.</p>
+      </div>
+    </div>
+
+    <h2>Service area</h2>
+    <p>Pinellas and Hillsborough: St. Petersburg, Clearwater, Tampa, Gulfport, Pinellas Park, St. Pete Beach, Tierra Verde, Treasure Island.</p>
+
+    <h2>Trade references</h2>
+    <p>Project references with contactable clients are available on request for qualified opportunities.</p>
+
+    <div class="foot">
+      <span>noah@paintnpete.com · 727-902-1986</span>
+      <span>Vendor packet · Page 2 of 3</span>
+    </div>
+  </section>
+
+  <!-- PAGE 3: Qualifications -->
+  <section class="page">
+    <div class="top">
+      <div class="brand">Paint'n Pete<span>Qualifications</span></div>
+      <div class="doc-meta">
+        <strong>Compliance</strong>
+        Verified August 2026
+      </div>
+    </div>
+
+    <h2>Company &amp; licensing</h2>
+    <table>
+      <tr><th>Legal entity</th><td>Kanwal Consulting LLC, DBA Paint'n Pete</td></tr>
+      <tr><th>Established</th><td>2022</td></tr>
+      <tr><th>Business status</th><td>Licensed Florida business. Pinellas County does not require a contractor license for painting. No DBPR contractor license number.</td></tr>
+      <tr><th>Sunbiz document</th><td>L23000152479 (Florida LLC)</td></tr>
+      <tr><th>W-9</th><td>On file (signed 2024-12-09). Enclosed.</td></tr>
+    </table>
+
+    <h2>Insurance</h2>
+    <table>
+      <tr>
+        <th>General liability</th>
+        <td>
+          Policy NXTWWCT4Q3-03-GL — Next Insurance US Company<br />
+          $1,000,000 each occurrence / $1,000,000 general aggregate (occurrence form)<br />
+          In force through 2027-07-15. Certificate enclosed.
+        </td>
+      </tr>
+      <tr>
+        <th>Workers’ compensation</th>
+        <td>
+          Policy N9WC614678 — National Liability &amp; Fire (biBERK)<br />
+          Statutory Florida WC + employers liability $100,000 / $100,000 / $500,000<br />
+          In force through 2027-01-13. Certificate enclosed.
+        </td>
+      </tr>
+      <tr>
+        <th>Additional insured</th>
+        <td>Available on request — issued within one business day in your legal name.</td>
+      </tr>
+    </table>
+
+    <h2>Warranty</h2>
+    <p>Two-year workmanship warranty on labor. Manufacturer warranties apply to products used, per product.</p>
+
+    <h2>How to request updates</h2>
+    <p>For a certificate naming your organization as additional insured, or refreshed copies of any enclosure, email <strong>noah@paintnpete.com</strong> with the certificate-holder legal name, mailing address, and project or vendor-list reference.</p>
+
+    <div class="foot">
+      <span>Kanwal Consulting LLC DBA Paint'n Pete · paintnpete.com</span>
+      <span>Vendor packet · Page 3 of 3</span>
+    </div>
+  </section>
+
+</body>
+</html>
