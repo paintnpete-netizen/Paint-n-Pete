@@ -12,7 +12,7 @@ bracketed tokens at send time.
 
 Keep under ~320 characters when possible; the portal URL is required.
 
-> [First name], your Paint'n Pete estimate is ready. Open your portal to download it, ask questions, and pay the deposit when you're ready: [portal_url]
+> [First name], your Paint'n Pete estimate is ready. Claim your client portal to view it and message us: [portal_url]
 >
 > Questions? Call [phone].
 
@@ -63,9 +63,11 @@ Use at the end of the estimate visit, before or as the text goes out:
 
 ---
 
-## Wiring (when built)
+## Wiring
 
-1. HQ / drawer "Send estimate" publishes PDF and writes ActiveJobs.
-2. Netlify or Apps Script sends this SMS via KaiCalls (`sms:write`).
+1. HQ estimate drawer **Submit to portal** publishes the estimate and writes ActiveJobs.
+2. Apps Script sends this SMS via KaiCalls (`sms:write`) on publish — same `kaiCallsApiKey` as booking.
 3. Parallel email optional; SMS is the primary invite.
-4. Idempotency key: `estimate-sent-[job_number]` so retries do not double-text.
+4. Idempotency key: `estimate-sent-[job_number]-[attemptId]` — one key per
+   publish call so accidental retries of the same submit do not double-text,
+   while intentional re-publish can send a fresh invite SMS.

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Job Money — Paint'n Pete HQ</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560&family=Manrope:wght@400;500;650;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="hq.css" />
+  <link rel="stylesheet" href="books.css" />
+</head>
+<body class="books-body">
+  <header class="hq-header books-header">
+    <div class="wrap books-wrap">
+      <a class="hq-brand" href="index.html">Paint'n Pete<span>HQ · Job money</span></a>
+      <button type="button" class="sign-out" id="sign-out" hidden>Sign out</button>
+    </div>
+  </header>
+
+  <main class="wrap books-wrap">
+    <section class="card" id="view-login" hidden>
+      <p class="eyebrow">Books</p>
+      <h1>Job money</h1>
+      <p class="lede">Same login as portal admin. See charged, collected, spent, and profit by job.</p>
+      <form id="login-form">
+        <label for="admin-email">Email</label>
+        <input id="admin-email" type="email" autocomplete="username" required />
+        <label for="admin-password">Password</label>
+        <input id="admin-password" type="password" autocomplete="current-password" required />
+        <button class="btn block" type="submit">Sign in</button>
+        <p class="err" id="login-err" hidden></p>
+      </form>
+    </section>
+
+    <section id="view-list" hidden>
+      <header class="books-top">
+        <div>
+          <p class="eyebrow">Phase A</p>
+          <h1>Job ledger</h1>
+          <p class="lede">Charged &amp; collected come from the portal / Stripe. You add expenditures. Profit is charged − spent.</p>
+        </div>
+        <button type="button" class="btn ghost" id="refresh-list">Refresh</button>
+      </header>
+
+      <div class="card qb-card">
+        <h2>QuickBooks (bank books)</h2>
+        <p class="meta">Connect only: business debit, business credit card, and Stripe. Put the job number (e.g. <code>PNP-2026-0827-xxxx</code>) in every memo / description when you categorize.</p>
+        <ol class="qb-steps">
+          <li>Open <a href="https://qbo.intuit.com/app/banking" target="_blank" rel="noopener">Banking / Transactions</a></li>
+          <li><strong>Link account</strong> → business checking/debit</li>
+          <li><strong>Link account</strong> → business credit card</li>
+          <li><strong>Link account</strong> → Stripe (or “Stripe” bank feed / payouts clearing)</li>
+          <li>Do <em>not</em> link personal cards or other banks</li>
+        </ol>
+        <p class="meta">Job profit lives here. QuickBooks is for tax &amp; bank truth.</p>
+      </div>
+
+      <div class="card">
+        <p class="empty" id="jobs-empty" hidden>No portal jobs yet. Submit an estimate from HQ to start a ledger row.</p>
+        <div class="job-money-list" id="jobs-list"></div>
+      </div>
+    </section>
+
+    <section id="view-job" hidden>
+      <p class="admin-back"><a href="#" id="back-list">← All jobs</a></p>
+      <header class="books-job-head">
+        <div>
+          <p class="pill" id="job-status">—</p>
+          <h1 id="job-title">Job</h1>
+          <p class="meta" id="job-sub"></p>
+        </div>
+      </header>
+
+      <div class="money-grid" id="money-grid"></div>
+
+      <div class="card">
+        <h2>Payments received</h2>
+        <ul class="payment-list" id="payment-list"></ul>
+        <p class="empty" id="payment-empty" hidden>No payments recorded yet.</p>
+      </div>
+
+      <div class="card">
+        <h2>Add expenditure</h2>
+        <form id="expense-form" class="expense-form">
+          <div>
+            <label for="ex-date">Date</label>
+            <input id="ex-date" type="date" required />
+          </div>
+          <div>
+            <label for="ex-category">Category</label>
+            <select id="ex-category">
+              <option value="materials">Materials / paint</option>
+              <option value="labor">Labor / helpers</option>
+              <option value="subcontractor">Subcontractor</option>
+              <option value="equipment">Equipment / tools</option>
+              <option value="fuel">Fuel / travel</option>
+              <option value="fees">Fees / dump / permits</option>
+              <option value="stripe_fees">Stripe / card fees</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="ex-amount">Amount ($)</label>
+            <input id="ex-amount" inputmode="decimal" placeholder="0.00" required />
+          </div>
+          <div class="span2">
+            <label for="ex-note">Note</label>
+            <input id="ex-note" placeholder="Home Depot paint, helper day…" />
+          </div>
+          <button class="btn" type="submit">Add spend</button>
+          <p class="err" id="ex-err" hidden></p>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Expenditures</h2>
+        <ul class="expense-list" id="expense-list"></ul>
+        <p class="empty" id="expense-empty" hidden>No spend logged yet.</p>
+      </div>
+    </section>
+
+    <section class="card" id="view-loading">
+      <h1>Loading…</h1>
+    </section>
+  </main>
+
+  <script src="books.js"></script>
+</body>
+</html>

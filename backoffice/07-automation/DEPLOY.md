@@ -172,6 +172,20 @@ better choice on Workspace.
 
 ---
 
+## 7. Client portal (optional — see `../10-portal/DEPLOY-PORTAL.md`)
+
+After `Portal.gs` is in the project and deployed as a new web app version:
+
+1. Run **`setupPortalTabs`** once in the editor.
+2. Deploy the Netlify site from `../10-portal/` with `PORTAL_SCRIPT_URL` and
+   `PORTAL_OPERATOR_KEY` set to the same web app URL and `webhookSecret`.
+3. Point `portal.paintnpete.com` at that Netlify site.
+
+HQ **Submit to portal** in the estimate drawer calls the portal API; it does
+not go live until both steps above are done.
+
+---
+
 ## If something breaks
 
 Apps Script editor → **Executions** in the left sidebar. Every run is logged

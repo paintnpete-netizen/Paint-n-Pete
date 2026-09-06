@@ -514,9 +514,9 @@ pricing:
     note: "Competitor research suggested transparent ranges build trust. Your call."
   rule: >
     The estimate drawer prices from rates.js × field measurements
-    (paint $2.10/sq ft, wash $0.75/sq ft, doors $200 interior / $250 exterior,
-    cabinets per piece). Do not invent a different number. If a job needs
-    different rates, change them on that estimate.
+    (paint $2/sq ft, wash $0.15/sq ft, doors $200 interior / $250 exterior,
+    cabinets per piece). Optional 5–20% discount on the estimate. Do not invent
+    a different number. If a job needs different rates, change them on that estimate.
 
 # -----------------------------------------------------------------------------
 # Tool stack — resolved 2026-08-19
@@ -568,14 +568,15 @@ stack:
     - "Declines out-of-area work gracefully."
     - "Escalates rather than improvising on anything it wasn't told."
   payments: "Stripe Checkout"
-  payments_status: todo
+  payments_status: in_progress
   payments_note: >
-    Locked 2026-08-24 for the client portal (10-portal/). Deposit and balance
-    via hosted Checkout; webhooks update ActiveJobs. Account not created yet —
-    flip to verified when Stripe is live under the business entity.
+    Accept + deposit via Stripe Checkout in the client portal (10-portal/).
+    Test keys wired on Netlify 2026-08-26. Finish Dashboard activation + bank
+    for live payouts — see 10-portal/STRIPE-DASHBOARD.md.
   client_portal:
-    status: spec
+    status: v1_stripe_test
     url_planned: "https://portal.paintnpete.com"
     invite: "estimate-sent SMS (not booking SMS)"
     legal: "Florida contractor attorney for contract + bill of sale"
     spec: "10-portal/portal.md"
+    deploy: "10-portal/DEPLOY-PORTAL.md"

@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Manrope:wght@400;500;650;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="drawer.css" />
+  <link rel="stylesheet" href="drawer.css?v=20260830a" />
 </head>
 <body>
   <header class="bar">
@@ -18,18 +18,14 @@
     <a href="#list">All</a>
   </header>
 
-  <div class="path" aria-label="Job path">
-    <span>Kai / form</span>
+  <div class="path" aria-label="Job path" id="job-path">
+    <span data-step="list">Estimates</span>
     <span>→</span>
-    <span>Booked</span>
+    <span data-step="job" class="here">Build</span>
     <span>→</span>
-    <span>Rep call</span>
+    <span data-step="preview">Preview</span>
     <span>→</span>
-    <span class="here">On site</span>
-    <span>→</span>
-    <span>Generate</span>
-    <span>→</span>
-    <span>Send</span>
+    <span data-step="send">Send</span>
   </div>
 
   <datalist id="room-presets">
@@ -47,13 +43,23 @@
     <option>Garage</option>
     <option>Fascia &amp; soffit</option>
     <option>Exterior</option>
+    <option>Lobby</option>
+    <option>Corridor</option>
+    <option>Suite</option>
+    <option>Common area</option>
+    <option>Stairwell</option>
+    <option>Parking garage</option>
+    <option>Building exterior</option>
   </datalist>
 
   <section data-view="list">
     <div class="wrap">
       <h1>Estimates</h1>
-      <p class="lede">One folder per walkthrough. Photos, measurements, and notes stay on this device until you generate the letter.</p>
+      <p class="lede">One folder per walkthrough — each submit is its own portal job, so a client can review more than one. Duplicate to send a second option without starting over.</p>
       <div id="job-list"></div>
+      <p class="list-tools">
+        <button class="text-btn" type="button" data-act="clear-all">Clear all estimates</button>
+      </p>
     </div>
     <div class="dock">
       <button class="btn" type="button" data-act="new">New estimate</button>
@@ -64,13 +70,13 @@
     <div class="wrap">
       <p class="pill" id="job-num">PNP</p>
       <h1>Walkthrough</h1>
-      <p class="lede">From the booking: name, address, phone. Tap Interior, Exterior, or Both. Then rooms or elevations. Generate builds the letter — you still type the dollars.</p>
+      <p class="lede">From the booking: name, address, phone. Tap Interior, Exterior, or Both. Add rooms or elevations with perimeter × rise. Preview builds the letter and calculates Investment from your rates.</p>
 
       <div class="card">
         <h2>Client</h2>
-        <label>Name</label>
+        <label id="client-label">Name</label>
         <input id="f-client" autocomplete="name" />
-        <label>Job-site address</label>
+        <label id="site-label">Job-site address</label>
         <input id="f-site" autocomplete="street-address" />
         <div class="grid2">
           <div>
@@ -84,10 +90,12 @@
         </div>
         <label>Work</label>
         <input type="hidden" id="f-kind" value="interior" />
-        <div class="seg" role="group" aria-label="Interior or exterior">
+        <div class="seg" role="group" aria-label="Estimate type">
           <button type="button" data-kind="interior" aria-pressed="true">Interior</button>
           <button type="button" data-kind="exterior" aria-pressed="false">Exterior</button>
           <button type="button" data-kind="both" aria-pressed="false">Both</button>
+          <button type="button" data-kind="drywall" aria-pressed="false">Drywall</button>
+          <button type="button" data-kind="commercial" aria-pressed="false">Commercial</button>
         </div>
         <div class="grid2">
           <div>
@@ -112,8 +120,57 @@
         <input id="f-days" placeholder="three to four working days" />
         <label>Color direction</label>
         <input id="f-colors" placeholder="what they asked for, or “confirm on site”" />
-        <label>House notes</label>
+        <label id="notes-label">House notes</label>
         <textarea id="f-notes" placeholder="Pets, HOA, lead-era house, parking, who will be home…"></textarea>
+      </div>
+
+      <div class="card" id="commercial-card" hidden>
+        <h2>Commercial project</h2>
+        <p class="meta">GC bids and property-manager quotes. These fields drive the commercial proposal layout.</p>
+        <label for="f-project">Project / building name</label>
+        <input id="f-project" placeholder="e.g. Harbor View Office — Phase 2 TI" />
+        <label for="f-owner">Owner / tenant entity</label>
+        <input id="f-owner" placeholder="e.g. ABC Holdings LLC" />
+        <div class="grid2">
+          <div>
+            <label for="f-bid-due">Bid due</label>
+            <input id="f-bid-due" type="date" />
+          </div>
+          <div>
+            <label for="f-comm-scope">Paint scope</label>
+            <select id="f-comm-scope">
+              <option value="interior">Interior</option>
+              <option value="exterior">Exterior</option>
+              <option value="both">Interior &amp; exterior</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid2">
+          <div>
+            <label for="f-work-schedule">Work schedule</label>
+            <select id="f-work-schedule">
+              <option value="business">Business hours (7 AM – 5 PM)</option>
+              <option value="after_hours">After-hours only</option>
+              <option value="weekend">Weekends / off-hours</option>
+              <option value="phased">Phased by area</option>
+            </select>
+          </div>
+          <div>
+            <label for="f-payment">Payment terms</label>
+            <select id="f-payment">
+              <option value="progress">Progress draws (30 / 40 / 30)</option>
+              <option value="net30">Net 30 on substantial completion</option>
+              <option value="5050">50% mobilize · 50% substantial completion</option>
+              <option value="custom">Custom (type below)</option>
+            </select>
+          </div>
+        </div>
+        <label for="f-retainage">Retainage (%)</label>
+        <input id="f-retainage" inputmode="decimal" placeholder="10" value="10" />
+        <label for="f-payment-custom">Custom payment terms</label>
+        <input id="f-payment-custom" placeholder="Only if Payment = Custom" />
+        <label for="f-schedule-notes">Schedule &amp; access notes</label>
+        <textarea id="f-schedule-notes" placeholder="Lifts, escorts, staging, what stays open…"></textarea>
       </div>
 
       <h2 id="rooms-heading" style="font-family:var(--font-display);font-weight:500">Rooms</h2>
@@ -121,7 +178,13 @@
       <div id="rooms"></div>
       <p class="no-print"><button class="btn" type="button" data-act="add-room" id="add-room-btn" style="width:100%;margin:0.5rem 0">Add a room</button></p>
 
-      <div class="card">
+      <div class="card" id="services-card">
+        <h2>Services</h2>
+        <p class="meta">Check add-ons for this job. Per-square-foot lines use the qty field, or default to measured area when left blank.</p>
+        <div id="services-list" class="service-list"></div>
+      </div>
+
+      <div class="card" id="cabinets-card">
         <h2>Cabinets</h2>
         <p class="meta">Leave at 0 if this job is not cabinets. Piece rates are a published 2026 contractor model until you replace them in Rates.</p>
         <div class="grid2">
@@ -144,23 +207,34 @@
         </div>
       </div>
 
+      <div class="card" id="custom-addons-card">
+        <h2>Custom add-ons</h2>
+        <p class="meta">One-off items not in the service list. Each line needs a description and price — they appear in the proposal box and roll into the total.</p>
+        <div id="custom-addons-list" class="custom-addons-list"></div>
+        <p class="no-print"><button class="btn ghost" type="button" data-act="add-custom-addon" style="width:100%;margin-top:0.35rem">Add line</button></p>
+      </div>
+
       <div class="card">
         <h2>Quote</h2>
         <p id="quote-out" class="sqft">Measure rooms or elevations. The total is measurements × your rates.</p>
         <ul id="quote-lines" class="quote-lines"></ul>
       </div>
 
-      <div class="card">
+      <div class="card" id="rates-card">
         <h2>Rates</h2>
-        <p class="meta">Your numbers. Change them here if a job is different; the letter uses whatever is on this estimate.</p>
+        <p class="meta" id="rates-meta">Your numbers. Change them here if a job is different; the letter uses whatever is on this estimate.</p>
         <div class="grid2">
           <div>
-            <label>Paint / sq ft</label>
+            <label id="r-paint-int-label">Interior paint / sq ft</label>
             <input id="r-paintPerSqft" inputmode="decimal" />
+          </div>
+          <div id="r-paint-ext-wrap" hidden>
+            <label>Exterior paint / sq ft</label>
+            <input id="r-paintExtPerSqft" inputmode="decimal" />
           </div>
           <div>
             <label>Pressure wash / sq ft</label>
-            <input id="r-washPerSqft" inputmode="decimal" />
+            <input id="r-washPerSqft" inputmode="decimal" title="Exterior default $0.15/sq ft" />
           </div>
           <div>
             <label>Interior door</label>
@@ -188,15 +262,39 @@
           </div>
         </div>
       </div>
+
+      <div class="card" id="discount-card">
+        <h2>Discount</h2>
+        <p class="meta">Optional. Applied to the quote total before deposit.</p>
+        <label for="f-discount">Percent off</label>
+        <select id="f-discount">
+          <option value="0">None</option>
+          <option value="5">5%</option>
+          <option value="10">10%</option>
+          <option value="15">15%</option>
+          <option value="20">20%</option>
+        </select>
+      </div>
     </div>
     <div class="dock">
-      <button class="btn ghost" type="button" data-act="save">Save notes</button>
-      <button class="btn ghost" type="button" data-act="send">Email client</button>
-      <button class="btn" type="button" data-act="generate">Generate letter</button>
+      <button class="btn ghost" type="button" data-act="save">Save</button>
+      <button class="btn" type="button" data-act="preview">Preview estimate</button>
     </div>
   </section>
 
-  <script src="../02-estimating/rates.js"></script>
-  <script src="drawer.js"></script>
+  <section data-view="preview" hidden>
+    <div class="preview-shell">
+      <p class="preview-hint">This is what the client will see. Scroll the letter, then choose an action below.</p>
+      <iframe id="preview-frame" title="Estimate preview" src="about:blank"></iframe>
+    </div>
+    <div class="dock preview-dock">
+      <button class="btn ghost" type="button" data-act="edit">Edit</button>
+      <button class="btn ghost" type="button" data-act="portal">Submit to portal</button>
+      <button class="btn" type="button" data-act="email">Email client</button>
+    </div>
+  </section>
+
+  <script src="estimating/rates.js?v=20260830a"></script>
+  <script src="drawer.js?v=20260830a"></script>
 </body>
 </html>

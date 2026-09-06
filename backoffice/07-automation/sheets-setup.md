@@ -61,12 +61,14 @@ else 4.
 
 ---
 
-## ActiveJobs (portal — planned)
+## ActiveJobs (portal)
 
-Import `../10-portal/active-jobs.csv` as a new tab when portal build starts.
+Import `../10-portal/active-jobs.csv` as a new tab, or run **`setupPortalTabs`**
+/ **`setupWorkbook`** in Apps Script — it creates the tab automatically.
+
 Statuses: `estimate_sent` → `estimate_accepted` → `deposit_paid` → `scheduled`
 → `in_progress` → `balance_due` → `paid` → `closed`. Spec:
-`../10-portal/portal.md`. The review `Jobs` tab stays review/repaint only.
+`../10-portal/portal.md`. Deploy: `../10-portal/DEPLOY-PORTAL.md`.
 
 ---
 

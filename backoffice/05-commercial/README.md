@@ -4,19 +4,18 @@ Residential revenue depends on how many homeowners find you this month.
 Commercial revenue depends on relationships built once and harvested for years.
 
 **Built:**
-- `capabilities-statement.md` — two-page document with the credential gate
+- `vendor-packet/` — **sendable packet** (capabilities PDF + W-9 + GL + WC + FL filing).
+  Run `python3 vendor-packet/assemble-packet.py` → Desktop folder with complete PDF.
+- `capabilities-statement.md` — source notes / credential history
+- `proposal-template.md` — commercial bid layout, fill-out checklist, drawer workflow
 - `outreach.md` — GC/builder, designer/architect, and property manager sequences
 - `bid-analysis.md` — bid package analyzer prompt and red flags
-- Public vendor packet on the live site (`/commercial#vendor-packet`) — qualifications,
-  insurance summary without policy numbers, and a same-day email path for COI / W-9 /
-  Florida business registration. Do not put the gated capabilities PDF or W-9 on the site.
+- Public summary on the live site (`/commercial#vendor-packet`) — no W-9 on the website.
 
-**⛔ Do not send any of it yet.** Trade references, bonding (fill or delete),
-and warranty exclusions are still open. Licence wording, insurance from the
-current COIs, W-9, legal entity, founded year, and warranty were verified
-2026-08-20–21. A capabilities statement with empty references is what a GC
-skips. The documents keep `[BRACKETED]` gaps on the remaining items so they
-cannot be sent by accident.
+**Send status (2026-08-30):** Packet is assemblable and sendable. Named trade
+references still “available on request” until you supply three with permission.
+Bonding row omitted (not listed). Warranty stated as two-year workmanship +
+manufacturer product warranties — no invented exclusions.
 
 **A second gate, easy to miss:** outreach sends from `noah@paintnpete.com`.
 SPF, DKIM, and DMARC (`p=none`) were added 2026-08-19. Leave DMARC on monitor

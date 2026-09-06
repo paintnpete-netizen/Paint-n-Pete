@@ -1,0 +1,9 @@
+[build]
+  publish = "."
+  # estimating/ is maintained under hq/estimating — do not overwrite from 02-estimating on deploy.
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    X-Frame-Options = "SAMEORIGIN"

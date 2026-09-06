@@ -1,8 +1,9 @@
 # Kai — the phone layer
 
-[KaiCalls](https://kaicalls.com) answers the line 24/7, runs an intake
-conversation, books onto Google Calendar, texts missed callers back, and sends
-Noah a transcript and lead summary within seconds.
+[KaiCalls](https://kaicalls.com) answers the line 24/7. **As of 2026-08-24:**
+estimate callers get the booking link immediately (no name/phone/address on
+the call — the website form collects that). Other callers leave a short
+message. Full prompt: `kai-agent-prompt.md`.
 
 It takes over the parts of this back office that happen **on the phone**. What
 it does not do is everything that happens after a consultation is booked —
@@ -213,8 +214,19 @@ Do not port 727. Do not buy another number.
 
 ### What he should hear (after routing is Direct)
 
-Greeting is live as: “Hi, this is Kai with Paintin' Pete. May I get your name
-and what kind of painting service you need?”
+**Intended greeting (paste from `kai-agent-prompt.md` — MCP lacks
+`agents:write` so dashboard paste is required):** “Hi, this is Kai with
+Paintin' Pete. Would you like to schedule an estimate or something else?”
+
+**2026-08-26 — “Hi Noah” bug:** Live `first_message` was a Jinja template (not plain
+text): `Hi{% if name %} {{ name }}{% endif %} this is Kai with Paintin' Pete…` — so
+Noah’s Admin Phone Access line heard “Hi, Noah. This is Kai…”. **Fixed live 2026-08-26**
+via dashboard Kai Assist → “Changed greeting parameter” → Save. Live greeting is now
+plain text: “Hi, this is Kai with Paintin' Pete. Would you like to schedule an estimate
+or something else?”
+Estimate path: text booking link only — no name / callback / address —
+then: “I've sent you a link to book an appointment on our calendar. Once you
+book, a Paintin' Pete rep will be in contact within 24 hours. Bye.”
 
 **Pronunciation clinic published 2026-08-20:** four TTS overrides, all
 `PAYN-tin PEET`, covering `Paintin' Pete`, `Paint'n Pete`, `Paint N Pete`,
@@ -263,6 +275,36 @@ phone, and they were not being acted on.
 Rule 1 is the direct guard against the lead below. Rule 4 is the early warning
 on the no-price rule — if Kai is losing people at the price question, it shows
 up on the first caller rather than the tenth.
+
+**Updated 2026-08-24 — rule 1 removed (false positives).** Kai sends the
+booking link on estimate calls; the client picks a time on the website. Rule 1
+texted "no appointment was booked" even when the client booked minutes later.
+Staff now rely on the form-submission email to noah@ (Apps Script + Netlify)
+with Leads / Netlify forms links — not a Kai urgent SMS on every estimate call.
+
+**Current escalation rules (apply in Kai dashboard → Staff alerts):**
+
+| # | When | SMS | Email |
+|---|---|---|---|
+| 1 | Caller needs work urgently, or said tomorrow / this week / ASAP | yes | yes |
+| 2 | Caller has a complaint or problem with work already completed | yes | yes |
+| 3 | Caller pushed for a price and did not book, or seemed unhappy | yes | yes |
+
+**Do not re-add:** "Caller wanted an estimate but no appointment was booked."
+
+When a client completes the booking form, Noah gets `[Paint'n Pete] New lead: …`
+at noah@paintnpete.com with links to the Leads tab and Netlify form submissions.
+That is the correct signal — not a Kai post-call SMS.
+
+### Apply in Kai dashboard (2 minutes)
+
+1. Open [KaiCalls → Staff alerts](https://www.kaicalls.com/dashboard).
+2. **Delete** the rule whose scenario is *"Caller wanted an estimate or callback
+   but no appointment was booked"* (or disable it).
+3. Confirm alert email is **noah@paintnpete.com** and SMS alerts stay on for the
+   three remaining urgent rules only (urgent timeline, complaint, price pushback).
+4. Save. Test with another estimate call — you should **not** get the URGENT
+   "no appointment was booked" text after the client uses the booking link.
 
 Scenario text is capped at about 100 characters, so rules have to be short.
 

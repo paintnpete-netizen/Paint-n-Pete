@@ -8,6 +8,9 @@ Connects the **prospect pipeline** (website visit → estimate acceptance) to th
 | `portal.md` | Product spec — auth, screens, Stripe events, build order |
 | `active-jobs.csv` | Sheet schema for the `ActiveJobs` tab |
 | `estimate-sent.md` | SMS + email that carry the portal link |
+| `DEPLOY-PORTAL.md` | Netlify + Apps Script deploy steps |
+| `site/` | Portal UI (Netlify publish root) |
+| `netlify/` | `portal-api` function → Apps Script |
 
 **Decisions locked 2026-08-24**
 

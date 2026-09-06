@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Client Portal — Paint'n Pete</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Manrope:wght@400;500;650;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="portal.css" />
+</head>
+<body>
+  <header class="portal-header" id="header" hidden>
+    <div class="wrap">
+      <a class="brand" href="index.html">Paint'n Pete<span>Client portal</span></a>
+      <button type="button" class="sign-out" id="sign-out">Sign out</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Invite / signup -->
+    <section class="card" id="view-signup" hidden>
+      <p class="pill">Create your login</p>
+      <h1>Create your portal login</h1>
+      <p class="lede" id="signup-lede">Your estimate is waiting. Create a password to view it and message us.</p>
+      <form id="signup-form">
+        <label for="su-email">Email (your username)</label>
+        <input id="su-email" type="email" autocomplete="username" required readonly />
+        <label for="su-password">Create a password (8+ characters)</label>
+        <input id="su-password" type="password" autocomplete="new-password" minlength="8" required />
+        <label for="su-phone">Last 4 digits of your phone</label>
+        <input id="su-phone" inputmode="numeric" maxlength="4" pattern="\d{4}" required placeholder="1234" />
+        <button class="btn block" type="submit">Create login &amp; view estimate</button>
+        <p class="err" id="signup-err" hidden></p>
+      </form>
+      <p class="link-row">Already have a login? <a href="#" id="go-login">Sign in</a></p>
+    </section>
+
+    <!-- Sign in -->
+    <section class="card" id="view-login" hidden>
+      <h1>Sign in</h1>
+      <p class="lede" id="login-lede">Access your Paint'n Pete job room.</p>
+      <form id="login-form">
+        <label for="li-email">Email (username)</label>
+        <input id="li-email" type="email" autocomplete="username" required />
+        <label for="li-password">Password</label>
+        <input id="li-password" type="password" autocomplete="current-password" required />
+        <button class="btn block" type="submit">Sign in</button>
+        <p class="err" id="login-err" hidden></p>
+      </form>
+    </section>
+
+    <!-- Projects list (when a client has more than one estimate) -->
+    <section id="view-jobs" hidden>
+      <h1 class="admin-title">Your estimates</h1>
+      <p class="lede admin-lede">Open each estimate to review it. Accept and pay on the one you want to book.</p>
+      <div class="card" id="jobs-list-wrap">
+        <ul class="doc-list" id="jobs-list"></ul>
+      </div>
+    </section>
+
+    <!-- Job home -->
+    <section id="view-job" hidden>
+      <p class="admin-back" id="back-to-jobs" hidden><a href="#" id="back-jobs-link">← All estimates</a></p>
+      <p class="pill" id="job-status-pill">Estimate ready</p>
+      <h1 class="job-title" id="job-title">Your project</h1>
+      <p class="job-sub" id="job-sub"></p>
+
+      <div class="notice" id="accept-banner" hidden>
+        <strong>Review your estimate</strong> — open Documents to read it. When you're ready, accept and pay your deposit in one step (card via Stripe).
+        <button class="btn block" type="button" id="accept-btn" style="margin-top:0.75rem">Accept &amp; pay deposit</button>
+        <p class="meta" id="deposit-note" hidden style="margin-top:0.5rem"></p>
+      </div>
+
+      <div class="notice" id="deposit-pending-banner" hidden>
+        Your estimate is accepted. Finish paying your deposit to lock the schedule.
+        <button class="btn block" type="button" id="retry-deposit-btn" style="margin-top:0.75rem">Pay deposit</button>
+      </div>
+
+      <div class="notice success" id="deposit-paid-banner" hidden>
+        Deposit received — thank you. Noah will confirm scheduling details with you directly.
+      </div>
+
+      <div class="notice" id="declined-banner" hidden>
+        This estimate was not accepted. If you still want the work, message Noah here or call 727-902-1986 — he can send a revised quote.
+      </div>
+
+      <nav class="tabs" role="tablist">
+        <button type="button" role="tab" id="tab-docs" aria-selected="true" aria-controls="panel-docs">Documents</button>
+        <button type="button" role="tab" id="tab-messages" aria-selected="false" aria-controls="panel-messages">Messages</button>
+      </nav>
+
+      <div class="card" id="panel-docs" role="tabpanel">
+        <h2>Documents</h2>
+        <ul class="doc-list" id="doc-list"></ul>
+        <p class="empty" id="doc-empty" hidden>No documents yet.</p>
+      </div>
+
+      <div class="card hidden" id="panel-messages" role="tabpanel">
+        <h2>Messages</h2>
+        <div class="messages" id="message-list"></div>
+        <form id="message-form">
+          <label for="msg-body">Message Noah</label>
+          <textarea id="msg-body" required placeholder="Colors, scheduling, questions…"></textarea>
+          <button class="btn" type="submit">Send</button>
+          <p class="err" id="msg-err" hidden></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- Loading / error -->
+    <section class="card" id="view-loading">
+      <h1>Loading…</h1>
+    </section>
+
+    <section class="card" id="view-error" hidden>
+      <h1>Link problem</h1>
+      <p class="lede" id="error-text">This invite link is invalid or expired. Call 727-902-1986 or email noah@paintnpete.com.</p>
+    </section>
+  </main>
+
+  <script src="portal.js?v=20260830a"></script>
+</body>
+</html>

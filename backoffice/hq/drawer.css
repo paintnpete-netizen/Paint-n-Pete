@@ -75,6 +75,27 @@ h1 {
 
 .lede { color: var(--muted); margin: 0 0 1rem; }
 
+.list-tools {
+  margin: 1.25rem 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+
+.text-btn {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  cursor: pointer;
+}
+
+.text-btn:hover { color: var(--ink); }
+
 .card {
   background: var(--paper);
   border: 1px solid var(--line);
@@ -146,6 +167,87 @@ textarea { min-height: 4.5rem; resize: vertical; }
 
 .checks input { width: auto; }
 
+.service-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-top: 0.35rem;
+}
+
+.service-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.35rem 0.75rem;
+  align-items: center;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--line, #e8e2d6);
+}
+
+.service-row:last-child { border-bottom: 0; }
+
+.service-row label {
+  display: flex;
+  gap: 0.45rem;
+  align-items: flex-start;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.92rem;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.35;
+}
+
+.service-row label input { width: auto; margin-top: 0.15rem; flex-shrink: 0; }
+
+.service-row .svc-note {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 0.15rem;
+}
+
+.service-row .svc-qty {
+  width: 5.5rem;
+  min-width: 0;
+  text-align: right;
+}
+
+.service-row .svc-qty-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 0.15rem;
+  display: block;
+}
+
+.custom-addons-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.custom-addon-row {
+  display: grid;
+  grid-template-columns: 1fr 6.5rem auto;
+  gap: 0.45rem;
+  align-items: end;
+}
+
+.custom-addon-row label {
+  margin: 0;
+}
+
+.custom-addon-row .rm-addon {
+  color: var(--muted);
+  background: none;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  padding: 0.45rem 0.2rem;
+  margin-bottom: 0.15rem;
+}
+
 .photos {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -191,9 +293,13 @@ textarea { min-height: 4.5rem; resize: vertical; }
 
 .seg {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.4rem;
   margin: 0.35rem 0 0.75rem;
+}
+
+.seg button[data-kind="commercial"] {
+  grid-column: 1 / -1;
 }
 
 .seg button {
@@ -249,6 +355,53 @@ textarea { min-height: 4.5rem; resize: vertical; }
   padding: 0.65rem 0.85rem calc(0.65rem + env(safe-area-inset-bottom));
   display: flex;
   gap: 0.5rem;
+  z-index: 30;
+}
+
+.preview-dock .btn {
+  font-size: 0.82rem;
+  padding: 0.85rem 0.35rem;
+}
+
+.preview-shell {
+  padding: 0.75rem 0.75rem 0;
+  max-width: 52rem;
+  margin: 0 auto;
+}
+
+.preview-hint {
+  margin: 0 0 0.65rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+#preview-frame {
+  display: block;
+  width: 100%;
+  height: calc(100vh - 11.5rem);
+  min-height: 22rem;
+  border: 1px solid var(--line);
+  background: #e7e4dc;
+  border-radius: 2px;
+}
+
+body.view-preview {
+  padding-bottom: 5.5rem;
+}
+
+@media (max-width: 520px) {
+  .preview-dock {
+    flex-wrap: wrap;
+  }
+  .preview-dock .btn {
+    flex: 1 1 calc(50% - 0.25rem);
+  }
+  .preview-dock .btn[data-act="email"] {
+    flex: 1 1 100%;
+  }
+  #preview-frame {
+    height: calc(100vh - 13.5rem);
+  }
 }
 
 .btn {
@@ -269,6 +422,53 @@ textarea { min-height: 4.5rem; resize: vertical; }
   background: transparent;
   color: #fff;
   border: 1px solid rgba(255,255,255,0.35);
+}
+
+.btn.small {
+  flex: 0 0 auto;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.list-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.list-card-main {
+  flex: 1;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  padding: 1rem 1rem 0.55rem 1.1rem;
+}
+
+.list-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0 1rem 0.9rem 1.1rem;
+}
+
+.list-card-actions .btn.ghost {
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+.list-card .list-delete {
+  color: var(--ink);
+  border-color: var(--line);
+  background: transparent;
+  margin-left: auto;
+}
+
+.list-card .list-delete:hover {
+  border-color: #a33;
+  color: #a33;
 }
 
 .pill {

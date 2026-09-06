@@ -1,0 +1,61 @@
+/* Commercial proposal — extends proposal.css */
+
+.commercial-proposal .doc-title .kicker {
+  letter-spacing: 0.14em;
+}
+
+.commercial-proposal .parties {
+  margin: 0.85rem 0 1rem;
+  font-size: 0.88rem;
+}
+
+.commercial-proposal .parties td:first-child {
+  width: 34%;
+  color: var(--muted);
+  font-weight: 650;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+}
+
+.commercial-proposal .summary {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  max-width: 42rem;
+}
+
+.commercial-proposal .meta-note {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin: -0.35rem 0 0.55rem;
+}
+
+.commercial-proposal .measure-tbl tfoot td {
+  font-weight: 700;
+  border-top: 1.5px solid var(--green);
+  background: var(--white);
+}
+
+.commercial-proposal .comm-block p {
+  margin: 0.25rem 0;
+  font-size: 0.92rem;
+}
+
+.commercial-proposal .comm-block .lbl {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.55rem;
+}
+
+.commercial-proposal .comm-block .lbl:first-child {
+  margin-top: 0;
+}
+
+.commercial-proposal .retainage {
+  margin-top: 0.45rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}

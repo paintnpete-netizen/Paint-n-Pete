@@ -1,7 +1,8 @@
 # Client Portal Spec
 
-Status: **spec only** — not built. Locked decisions: Stripe; portal link with
-estimate-sent SMS; Florida contractor attorney for contract + bill of sale.
+Status: **v1 built** (2026-08-24) — signup, documents, accept, chat. **Stripe deferred.**
+Locked decisions: Stripe when payments ship; portal link with estimate-sent SMS;
+Florida contractor attorney for contract + bill of sale.
 
 Facts (company name, phone, domain) come from `../config/business-profile.yml`.
 Do not hardcode a second operator's identity here.
@@ -55,8 +56,9 @@ Not on the public marketing deploy path without isolation.
 (`PNP-YYYY-MMDD-lastname`). After account creation, session cookie. No public
 browsing of other jobs.
 
-**Operator rule:** Noah uses HQ + Sheets, not the client portal, except for
-preview.
+**Operator rule:** Noah uses **portal admin** (`/admin.html`) to supervise jobs and
+reply to clients. HQ + Sheets remain the source of truth for publishing and
+pipeline status.
 
 ---
 
